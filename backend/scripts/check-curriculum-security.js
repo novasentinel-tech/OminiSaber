@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 const migration = fs.readFileSync(new URL('../migrations/20260903_importacao_curricular_fase3.sql', import.meta.url), 'utf8');
 const correction = fs.readFileSync(new URL('../migrations/20260903_importacao_curricular_fase3_1.sql', import.meta.url), 'utf8');
+const phase32 = fs.readFileSync(new URL('../migrations/20260904_importacao_curricular_fase3_2.sql', import.meta.url), 'utf8');
 const edge = fs.readFileSync(new URL('../supabase/functions/curriculo-upload/index.ts', import.meta.url), 'utf8');
 const client = fs.readFileSync(new URL('../ominisaber-manager-client.js', import.meta.url), 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
@@ -21,4 +22,19 @@ assert(edge.includes("file.type !== 'application/pdf'") && edge.includes('file.s
 assert(!edge.includes("PDF sem texto selecionável"), 'texto extraído do cliente não é tratado como validação server-side');
 assert(!client.includes('SERVICE_ROLE') && !client.includes('service_role'), 'nenhum segredo administrativo no cliente');
 assert(client.includes("curriculo-upload") && client.includes('reprocessCurriculumImport'), 'cliente usa Edge Function e reprocessamento');
+
+const approvalGuard = "if not exists (\n    select 1 from public.importacoes_curriculo_itens\n    where importacao_id = imp.id and tipo = 'habilidade' and status in ('ok', 'aprovado')\n  ) then raise exception 'Nenhuma habilidade aprovada para publicação'; end if;";
+const guardPosition = phase32.indexOf(approvalGuard);
+const insertPosition = phase32.indexOf('insert into public.curriculos');
+const archivePosition = phase32.indexOf("set status = 'arquivado'");
+assert(phase32.includes("p_trimestre smallint, p_resumo jsonb, p_texto text, p_itens jsonb"), 'staging mantém compatibilidade da assinatura');
+assert(!phase32.includes("nullif(btrim(p_texto), '') is null"), 'staging aceita p_texto nulo ou vazio');
+assert(phase32.includes('documento_texto_extraido, documento_id') && phase32.includes('p_texto, p_documento_id'), 'staging preserva o texto recebido apenas como dado');
+assert(phase32.includes("status in ('ok', 'aprovado')") && phase32.includes("tipo = 'habilidade'"), 'publicação exige habilidade EM aprovada');
+assert(phase32.includes("raise exception 'Nenhuma habilidade aprovada para publicação'"), 'erro controlado de publicação vazia');
+assert(guardPosition >= 0 && guardPosition < insertPosition && guardPosition < archivePosition, 'guard de publicação ocorre antes de inserir e arquivar');
+assert(phase32.includes("status in ('ok', 'aprovado') loop") && phase32.includes("tipo = 'habilidade'"), 'habilidade aprovada é materializada');
+assert(phase32.includes("where importacao_id = imp.id and tipo = 'habilidade' and status in ('ok', 'aprovado') loop"), 'itens rejeitados não são materializados');
+assert(phase32.includes("status in ('ok', 'aprovado') loop") && !phase32.includes("tipo = 'habilidade' and status = 'rejeitado' loop"), 'uma aprovada com rejeitada mantém a rejeitada fora do catálogo');
 console.log('OK segurança curricular: RLS, staging, idempotência, concorrência, Storage, validação e segredos.');
+console.log('Smoke/static Fase 3.2: cobre p_texto nulo/vazio, publicação sem aprovadas, rejeitadas, mistura aprovada/rejeitada e ordem do guard. Sem PostgreSQL/Supabase real, não são testes comportamentais.');
