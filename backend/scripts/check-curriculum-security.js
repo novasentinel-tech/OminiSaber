@@ -1,27 +1,31 @@
 import fs from 'node:fs';
 
-const migration = fs.readFileSync(new URL('../migrations/20260903_importacao_curricular_fase3.sql', import.meta.url), 'utf8');
+const migration = fs.readFileSync(new URL('../migrations/20260903_importacao_curricular.sql', import.meta.url), 'utf8');
+const phase3 = fs.readFileSync(new URL('../migrations/20260903_importacao_curricular_fase3.sql', import.meta.url), 'utf8');
 const correction = fs.readFileSync(new URL('../migrations/20260903_importacao_curricular_fase3_1.sql', import.meta.url), 'utf8');
 const phase32 = fs.readFileSync(new URL('../migrations/20260904_importacao_curricular_fase3_2.sql', import.meta.url), 'utf8');
+const policyCorrection = fs.readFileSync(new URL('../migrations/20260904_importacao_curricular_correcao_policy.sql', import.meta.url), 'utf8');
 const edge = fs.readFileSync(new URL('../supabase/functions/curriculo-upload/index.ts', import.meta.url), 'utf8');
 const client = fs.readFileSync(new URL('../ominisaber-manager-client.js', import.meta.url), 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 
-assert(migration.includes("status = 'publicado'") && migration.includes("status = 'revisao'"), 'ciclo publicado/revisão');
-assert(migration.includes('pg_advisory_xact_lock'), 'concorrência protegida por advisory lock');
-assert(migration.includes("if imp.status = 'aprovada' and imp.curriculo_id is not null then return imp.curriculo_id"), 'aprovação idempotente');
-assert(migration.includes('criar_importacao_curriculo') && migration.includes('jsonb_array_elements(coalesce(p_itens'), 'staging atômico');
+assert(phase3.includes("status = 'publicado'") && phase3.includes("status = 'revisao'"), 'ciclo publicado/revisão');
+assert(phase3.includes('pg_advisory_xact_lock'), 'concorrência protegida por advisory lock');
+assert(phase3.includes("if imp.status = 'aprovada' and imp.curriculo_id is not null then return imp.curriculo_id"), 'aprovação idempotente');
+assert(phase3.includes('criar_importacao_curriculo') && phase3.includes('jsonb_array_elements(coalesce(p_itens'), 'staging atômico');
 assert(correction.includes('on conflict (curriculo_id, serie, trimestre) do update'), 'período reutilizado entre habilidades');
 assert(correction.includes("and status = 'revisar'") && correction.includes("status in ('ok', 'aprovado')"), 'rejeitado não bloqueia nem materializa');
-assert(migration.includes("item -> 'expectativas'") && migration.includes("item -> 'objetos'"), 'aprovação materializa expectativas e objetos');
-assert(migration.includes('reprocessar_importacao_curriculo') && migration.includes('reprocessamento_de_id'), 'reprocessamento preserva histórico');
-assert(migration.includes('documentos_curriculares') && migration.includes('curriculos_pdfs'), 'documento e bucket privados');
-assert(migration.includes('curriculos_pdfs_gestor_select') && migration.includes("public.usuario_role()) = 'gestor'"), 'Storage restrito ao gestor');
-assert(migration.includes('descritores_leitura') && migration.includes("status = 'ativo'") && migration.includes("c.status = 'publicado'"), 'descritores dependem de currículo publicado');
+assert(phase3.includes("item -> 'expectativas'") && phase3.includes("item -> 'objetos'"), 'aprovação materializa expectativas e objetos');
+assert(phase3.includes('reprocessar_importacao_curriculo') && phase3.includes('reprocessamento_de_id'), 'reprocessamento preserva histórico');
+assert(phase3.includes('documentos_curriculares') && phase3.includes('curriculos_pdfs'), 'documento e bucket privados');
+assert(phase3.includes('curriculos_pdfs_gestor_select') && phase3.includes("public.usuario_role()) = 'gestor'"), 'Storage restrito ao gestor');
+assert(phase3.includes('descritores_leitura') && phase3.includes("status = 'ativo'") && phase3.includes("c.status = 'publicado'"), 'descritores dependem de currículo publicado');
 assert(edge.includes("file.type !== 'application/pdf'") && edge.includes('file.size > MAX_BYTES') && edge.includes("signature !== '%PDF-'") && edge.includes('%%EOF') && edge.includes('SHA-256'), 'validação server-side do PDF');
 assert(!edge.includes("PDF sem texto selecionável"), 'texto extraído do cliente não é tratado como validação server-side');
 assert(!client.includes('SERVICE_ROLE') && !client.includes('service_role'), 'nenhum segredo administrativo no cliente');
 assert(client.includes("curriculo-upload") && client.includes('reprocessCurriculumImport'), 'cliente usa Edge Function e reprocessamento');
+assert(migration.includes('where ho.objeto_id = public.objetos_conhecimento.id'), 'policy histórica qualifica o id do objeto');
+assert(policyCorrection.includes('drop policy if exists objetos_leitura') && policyCorrection.includes('where ho.objeto_id = public.objetos_conhecimento.id'), 'migration corretiva recria apenas a policy ambígua');
 
 const approvalGuard = "if not exists (\n    select 1 from public.importacoes_curriculo_itens\n    where importacao_id = imp.id and tipo = 'habilidade' and status in ('ok', 'aprovado')\n  ) then raise exception 'Nenhuma habilidade aprovada para publicação'; end if;";
 const guardPosition = phase32.indexOf(approvalGuard);

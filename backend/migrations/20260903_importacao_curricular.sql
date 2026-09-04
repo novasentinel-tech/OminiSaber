@@ -144,7 +144,7 @@ create policy habilidade_descritores_leitura on public.habilidade_descritores fo
 drop policy if exists expectativas_leitura on public.expectativas_aprendizagem;
 create policy expectativas_leitura on public.expectativas_aprendizagem for select to authenticated using (exists (select 1 from public.curriculo_periodos p join public.curriculos c on c.id = p.curriculo_id where p.id = periodo_id and (c.status = 'publicado' or (select public.usuario_role()) = 'gestor')));
 drop policy if exists objetos_leitura on public.objetos_conhecimento;
-create policy objetos_leitura on public.objetos_conhecimento for select to authenticated using (exists (select 1 from public.habilidade_objetos ho join public.curriculo_periodos p on p.id = ho.periodo_id join public.curriculos c on c.id = p.curriculo_id where ho.objeto_id = id and (c.status = 'publicado' or (select public.usuario_role()) = 'gestor')));
+create policy objetos_leitura on public.objetos_conhecimento for select to authenticated using (exists (select 1 from public.habilidade_objetos ho join public.curriculo_periodos p on p.id = ho.periodo_id join public.curriculos c on c.id = p.curriculo_id where ho.objeto_id = public.objetos_conhecimento.id and (c.status = 'publicado' or (select public.usuario_role()) = 'gestor')));
 drop policy if exists habilidade_objetos_leitura on public.habilidade_objetos;
 create policy habilidade_objetos_leitura on public.habilidade_objetos for select to authenticated using (exists (select 1 from public.curriculo_periodos p join public.curriculos c on c.id = p.curriculo_id where p.id = periodo_id and (c.status = 'publicado' or (select public.usuario_role()) = 'gestor')));
 drop policy if exists importacoes_gestor on public.importacoes_curriculo;
