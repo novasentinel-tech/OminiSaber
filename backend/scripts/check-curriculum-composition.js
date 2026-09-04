@@ -1,0 +1,31 @@
+import fs from 'node:fs';
+
+const migration = fs.readFileSync(new URL('../migrations/20260904_importacao_curricular_fase3_4.sql', import.meta.url), 'utf8');
+const phase33 = fs.readFileSync(new URL('../migrations/20260904_importacao_curricular_fase3_3.sql', import.meta.url), 'utf8');
+const build = fs.readFileSync(new URL('./build-complete-schema.js', import.meta.url), 'utf8');
+const assert = (condition, message) => { if (!condition) throw new Error(message); };
+
+const lockPosition = migration.indexOf('pg_advisory_xact_lock');
+const lookupPosition = migration.indexOf("status = 'publicado'\n      and ativo = true");
+const insertPosition = migration.indexOf('insert into public.curriculos');
+const archivePosition = migration.indexOf("set status = 'arquivado'");
+const approvalGuard = migration.indexOf("raise exception 'Nenhuma habilidade aprovada para publicação'");
+assert(migration.includes('select * into imp from public.importacoes_curriculo where id = p_importacao_id for update'), 'A mantém FOR UPDATE');
+assert(migration.includes("imp.status = 'aprovada' and imp.curriculo_id is not null then return imp.curriculo_id"), 'G mantém idempotência');
+assert(migration.includes("origem = coalesce(imp.origem, 'Não identificada')") && migration.includes('ano_letivo = imp.ano_letivo') && migration.includes('materia_codigo = imp.materia_codigo'), 'A-F usam a chave anual completa');
+assert(migration.includes("status = 'publicado'") && migration.includes('ativo = true'), 'busca somente currículo publicado ativo');
+assert(lockPosition >= 0 && lockPosition < lookupPosition, 'H adquire lock antes da busca');
+assert(migration.includes('if imp.reprocessamento_de_id is null then'), 'importação normal separada do reprocessamento');
+assert(lookupPosition >= 0 && lookupPosition < insertPosition, 'B reutiliza antes de criar currículo');
+assert(migration.includes('curriculo_novo := true') && migration.includes('if curriculo_novo then'), 'arquivamento ocorre somente ao criar nova versão');
+assert(archivePosition > insertPosition, 'currículo é criado antes do arquivamento de uma versão anterior');
+assert(migration.includes('on conflict (curriculo_id, serie, trimestre) do update'), 'B/C reutilizam períodos por série e trimestre');
+assert(migration.includes('on conflict (habilidade_id, periodo_id) do update'), 'G não duplica vínculo habilidade/período');
+assert(migration.includes('status in (\'ok\', \'aprovado\')') && migration.includes("upper(payload ->> 'codigo') ~ '^EM\\d{2}[A-Z]{2}\\d{2}$'"), 'I preserva a defesa EM da Fase 3.3');
+assert(approvalGuard >= 0 && approvalGuard < insertPosition, 'habilidade EM aprovada é validada antes do currículo');
+assert(migration.includes("where importacao_id = imp.id\n      and tipo = 'habilidade'\n      and status in ('ok', 'aprovado')\n      and upper(payload ->> 'codigo') ~ '^EM\\d{2}[A-Z]{2}\\d{2}$'\n  loop"), 'D/E/F materializam somente habilidades EM');
+assert(!migration.includes("status = 'publicado' and ativo = true and trimestre"), 'trimestre não participa da identidade anual');
+assert(phase33.includes('reprocessamento_de_id'), 'reprocessamento continua vinculado ao staging existente');
+assert(build.includes('20260904_importacao_curricular_fase3_4.sql'), 'Fase 3.4 incluída no build');
+console.log('OK composição curricular: reuso anual, períodos trimestrais, idempotência, lock, reprocessamento explícito e defesa EM/EF.');
+console.log('Smoke/static Fase 3.4: cobre cenários A-I por invariantes SQL; sem PostgreSQL/Supabase real, não são testes comportamentais.');

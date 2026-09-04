@@ -35,11 +35,13 @@ Na Fase 3.2, o texto extraído (`p_texto`) deixou de ser requisito para criar o 
 
 Na Fase 3.3, o currículo principal permanece exclusivamente de Ensino Médio. O backend classifica códigos `EM` como `habilidade`/`ensino_medio` e códigos `EF` como `referencia_ensino_fundamental`/`ensino_fundamental`, independentemente do tipo enviado pelo cliente. A edição de um item também reclassifica tipo, etapa e, para referências EF, o status para `revisar`. A aprovação possui uma defesa final independente: somente habilidades com código EM válido e status `ok` ou `aprovado` podem satisfazer o bloqueio de publicação e ser materializadas.
 
+Na Fase 3.4, `curriculos` representa o currículo anual e o trimestre pertence a `curriculo_periodos`; portanto, os PDFs do primeiro, segundo e terceiro trimestre podem compor o mesmo currículo publicado. Uma importação trimestral normal reutiliza o currículo publicado ativo da mesma origem, ano letivo e matéria, acrescentando somente seus períodos e relações. Trimestre não é versão curricular. Uma nova versão ainda pode surgir em um reprocessamento explícito ou quando não houver currículo publicado compatível; o reprocessamento continua sendo staging controlado e não sobrescreve silenciosamente uma publicação existente.
+
 O servidor valida extensão, MIME, tamanho, assinatura `%PDF-`, marcador `%%EOF` e SHA-256. O texto extraído continua sendo produzido pelo PDF.js no cliente e armazenado como dado não confiável; esta Edge Function não faz parsing completo de PDF nem confirma texto selecionável. Essa validação deve ser adicionada em uma etapa posterior com runtime de parsing/OCR apropriado.
 
 ### Dívidas técnicas da Fase 1
 
-- `max(versao) + 1` ainda precisa de uma estratégia de concorrência no banco.
+- Reprocessamentos explícitos ainda criam uma nova versão e arquivam a publicação anterior; não há neste fluxo um sinal separado para revisão oficial sem essa substituição.
 - Habilidades e descritores são entidades globais reutilizadas; versões ainda não são snapshots históricos totalmente imutáveis.
 - Os padrões de habilidades devem permanecer adequados ao Ensino Médio e não evoluir para um parser genérico de toda a BNCC.
 

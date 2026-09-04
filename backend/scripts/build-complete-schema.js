@@ -27,7 +27,8 @@ const sources = [
   'migrations/20260903_redacoes_avaliacoes_portugues.sql',
   'migrations/20260904_importacao_curricular_fase3_2.sql',
   'migrations/20260904_importacao_curricular_correcao_policy.sql',
-  'migrations/20260904_importacao_curricular_fase3_3.sql'
+  'migrations/20260904_importacao_curricular_fase3_3.sql',
+  'migrations/20260904_importacao_curricular_fase3_4.sql'
 ];
 
 const removeTransactionWrapper = (sql, source) => {
