@@ -33,6 +33,8 @@ Na Fase 3, o PDF é validado e armazenado pela Edge Function `curriculo-upload` 
 
 Na Fase 3.2, o texto extraído (`p_texto`) deixou de ser requisito para criar o staging e pode ser nulo ou vazio. A publicação exige pelo menos uma habilidade EM com status `ok` ou `aprovado`; itens rejeitados continuam fora da materialização. Essa regra é verificada antes da criação da nova versão e do arquivamento da versão anterior.
 
+Na Fase 3.3, o currículo principal permanece exclusivamente de Ensino Médio. O backend classifica códigos `EM` como `habilidade`/`ensino_medio` e códigos `EF` como `referencia_ensino_fundamental`/`ensino_fundamental`, independentemente do tipo enviado pelo cliente. A edição de um item também reclassifica tipo, etapa e, para referências EF, o status para `revisar`. A aprovação possui uma defesa final independente: somente habilidades com código EM válido e status `ok` ou `aprovado` podem satisfazer o bloqueio de publicação e ser materializadas.
+
 O servidor valida extensão, MIME, tamanho, assinatura `%PDF-`, marcador `%%EOF` e SHA-256. O texto extraído continua sendo produzido pelo PDF.js no cliente e armazenado como dado não confiável; esta Edge Function não faz parsing completo de PDF nem confirma texto selecionável. Essa validação deve ser adicionada em uma etapa posterior com runtime de parsing/OCR apropriado.
 
 ### Dívidas técnicas da Fase 1

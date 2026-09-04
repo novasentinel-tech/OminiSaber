@@ -5,6 +5,7 @@ const phase3 = fs.readFileSync(new URL('../migrations/20260903_importacao_curric
 const correction = fs.readFileSync(new URL('../migrations/20260903_importacao_curricular_fase3_1.sql', import.meta.url), 'utf8');
 const phase32 = fs.readFileSync(new URL('../migrations/20260904_importacao_curricular_fase3_2.sql', import.meta.url), 'utf8');
 const policyCorrection = fs.readFileSync(new URL('../migrations/20260904_importacao_curricular_correcao_policy.sql', import.meta.url), 'utf8');
+const phase33 = fs.readFileSync(new URL('../migrations/20260904_importacao_curricular_fase3_3.sql', import.meta.url), 'utf8');
 const edge = fs.readFileSync(new URL('../supabase/functions/curriculo-upload/index.ts', import.meta.url), 'utf8');
 const client = fs.readFileSync(new URL('../ominisaber-manager-client.js', import.meta.url), 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
@@ -40,5 +41,18 @@ assert(guardPosition >= 0 && guardPosition < insertPosition && guardPosition < a
 assert(phase32.includes("status in ('ok', 'aprovado') loop") && phase32.includes("tipo = 'habilidade'"), 'habilidade aprovada é materializada');
 assert(phase32.includes("where importacao_id = imp.id and tipo = 'habilidade' and status in ('ok', 'aprovado') loop"), 'itens rejeitados não são materializados');
 assert(phase32.includes("status in ('ok', 'aprovado') loop") && !phase32.includes("tipo = 'habilidade' and status = 'rejeitado' loop"), 'uma aprovada com rejeitada mantém a rejeitada fora do catálogo');
+const emPattern = "^EM\\d{2}[A-Z]{2}\\d{2}$";
+const efPattern = "^EF\\d{2}[A-Z]{2}\\d{2}$";
+assert(phase33.includes(emPattern) && phase33.includes(efPattern), 'staging e aprovação usam padrões EM/EF estritos');
+assert(phase33.includes("when codigo ~ '^EM\\d{2}[A-Z]{2}\\d{2}$' then 'habilidade'") && phase33.includes("when codigo ~ '^EF\\d{2}[A-Z]{2}\\d{2}$' then 'referencia_ensino_fundamental'"), 'staging deriva o tipo pelo código');
+assert(phase33.includes("'ensino_medio'") && phase33.includes("'ensino_fundamental'"), 'staging grava a etapa correspondente');
+assert(phase33.includes("case when tipo_seguro = 'referencia_ensino_fundamental' then 'revisar'"), 'referência EF volta para revisão');
+assert(phase33.includes("set payload = payload_seguro, tipo = coalesce(tipo_seguro, tipo)"), 'edição atualiza tipo junto com payload');
+assert(phase33.includes("payload_seguro := jsonb_set(payload_seguro, '{etapa}'") && phase33.includes("status_seguro := 'revisar'"), 'edição reclassifica a etapa e o status EF');
+assert(phase33.includes("and upper(payload ->> 'codigo') ~ '^EM\\d{2}[A-Z]{2}\\d{2}$'"), 'guard de aprovação exige código EM válido');
+assert(phase33.includes("and tipo = 'habilidade'\n      and status in ('ok', 'aprovado')\n      and upper(payload ->> 'codigo') ~ '^EM\\d{2}[A-Z]{2}\\d{2}$'"), 'guard ignora EF forjado como habilidade');
+assert(phase33.includes("for item in select payload from public.importacoes_curriculo_itens where importacao_id = imp.id and tipo = 'habilidade' and status in ('ok', 'aprovado') and upper(payload ->> 'codigo') ~ '^EM\\d{2}[A-Z]{2}\\d{2}$' loop"), 'materialização final só percorre habilidades EM');
+assert(phase33.indexOf("raise exception 'Nenhuma habilidade aprovada para publicação'") < phase33.indexOf('insert into public.curriculos'), 'bloqueio EF ocorre antes da criação do currículo');
+assert(!phase33.includes("upper(item ->> 'codigo') ~ '^EF"), 'nenhum código EF é inserido no catálogo principal');
 console.log('OK segurança curricular: RLS, staging, idempotência, concorrência, Storage, validação e segredos.');
-console.log('Smoke/static Fase 3.2: cobre p_texto nulo/vazio, publicação sem aprovadas, rejeitadas, mistura aprovada/rejeitada e ordem do guard. Sem PostgreSQL/Supabase real, não são testes comportamentais.');
+console.log('Smoke/static Fases 3.2 e 3.3: cobre p_texto nulo/vazio, classificação EM/EF, edição bidirecional, publicação sem EM aprovada, mistura aprovada/rejeitada e defesa final. Sem PostgreSQL/Supabase real, não são testes comportamentais.');
