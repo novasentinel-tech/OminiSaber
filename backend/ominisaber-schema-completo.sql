@@ -6,7 +6,7 @@
 begin;
 
 -- ============================================================================
--- ETAPA 1/25: schema/core.sql
+-- ETAPA 1/26: schema/core.sql
 -- ============================================================================
 
 -- OminiSaber | Schema Supabase
@@ -792,7 +792,7 @@ grant execute on function public.aluno_pode_acessar_materia(public.materia_aluno
 -- O arquivo separado permite atualizar bases existentes sem recriar o schema principal.
 
 -- ============================================================================
--- ETAPA 2/25: migrations/20260831_acesso_materias_aluno.sql
+-- ETAPA 2/26: migrations/20260831_acesso_materias_aluno.sql
 -- ============================================================================
 
 do $$ begin
@@ -960,7 +960,7 @@ create policy trilhas_select on public.trilhas for select to authenticated using
 );
 
 -- ============================================================================
--- ETAPA 3/25: schema/configuracoes.sql
+-- ETAPA 3/26: schema/configuracoes.sql
 -- ============================================================================
 
 -- Preferencias e dados editaveis do perfil do aluno.
@@ -987,7 +987,7 @@ drop trigger if exists perfis_updated_at on public.perfis;
 drop function if exists public.atualizar_perfil_updated_at();
 
 -- ============================================================================
--- ETAPA 4/25: schema/biblioteca.sql
+-- ETAPA 4/26: schema/biblioteca.sql
 -- ============================================================================
 
 -- OminiSaber | Biblioteca digital e leituras do aluno
@@ -1302,7 +1302,7 @@ create trigger set_exemplares_updated_at before update on public.exemplares
 for each row execute function public.set_updated_at();
 
 -- ============================================================================
--- ETAPA 5/25: schema/estoque-etapa1.sql
+-- ETAPA 5/26: schema/estoque-etapa1.sql
 -- ============================================================================
 
 -- OminiSaber | Migracao da Etapa 1: autores, obras e exemplares
@@ -1417,7 +1417,7 @@ create trigger set_autores_updated_at before update on public.autores
 for each row execute function public.set_updated_at();
 
 -- ============================================================================
--- ETAPA 6/25: schema/estoque-etapa2.sql
+-- ETAPA 6/26: schema/estoque-etapa2.sql
 -- ============================================================================
 
 -- OminiSaber | Migracao da Etapa 2: secoes fisicas e alocacao
@@ -1521,7 +1521,7 @@ create trigger set_secoes_fisicas_updated_at before update on public.secoes_fisi
 for each row execute function public.set_updated_at();
 
 -- ============================================================================
--- ETAPA 7/25: schema/conquistas.sql
+-- ETAPA 7/26: schema/conquistas.sql
 -- ============================================================================
 
 -- OminiSaber | Catálogo e progresso de conquistas
@@ -1593,7 +1593,7 @@ revoke insert, update, delete on table public.conquistas from anon, authenticate
 revoke insert, update, delete on table public.conquistas_aluno from anon, authenticated;
 
 -- ============================================================================
--- ETAPA 8/25: schema/espacos-docentes.sql
+-- ETAPA 8/26: schema/espacos-docentes.sql
 -- ============================================================================
 
 -- OminiSaber | Espaços funcionais por especialidade docente
@@ -1998,7 +1998,7 @@ revoke all on public.laboratorios_docentes, public.avaliacoes_docentes, public.q
 grant select, insert, update, delete on public.laboratorios_docentes, public.avaliacoes_docentes, public.questoes_avaliacao, public.gabaritos_avaliacao, public.entregas_laboratorio, public.tentativas_avaliacao to authenticated;
 
 -- ============================================================================
--- ETAPA 9/25: migrations/20260831_trilhas_estudos_completos.sql
+-- ETAPA 9/26: migrations/20260831_trilhas_estudos_completos.sql
 -- ============================================================================
 
 create schema if not exists private authorization postgres;
@@ -2418,7 +2418,7 @@ create trigger set_anotacoes_aula_updated_at before update on public.anotacoes_a
 for each row execute function public.set_updated_at();
 
 -- ============================================================================
--- ETAPA 10/25: migrations/20260831_redacao_jornada_completa.sql
+-- ETAPA 10/26: migrations/20260831_redacao_jornada_completa.sql
 -- ============================================================================
 
 create schema if not exists private authorization postgres;
@@ -2786,7 +2786,7 @@ create trigger set_avaliacoes_competencias_redacao_updated_at before update on p
 for each row execute function public.set_updated_at();
 
 -- ============================================================================
--- ETAPA 11/25: migrations/20260831_agenda_notificacoes.sql
+-- ETAPA 11/26: migrations/20260831_agenda_notificacoes.sql
 -- ============================================================================
 
 create extension if not exists pgcrypto;
@@ -3001,7 +3001,7 @@ begin
 end $$;
 
 -- ============================================================================
--- ETAPA 12/25: migrations/20260902_biblioteca_acervo_unificado.sql
+-- ETAPA 12/26: migrations/20260902_biblioteca_acervo_unificado.sql
 -- ============================================================================
 
 -- OminiSaber | Acervo físico, PDFs verificados e reserva transacional
@@ -3331,7 +3331,7 @@ begin
 end $$;
 
 -- ============================================================================
--- ETAPA 13/25: migrations/20260903_portal_gestor.sql
+-- ETAPA 13/26: migrations/20260903_portal_gestor.sql
 -- ============================================================================
 
 alter table public.perfis add column if not exists email_contato text;
@@ -3442,7 +3442,7 @@ grant select, insert on public.solicitacoes_acesso to authenticated;
 grant select on public.gestor_auditoria to authenticated;
 
 -- ============================================================================
--- ETAPA 14/25: migrations/20260903_importacao_curricular.sql
+-- ETAPA 14/26: migrations/20260903_importacao_curricular.sql
 -- ============================================================================
 
 alter table public.descritores_curriculares
@@ -3679,7 +3679,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 15/25: migrations/20260903_importacao_curricular_fase1.sql
+-- ETAPA 15/26: migrations/20260903_importacao_curricular_fase1.sql
 -- ============================================================================
 
 alter table public.importacoes_curriculo
@@ -3773,7 +3773,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 16/25: migrations/20260903_importacao_curricular_fase2.sql
+-- ETAPA 16/26: migrations/20260903_importacao_curricular_fase2.sql
 -- ============================================================================
 
 alter table public.importacoes_curriculo_itens
@@ -3783,7 +3783,7 @@ alter table public.importacoes_curriculo_itens
   check (tipo in ('habilidade','referencia_ensino_fundamental','descritor','aviso'));
 
 -- ============================================================================
--- ETAPA 17/25: migrations/20260903_importacao_curricular_fase3.sql
+-- ETAPA 17/26: migrations/20260903_importacao_curricular_fase3.sql
 -- ============================================================================
 
 create table if not exists public.documentos_curriculares (
@@ -4019,7 +4019,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 18/25: migrations/20260903_importacao_curricular_fase3_1.sql
+-- ETAPA 18/26: migrations/20260903_importacao_curricular_fase3_1.sql
 -- ============================================================================
 
 create or replace function public.aprovar_importacao_curriculo(p_importacao_id uuid) returns uuid language plpgsql security definer set search_path = '' as $$
@@ -4063,7 +4063,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 19/25: migrations/20260903_redacoes_avaliacoes_portugues.sql
+-- ETAPA 19/26: migrations/20260903_redacoes_avaliacoes_portugues.sql
 -- ============================================================================
 
 -- Rascunhos privados da devolutiva. A redação do aluno permanece imutável até
@@ -4228,7 +4228,7 @@ revoke all on function public.corrigir_redacao(uuid,numeric,text,jsonb,jsonb) fr
 grant execute on function public.corrigir_redacao(uuid,numeric,text,jsonb,jsonb) to authenticated;
 
 -- ============================================================================
--- ETAPA 20/25: migrations/20260904_importacao_curricular_fase3_2.sql
+-- ETAPA 20/26: migrations/20260904_importacao_curricular_fase3_2.sql
 -- ============================================================================
 
 create or replace function public.criar_importacao_curriculo(
@@ -4305,14 +4305,14 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 21/25: migrations/20260904_importacao_curricular_correcao_policy.sql
+-- ETAPA 21/26: migrations/20260904_importacao_curricular_correcao_policy.sql
 -- ============================================================================
 
 drop policy if exists objetos_leitura on public.objetos_conhecimento;
 create policy objetos_leitura on public.objetos_conhecimento for select to authenticated using (exists (select 1 from public.habilidade_objetos ho join public.curriculo_periodos p on p.id = ho.periodo_id join public.curriculos c on c.id = p.curriculo_id where ho.objeto_id = public.objetos_conhecimento.id and (c.status = 'publicado' or (select public.usuario_role()) = 'gestor')));
 
 -- ============================================================================
--- ETAPA 22/25: migrations/20260904_importacao_curricular_fase3_3.sql
+-- ETAPA 22/26: migrations/20260904_importacao_curricular_fase3_3.sql
 -- ============================================================================
 
 create or replace function public.criar_importacao_curriculo(
@@ -4454,7 +4454,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 23/25: migrations/20260904_importacao_curricular_fase3_4.sql
+-- ETAPA 23/26: migrations/20260904_importacao_curricular_fase3_4.sql
 -- ============================================================================
 
 create or replace function public.aprovar_importacao_curriculo(p_importacao_id uuid) returns uuid language plpgsql security definer set search_path = '' as $$
@@ -4591,7 +4591,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 24/25: migrations/20260904_importacao_curricular_fase3_5.sql
+-- ETAPA 24/26: migrations/20260904_importacao_curricular_fase3_5.sql
 -- ============================================================================
 
 create or replace function public.aprovar_importacao_curriculo(p_importacao_id uuid) returns uuid language plpgsql security definer set search_path = '' as $$
@@ -4802,7 +4802,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 25/25: migrations/20260905_integracao_curricular_fase4.sql
+-- ETAPA 25/26: migrations/20260905_integracao_curricular_fase4.sql
 -- ============================================================================
 
 create table if not exists public.questoes_avaliacao_habilidades (
@@ -5075,6 +5075,147 @@ $$;
 
 revoke all on function public.cobertura_curricular(public.materia_aluno, smallint, smallint, uuid, uuid) from public, anon, authenticated;
 grant execute on function public.cobertura_curricular(public.materia_aluno, smallint, smallint, uuid, uuid) to authenticated;
+
+-- ============================================================================
+-- ETAPA 26/26: migrations/20260905_integracao_curricular_fase4_1.sql
+-- ============================================================================
+
+create or replace function public.habilidade_compativel_com_materia(
+  p_habilidade_id uuid,
+  p_materia public.materia_aluno
+)
+returns boolean
+language sql
+stable
+security invoker
+set search_path = ''
+as $$
+  select exists (
+    select 1
+    from public.habilidades_curriculares h
+    join public.habilidade_curriculo_periodos hcp on hcp.habilidade_id = h.id
+    join public.curriculo_periodos cp on cp.id = hcp.periodo_id
+    join public.curriculos c on c.id = cp.curriculo_id
+    where h.id = p_habilidade_id
+      and h.materia_codigo = p_materia
+      and h.codigo ~ '^EM\d{2}[A-Z]{2}\d{2}$'
+      and c.status = 'publicado'
+      and c.ativo = true
+  );
+$$;
+
+revoke all on function public.habilidade_compativel_com_materia(uuid, public.materia_aluno) from public, anon;
+grant execute on function public.habilidade_compativel_com_materia(uuid, public.materia_aluno) to authenticated;
+
+drop policy if exists questoes_avaliacao_habilidades_select on public.questoes_avaliacao_habilidades;
+create policy questoes_avaliacao_habilidades_select on public.questoes_avaliacao_habilidades for select to authenticated using (
+  public.habilidade_compativel_com_materia(
+    habilidade_id,
+    (select a.tipo_professor::text::public.materia_aluno
+     from public.questoes_avaliacao q
+     join public.avaliacoes_docentes a on a.id = q.avaliacao_id
+     where q.id = questao_id)
+  )
+  and (
+    (select public.usuario_role()) = 'gestor'
+    or exists (
+      select 1 from public.questoes_avaliacao q
+      join public.avaliacoes_docentes a on a.id = q.avaliacao_id
+      where q.id = questao_id and (
+        a.professor_id = (select auth.uid())
+        or (a.status = 'publicado' and a.turma_id = (select public.usuario_turma_id()))
+      )
+    )
+  )
+);
+drop policy if exists questoes_avaliacao_habilidades_manage on public.questoes_avaliacao_habilidades;
+create policy questoes_avaliacao_habilidades_manage on public.questoes_avaliacao_habilidades for all to authenticated
+using (
+  public.habilidade_compativel_com_materia(
+    habilidade_id,
+    (select a.tipo_professor::text::public.materia_aluno
+     from public.questoes_avaliacao q
+     join public.avaliacoes_docentes a on a.id = q.avaliacao_id
+     where q.id = questao_id)
+  )
+  and ((select public.usuario_role()) = 'gestor' or exists (select 1 from public.questoes_avaliacao q join public.avaliacoes_docentes a on a.id = q.avaliacao_id where q.id = questao_id and a.professor_id = (select auth.uid()) and a.status = 'rascunho'))
+)
+with check (
+  public.habilidade_compativel_com_materia(
+    habilidade_id,
+    (select a.tipo_professor::text::public.materia_aluno
+     from public.questoes_avaliacao q
+     join public.avaliacoes_docentes a on a.id = q.avaliacao_id
+     where q.id = questao_id)
+  )
+  and ((select public.usuario_role()) = 'gestor' or exists (select 1 from public.questoes_avaliacao q join public.avaliacoes_docentes a on a.id = q.avaliacao_id where q.id = questao_id and a.professor_id = (select auth.uid()) and a.status = 'rascunho' and a.tipo_professor::text = (select public.usuario_tipo_professor())::text))
+);
+
+drop policy if exists laboratorios_docentes_habilidades_select on public.laboratorios_docentes_habilidades;
+create policy laboratorios_docentes_habilidades_select on public.laboratorios_docentes_habilidades for select to authenticated using (
+  public.habilidade_compativel_com_materia(
+    habilidade_id,
+    (select l.tipo_professor::text::public.materia_aluno from public.laboratorios_docentes l where l.id = laboratorio_id)
+  )
+  and ((select public.usuario_role()) = 'gestor' or exists (select 1 from public.laboratorios_docentes l where l.id = laboratorio_id and (l.professor_id = (select auth.uid()) or (l.status = 'publicado' and l.turma_id = (select public.usuario_turma_id())))))
+);
+drop policy if exists laboratorios_docentes_habilidades_manage on public.laboratorios_docentes_habilidades;
+create policy laboratorios_docentes_habilidades_manage on public.laboratorios_docentes_habilidades for all to authenticated
+using (
+  public.habilidade_compativel_com_materia(
+    habilidade_id,
+    (select l.tipo_professor::text::public.materia_aluno from public.laboratorios_docentes l where l.id = laboratorio_id)
+  )
+  and ((select public.usuario_role()) = 'gestor' or exists (select 1 from public.laboratorios_docentes l where l.id = laboratorio_id and l.professor_id = (select auth.uid()) and l.status = 'rascunho'))
+)
+with check (
+  public.habilidade_compativel_com_materia(
+    habilidade_id,
+    (select l.tipo_professor::text::public.materia_aluno from public.laboratorios_docentes l where l.id = laboratorio_id)
+  )
+  and ((select public.usuario_role()) = 'gestor' or exists (select 1 from public.laboratorios_docentes l where l.id = laboratorio_id and l.professor_id = (select auth.uid()) and l.status = 'rascunho' and l.tipo_professor::text = (select public.usuario_tipo_professor())::text))
+);
+
+drop policy if exists atividades_habilidades_select on public.atividades_habilidades;
+create policy atividades_habilidades_select on public.atividades_habilidades for select to authenticated using (
+  public.habilidade_compativel_com_materia(
+    habilidade_id,
+    (select t.materia_codigo from public.atividades a join public.trilhas t on t.id = a.trilha_id where a.id = atividade_id)
+  )
+  and ((select public.usuario_role()) = 'gestor' or exists (select 1 from public.atividades a join public.trilhas t on t.id = a.trilha_id where a.id = atividade_id and (t.professor_id = (select auth.uid()) or (t.publicada = true and (t.turma_id is null or t.turma_id = (select public.usuario_turma_id()))))))
+);
+drop policy if exists atividades_habilidades_manage on public.atividades_habilidades;
+create policy atividades_habilidades_manage on public.atividades_habilidades for all to authenticated
+using (
+  public.habilidade_compativel_com_materia(
+    habilidade_id,
+    (select t.materia_codigo from public.atividades a join public.trilhas t on t.id = a.trilha_id where a.id = atividade_id)
+  )
+  and ((select public.usuario_role()) = 'gestor' or exists (select 1 from public.atividades a join public.trilhas t on t.id = a.trilha_id where a.id = atividade_id and t.professor_id = (select auth.uid())))
+)
+with check (
+  public.habilidade_compativel_com_materia(
+    habilidade_id,
+    (select t.materia_codigo from public.atividades a join public.trilhas t on t.id = a.trilha_id where a.id = atividade_id)
+  )
+  and ((select public.usuario_role()) = 'gestor' or exists (select 1 from public.atividades a join public.trilhas t on t.id = a.trilha_id where a.id = atividade_id and t.professor_id = (select auth.uid()) and t.materia_codigo::text = (select public.usuario_tipo_professor())::text))
+);
+
+drop policy if exists propostas_redacao_habilidades_select on public.propostas_redacao_habilidades;
+create policy propostas_redacao_habilidades_select on public.propostas_redacao_habilidades for select to authenticated using (
+  public.habilidade_compativel_com_materia(habilidade_id, 'portugues'::public.materia_aluno)
+  and ((select public.usuario_role()) = 'gestor' or exists (select 1 from public.propostas_redacao p where p.id = proposta_id and (p.professor_id = (select auth.uid()) or (p.publicada = true and (p.turma_id is null or p.turma_id = (select public.usuario_turma_id()))))))
+);
+drop policy if exists propostas_redacao_habilidades_manage on public.propostas_redacao_habilidades;
+create policy propostas_redacao_habilidades_manage on public.propostas_redacao_habilidades for all to authenticated
+using (
+  public.habilidade_compativel_com_materia(habilidade_id, 'portugues'::public.materia_aluno)
+  and ((select public.usuario_role()) = 'gestor' or exists (select 1 from public.propostas_redacao p where p.id = proposta_id and p.professor_id = (select auth.uid()) and p.publicada = false))
+)
+with check (
+  public.habilidade_compativel_com_materia(habilidade_id, 'portugues'::public.materia_aluno)
+  and ((select public.usuario_role()) = 'gestor' or exists (select 1 from public.propostas_redacao p where p.id = proposta_id and p.professor_id = (select auth.uid()) and p.publicada = false))
+);
 
 commit;
 

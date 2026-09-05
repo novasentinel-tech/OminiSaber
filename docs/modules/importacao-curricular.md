@@ -39,6 +39,8 @@ Na Fase 3.4, `curriculos` representa o currículo anual e o trimestre pertence a
 
 Na Fase 3.5, um reprocessamento explícito cria uma nova versão anual completa. Ele herda da versão publicada anterior os períodos e vínculos não afetados, substitui somente as chaves `série + trimestre` presentes na nova importação e publica a nova versão apenas após a composição inteira concluir. A versão anterior só é arquivada depois desse sucesso; se qualquer materialização falhar, a transação mantém a versão anterior intacta e não deixa uma versão parcial publicada.
 
+Na Fase 4.1, o banco também valida a compatibilidade entre a matéria do recurso pedagógico e a matéria da habilidade. Questões e laboratórios usam `tipo_professor`, atividades usam `trilhas.materia_codigo` e propostas de redação usam Português, pois não possuem componente curricular próprio. Uma habilidade EM publicada de outra matéria é rejeitada pelas policies, inclusive quando o vínculo é tentado diretamente por um cliente ou pelo Gestor.
+
 O servidor valida extensão, MIME, tamanho, assinatura `%PDF-`, marcador `%%EOF` e SHA-256. O texto extraído continua sendo produzido pelo PDF.js no cliente e armazenado como dado não confiável; esta Edge Function não faz parsing completo de PDF nem confirma texto selecionável. Essa validação deve ser adicionada em uma etapa posterior com runtime de parsing/OCR apropriado.
 
 ### Dívidas técnicas da Fase 1
