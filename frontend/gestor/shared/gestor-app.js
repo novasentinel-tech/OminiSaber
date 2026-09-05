@@ -419,9 +419,9 @@
       content().innerHTML = `<div class="panel"><h2>Analisando currículo...</h2><p id="import-progress">Documento recebido</p></div>`;
       try {
         if (!window.pdfjsLib) throw new Error("O extrator de PDF não está disponível.");
-        const document = await window.pdfjsLib.getDocument({ data: await data.file.arrayBuffer() }).promise;
+        const pdfDocument = await window.pdfjsLib.getDocument({ data: await data.file.arrayBuffer() }).promise;
         const pages = [];
-        for (let pageNumber = 1; pageNumber <= document.numPages; pageNumber += 1) { const page = await document.getPage(pageNumber); const text = await page.getTextContent(); pages.push({ items: text.items.map((item) => ({ str: item.str, transform: item.transform, width: item.width, height: item.height })) }); document.querySelector("#import-progress").textContent = `Texto extraído: página ${pageNumber} de ${document.numPages}`; }
+        for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) { const page = await pdfDocument.getPage(pageNumber); const text = await page.getTextContent(); pages.push({ items: text.items.map((item) => ({ str: item.str, transform: item.transform, width: item.width, height: item.height })) }); document.querySelector("#import-progress").textContent = `Texto extraído: página ${pageNumber} de ${pdfDocument.numPages}`; }
         const parsed = window.OminiSaberCurriculumParser.parseCurriculumPages(pages, data);
         const extractedText = pages.map((page) => page.items.map((item) => item.str).join("\n")).join("\n\f\n");
         const result = await api().createCurriculumImport({ ...data, materia: data.materia || parsed.detected.materia_codigo, resumo: parsed.resumo, texto: extractedText }, parsed.items);
