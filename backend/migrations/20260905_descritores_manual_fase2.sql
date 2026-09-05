@@ -52,7 +52,7 @@ begin
     if serie_num not between 1 and 3 or trimestre_num not between 1 and 3 then raise exception 'Série ou trimestre inválido no item %', contador; end if;
     if status_text not in ('ativo', 'revisao', 'arquivado') then raise exception 'Status inválido no item %', contador; end if;
     if codigo = any(codigos) then raise exception 'Código % repetido no lote', codigo; end if;
-    if exists (select 1 from public.descritores_curriculares dc where dc.codigo = batch_fn.codigo) then raise exception 'Código % já cadastrado', batch_fn.codigo; end if;
+    if exists (select 1 from public.descritores_curriculares dc where dc.codigo = codigo) then raise exception 'Código % já cadastrado', codigo; end if;
     codigos := array_append(codigos, codigo);
 
     if habilidade_id is not null then

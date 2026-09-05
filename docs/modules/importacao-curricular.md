@@ -45,7 +45,11 @@ Na Fase 4.1, o banco também valida a compatibilidade entre a matéria do recurs
 
 O Portal Gestor possui um wizard funcional de três etapas para cadastrar de 1 a 5 descritores por vez. O cadastro reutiliza `descritores_curriculares` e, quando selecionada, relaciona uma habilidade existente por `habilidade_descritores` no período publicado correspondente. A edição individual existente continua disponível.
 
-Nesta fase, expectativas, objetos de conhecimento, habilidade da computação e observações ficam apenas no estado temporário do wizard, porque o modelo atual os relaciona a habilidades/períodos e não oferece uma estrutura própria para cadastro manual de descritor. O salvamento usa chamadas sequenciais; atomicidade de lote, validações server-side adicionais e normalização serão tratadas na Fase 2. A importação automática por PDF permanece disponível no backend, mas está temporariamente desabilitada na interface.
+Nesta fase, expectativas, objetos de conhecimento, habilidade da computação e observações não aparecem no wizard porque o modelo atual os relaciona a habilidades/períodos e não oferece uma estrutura própria para cadastro manual de descritor. O salvamento é feito por uma RPC única transacional, que valida o lote, resolve o período no banco, persiste vínculos e registra auditoria. A edição individual usa uma RPC atômica separada. A importação automática por PDF permanece disponível no backend, mas está temporariamente desabilitada na interface.
+
+## Cadastro manual de descritores — Fase 2
+
+A Fase 2 substitui as gravações diretas do cliente por `salvar_descritores_curriculares_lote`, para que 1 a 5 descritores sejam validados e persistidos em uma única transação. A habilidade opcional é validada por matéria e por série/trimestre em currículo publicado e ativo; o `periodo_id` é resolvido exclusivamente no banco. A edição usa `atualizar_descritor_curricular`, que atualiza o descritor e recria/remova o vínculo de habilidade atomicamente. Falhas causam rollback completo do lote ou da edição.
 
 O servidor valida extensão, MIME, tamanho, assinatura `%PDF-`, marcador `%%EOF` e SHA-256. O texto extraído continua sendo produzido pelo PDF.js no cliente e armazenado como dado não confiável; esta Edge Function não faz parsing completo de PDF nem confirma texto selecionável. Essa validação deve ser adicionada em uma etapa posterior com runtime de parsing/OCR apropriado.
 
