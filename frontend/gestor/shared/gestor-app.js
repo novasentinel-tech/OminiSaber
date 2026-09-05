@@ -385,7 +385,80 @@
   };
   const descriptorsPage = async () => {
     const rows = await api().listManagerDescriptors();
-    content().innerHTML = `<div class="page-head"><div><h2>Descritores curriculares</h2><p>Referência institucional para trilhas e avaliações.</p></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="import-curriculum">${icon("upload_file")} Importar currículo</button><button class="btn btn-primary" id="new">${icon("add")} Novo descritor</button></div></div><div class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Código</th><th>Título</th><th>Matéria</th><th>Série / Trimestre</th><th>Status</th><th></th></tr></thead><tbody>${rows.map((x) => `<tr><td><b>${esc(x.codigo)}</b></td><td>${esc(x.titulo)}</td><td>${esc(x.materia_codigo)}</td><td>${x.serie ? `${x.serie}º` : "—"} · ${x.trimestre ? `${x.trimestre}º tri` : "—"}</td><td>${status(x.status === "ativo", x.status, x.status)}</td><td><button class="btn edit" data-id="${x.id}">Editar</button></td></tr>`).join("")}</tbody></table>${rows.length ? "" : empty("Cadastre os descritores oficiais.")}</div></div>`;
+    content().innerHTML = `<div class="page-head"><div><h2>Descritores curriculares</h2><p>Referência institucional para trilhas e avaliações.</p></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="import-curriculum" disabled title="Importação automática em manutenção">${icon("upload_file")} Importação automática em manutenção</button><button class="btn btn-primary" id="new">${icon("add")} Novo descritor</button></div></div><div class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Código</th><th>Título</th><th>Matéria</th><th>Série / Trimestre</th><th>Status</th><th></th></tr></thead><tbody>${rows.map((x) => `<tr><td><b>${esc(x.codigo)}</b></td><td>${esc(x.titulo)}</td><td>${esc(x.materia_codigo)}</td><td>${x.serie ? `${x.serie}º` : "—"} · ${x.trimestre ? `${x.trimestre}º tri` : "—"}</td><td>${status(x.status === "ativo", x.status, x.status)}</td><td><button class="btn edit" data-id="${x.id}">Editar</button></td></tr>`).join("")}</tbody></table>${rows.length ? "" : empty("Cadastre os descritores oficiais.")}</div></div>`;
+    const wizardState = { step: 1, quantity: 1, descriptors: [] };
+    const materiaOptions = `<option value="">Selecione</option><option value="portugues">Português</option><option value="matematica">Matemática</option><option value="fisica">Física</option><option value="redacao">Redação</option><option value="tecnico_administracao">Administração</option><option value="tecnico_informatica">Informática</option>`;
+    const wizard = document.createElement("div");
+    wizard.className = "modal-backdrop";
+    wizard.innerHTML = `<form class="modal descriptor-wizard" style="max-width:900px"><div class="modal-head"><h2>Cadastro manual de descritores</h2><button type="button" class="icon-btn" data-wizard-close>${icon("close")}</button></div><div data-wizard-body></div><div class="modal-actions"><span data-wizard-error class="error-text"></span><button type="button" class="btn" data-wizard-prev>Anterior</button><button type="button" class="btn" data-wizard-cancel>Cancelar</button><button type="submit" class="btn btn-primary" data-wizard-submit>Continuar</button></div></form>`;
+    const closeWizard = () => wizard.remove();
+    const wizardBody = () => wizard.querySelector("[data-wizard-body]");
+    const wizardError = (message = "") => { wizard.querySelector("[data-wizard-error]").textContent = message; };
+    const validateStep1 = () => {
+      const titles = wizardState.descriptors.map((item) => String(item.title || "").trim());
+      if (!titles.every((title) => title.length >= 3)) return "Preencha todos os títulos com pelo menos 3 caracteres.";
+      wizardState.descriptors.forEach((item, index) => { item.title = titles[index]; });
+      return null;
+    };
+    const validateStep2 = () => {
+      const current = wizardState.descriptors[wizardState.currentIndex];
+      if (!current) return "Descritor inválido.";
+      if (!["title", "code", "materia", "serie", "trimestre", "description", "status"].every((field) => String(current[field] ?? "").trim())) return "Preencha título, código, matéria, série, trimestre, descrição e status.";
+      if (!/^D\d{3}(?:_[A-Z])?$/.test(current.code)) return "Use um código no formato D023_P.";
+      if (wizardState.descriptors.some((item, index) => index !== wizardState.currentIndex && item.code === current.code)) return "Não repita o código dentro deste wizard.";
+      return null;
+    };
+    const syncStep2 = () => {
+      const current = wizardState.descriptors[wizardState.currentIndex];
+      if (!current) return;
+      const form = wizardBody().querySelector("[data-step-form]");
+      if (!form) return;
+      const values = new FormData(form);
+      ["title", "code", "materia", "serie", "trimestre", "description", "status", "habilidade_id", "expectativa", "objetos", "habilidadeComputacao", "observacoes"].forEach((field) => { current[field] = values.get(field) || ""; });
+      current.serie = current.serie ? Number(current.serie) : null;
+      current.trimestre = current.trimestre ? Number(current.trimestre) : null;
+    };
+    const renderWizard = async () => {
+      wizardError();
+      const submit = wizard.querySelector("[data-wizard-submit]");
+      if (wizardState.step === 1) {
+        wizardBody().innerHTML = `<p>Etapa 1 de 3</p><label>Quantos descritores deseja cadastrar?<select class="field" name="quantity">${[1, 2, 3, 4, 5].map((value) => `<option value="${value}" ${value === wizardState.quantity ? "selected" : ""}>${value}</option>`).join("")}</select></label><div class="form-grid" data-title-list>${wizardState.descriptors.map((item, index) => `<label>Descritor ${index + 1} — Título<input class="field" data-title-index="${index}" value="${esc(item.title)}" minlength="3" required></label>`).join("")}</div>`;
+        wizardBody().querySelector("[name=quantity]").onchange = (event) => { wizardState.quantity = Number(event.target.value); while (wizardState.descriptors.length < wizardState.quantity) wizardState.descriptors.push({ title: "", code: "", materia: "", serie: "", trimestre: "", description: "", status: "revisao", habilidade_id: "", expectativa: "", objetos: "", habilidadeComputacao: "", observacoes: "" }); wizardState.descriptors.length = wizardState.quantity; renderWizard(); };
+        wizardBody().querySelectorAll("[data-title-index]").forEach((input) => { input.oninput = () => { wizardState.descriptors[Number(input.dataset.titleIndex)].title = input.value; }; });
+        submit.textContent = "Continuar";
+      } else if (wizardState.step === 2) {
+        const current = wizardState.descriptors[wizardState.currentIndex];
+        wizardBody().innerHTML = `<p>Etapa 2 de 3 · Descritor ${wizardState.currentIndex + 1} de ${wizardState.quantity}</p><nav class="descriptor-wizard-nav">${wizardState.descriptors.map((item, index) => `<button type="button" class="btn ${index === wizardState.currentIndex ? "btn-primary" : ""}" data-descriptor-index="${index}">${index + 1}. ${esc(item.title || "Sem título")}</button>`).join("")}</nav><div class="form-grid" data-step-form><label>Título<input class="field" name="title" value="${esc(current.title)}" required></label><label>Código<input class="field" name="code" value="${esc(current.code)}" placeholder="D023_P" required></label><label>Matéria<select class="field" name="materia" required>${materiaOptions.replace(`value="${current.materia}"`, `value="${current.materia}" selected`)}</select></label><label>Série<select class="field" name="serie" required><option value="">Selecione</option>${[1, 2, 3].map((value) => `<option value="${value}" ${Number(current.serie) === value ? "selected" : ""}>${value}ª série</option>`).join("")}</select></label><label>Trimestre<select class="field" name="trimestre" required><option value="">Selecione</option>${[1, 2, 3].map((value) => `<option value="${value}" ${Number(current.trimestre) === value ? "selected" : ""}>${value}º trimestre</option>`).join("")}</select></label><label>Status<select class="field" name="status" required><option value="revisao" ${current.status === "revisao" ? "selected" : ""}>Em revisão</option><option value="ativo" ${current.status === "ativo" ? "selected" : ""}>Ativo</option><option value="arquivado" ${current.status === "arquivado" ? "selected" : ""}>Arquivado</option></select></label><label class="wide">Descrição<textarea class="field" name="description" rows="4" required>${esc(current.description)}</textarea></label><label class="wide">Habilidade curricular relacionada<select class="field" name="habilidade_id"><option value="">Sem habilidade relacionada</option></select></label></div>`;
+        const skillSelect = wizardBody().querySelector("[name=habilidade_id]");
+        wizardBody().querySelectorAll("[name=materia],[name=serie],[name=trimestre]").forEach((field) => { field.onchange = () => { syncStep2(); renderWizard(); }; });
+        try { const skills = await api().listManagerCurriculumSkills({ materia: current.materia, serie: current.serie, trimestre: current.trimestre }); skillSelect.innerHTML += skills.map((skill) => `<option value="${skill.habilidade_id}" ${current.habilidade_id === skill.habilidade_id ? "selected" : ""}>${esc(skill.codigo)} — ${esc(skill.descricao)}</option>`).join(""); } catch (error) { wizardError(error.message); }
+        wizardBody().querySelectorAll("[data-descriptor-index]").forEach((button) => { button.onclick = () => { syncStep2(); wizardState.currentIndex = Number(button.dataset.descriptorIndex); renderWizard(); }; });
+        submit.textContent = wizardState.currentIndex === wizardState.quantity - 1 ? "Revisar" : "Próximo";
+      } else {
+        wizardBody().innerHTML = `<p>Etapa 3 de 3 · Revise os descritores antes de salvar.</p>${wizardState.descriptors.map((item, index) => `<section class="panel"><h3>${index + 1}. ${esc(item.title)}</h3><p><b>${esc(item.code)}</b> · ${esc(item.materia)} · ${item.serie}ª série · ${item.trimestre}º trimestre · ${esc(item.status)}</p><p>${esc(item.description)}</p><p>Habilidade: ${item.habilidade_id ? "Selecionada" : "Sem habilidade relacionada"}</p><button type="button" class="btn" data-edit-descriptor="${index}">Editar este descritor</button></section>`).join("")}`;
+        wizardBody().querySelectorAll("[data-edit-descriptor]").forEach((button) => { button.onclick = () => { wizardState.currentIndex = Number(button.dataset.editDescriptor); wizardState.step = 2; renderWizard(); }; });
+        submit.textContent = `Salvar ${wizardState.quantity} descritor${wizardState.quantity === 1 ? "" : "es"}`;
+      }
+      const previous = wizard.querySelector("[data-wizard-prev]");
+      previous.hidden = wizardState.step === 1;
+      previous.onclick = () => {
+        if (wizardState.step === 3) { wizardState.step = 2; wizardState.currentIndex = wizardState.quantity - 1; }
+        else if (wizardState.step === 2) { syncStep2(); if (wizardState.currentIndex > 0) wizardState.currentIndex -= 1; else wizardState.step = 1; }
+        renderWizard();
+      };
+    };
+    const openWizard = () => {
+      wizardState.step = 1; wizardState.quantity = 1; wizardState.currentIndex = 0; wizardState.descriptors = [{ title: "", code: "", materia: "", serie: "", trimestre: "", description: "", status: "revisao", habilidade_id: "", expectativa: "", objetos: "", habilidadeComputacao: "", observacoes: "" }];
+      document.body.append(wizard); renderWizard();
+    };
+    wizard.querySelector("[data-wizard-close]").onclick = closeWizard;
+    wizard.querySelector("[data-wizard-cancel]").onclick = closeWizard;
+    wizard.querySelector("form").onsubmit = async (event) => {
+      event.preventDefault(); wizardError();
+      if (wizardState.step === 1) { const error = validateStep1(); if (error) return wizardError(error); wizardState.step = 2; wizardState.currentIndex = 0; return renderWizard(); }
+      if (wizardState.step === 2) { syncStep2(); const error = validateStep2(); if (error) return wizardError(error); if (wizardState.currentIndex < wizardState.quantity - 1) { wizardState.currentIndex += 1; return renderWizard(); } wizardState.step = 3; return renderWizard(); }
+      try { for (let index = 0; index < wizardState.descriptors.length; index += 1) { const item = wizardState.descriptors[index]; wizardState.savingIndex = index; await api().saveManagerDescriptor(item); } closeWizard(); toast(`${wizardState.quantity} descritor${wizardState.quantity === 1 ? "" : "es"} cadastrado${wizardState.quantity === 1 ? "" : "s"} com sucesso.`); await descriptorsPage(); } catch (error) { wizardError(`Falha no descritor ${(wizardState.savingIndex ?? 0) + 1}: ${error.message}`); }
+    };
     const review = async (importacao, parsed) => {
       const items = parsed.items.map((item, index) => ({ ...item, id: item.id || `local-${index}` }));
       const editItem = async (item) => {
@@ -432,7 +505,7 @@
     const open = async (x) => {
       const d = await modal(
         x ? "Editar descritor" : "Novo descritor",
-        `<div class="form-grid"><label>Código<input class="field" name="codigo" value="${esc(x?.codigo)}" required></label><label>Matéria<select class="field" name="materia_codigo"><option value="matematica">Matemática</option><option value="fisica">Física</option><option value="portugues_literatura">Português e Literatura</option><option value="redacao">Redação</option><option value="administracao">Administração</option><option value="informatica">Informática</option></select></label><label class="wide">Título<input class="field" name="titulo" value="${esc(x?.titulo)}" required></label><label>Série<select class="field" name="serie"><option>1</option><option>2</option><option>3</option></select></label><label>Trimestre<select class="field" name="trimestre"><option>1</option><option>2</option><option>3</option></select></label><label class="wide">Status<select class="field" name="status"><option value="ativo">Ativo</option><option value="revisao">Em revisão</option><option value="arquivado">Arquivado</option></select></label></div>`,
+        `<div class="form-grid"><label>Código<input class="field" name="codigo" value="${esc(x?.codigo)}" required></label><label>Matéria<select class="field" name="materia_codigo"><option value="portugues" ${x?.materia_codigo === "portugues" ? "selected" : ""}>Português</option><option value="matematica" ${x?.materia_codigo === "matematica" ? "selected" : ""}>Matemática</option><option value="fisica" ${x?.materia_codigo === "fisica" ? "selected" : ""}>Física</option><option value="redacao" ${x?.materia_codigo === "redacao" ? "selected" : ""}>Redação</option><option value="tecnico_administracao" ${x?.materia_codigo === "tecnico_administracao" ? "selected" : ""}>Administração</option><option value="tecnico_informatica" ${x?.materia_codigo === "tecnico_informatica" ? "selected" : ""}>Informática</option></select></label><label class="wide">Título<input class="field" name="titulo" value="${esc(x?.titulo)}" required></label><label>Série<select class="field" name="serie"><option>1</option><option>2</option><option>3</option></select></label><label>Trimestre<select class="field" name="trimestre"><option>1</option><option>2</option><option>3</option></select></label><label class="wide">Status<select class="field" name="status"><option value="ativo">Ativo</option><option value="revisao">Em revisão</option><option value="arquivado">Arquivado</option></select></label></div>`,
       );
       if (d) {
         await api().saveManagerDescriptor({ ...d, id: x?.id });
@@ -440,7 +513,7 @@
         descriptorsPage();
       }
     };
-    document.querySelector("#new").onclick = () => open();
+    document.querySelector("#new").onclick = openWizard;
     document
       .querySelectorAll(".edit")
       .forEach(
