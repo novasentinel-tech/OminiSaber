@@ -1,0 +1,30 @@
+import fs from 'node:fs';
+
+const migration = fs.readFileSync(new URL('../migrations/20260904_importacao_curricular_fase3_5.sql', import.meta.url), 'utf8');
+const composition = fs.readFileSync(new URL('../migrations/20260904_importacao_curricular_fase3_4.sql', import.meta.url), 'utf8');
+const build = fs.readFileSync(new URL('./build-complete-schema.js', import.meta.url), 'utf8');
+const assert = (condition, message) => { if (!condition) throw new Error(message); };
+
+const lockPosition = migration.indexOf('pg_advisory_xact_lock');
+const oldLookupPosition = migration.indexOf("select id into anterior_id");
+const newInsertPosition = migration.indexOf("values (\n      coalesce(imp.origem, 'Currículo importado')");
+const materializationPosition = migration.indexOf('for item in');
+const publishPosition = migration.indexOf("set status = 'publicado', ativo = true");
+const archivePosition = migration.indexOf("set status = 'arquivado', ativo = false");
+assert(migration.includes('imp.reprocessamento_de_id is not null') || migration.includes('imp.reprocessamento_de_id is null'), 'fluxos normal e reprocessamento são distinguidos');
+assert(migration.includes("select id into anterior_id") && migration.includes("status = 'publicado'") && migration.includes('ativo = true'), 'A localiza a versão publicada anterior');
+assert(lockPosition >= 0 && lockPosition < oldLookupPosition, 'I adquire advisory lock antes da busca da versão anterior');
+assert(migration.includes("status, criado_por, importacao_id)\n    values (\n      coalesce(imp.origem, 'Currículo importado')") && migration.includes("'rascunho'"), 'nova versão nasce transacionalmente como rascunho');
+assert(migration.includes('for periodo_anterior in') && migration.includes('if not periodo_afetado then'), 'A/C herdam períodos não afetados');
+assert(migration.includes("nullif(i.payload ->> 'serie', '')::smallint = periodo_anterior.serie") && migration.includes("coalesce(nullif(i.payload ->> 'trimestre', '')::smallint, imp.trimestre) = periodo_anterior.trimestre"), 'B/D identificam período afetado por série e trimestre');
+assert(migration.includes('habilidade_curriculo_periodos') && migration.includes('habilidade_descritores') && migration.includes('expectativas_aprendizagem') && migration.includes('habilidade_objetos'), 'A/C herdam todos os vínculos dependentes do período');
+assert(migration.includes('on conflict (curriculo_id, serie, trimestre) do update'), 'F não duplica períodos');
+assert(migration.includes('on conflict (habilidade_id, periodo_id) do update') && migration.includes('on conflict do nothing'), 'F não duplica vínculos');
+assert(migration.includes("upper(payload ->> 'codigo') ~ '^EM\\d{2}[A-Z]{2}\\d{2}$'"), 'H preserva a defesa EM da Fase 3.3');
+assert(materializationPosition >= 0 && materializationPosition < publishPosition, 'materialização ocorre antes da publicação');
+assert(publishPosition >= 0 && archivePosition > publishPosition, 'E arquiva somente após publicar a nova composição');
+assert(migration.includes('update public.importacoes_curriculo') && migration.includes('curriculo_id = curr_id'), 'importação fica vinculada à versão resultante');
+assert(composition.includes('if imp.reprocessamento_de_id is null then'), 'G preserva o reuso normal da Fase 3.4');
+assert(build.includes('20260904_importacao_curricular_fase3_5.sql'), 'Fase 3.5 incluída no build');
+console.log('OK reprocessamento curricular: herança anual, substituição por série/trimestre, publicação transacional, idempotência, concorrência e EM/EF.');
+console.log('Smoke/static Fase 3.5: cobre cenários A-I por invariantes SQL; sem PostgreSQL/Supabase real, não são testes comportamentais.');
