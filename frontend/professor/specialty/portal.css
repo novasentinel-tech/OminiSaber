@@ -521,6 +521,72 @@ textarea:focus {
   gap: 9px;
   margin-top: 20px;
 }
+
+.curriculum-picker {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  padding: 16px;
+  border: 1px solid var(--line, #dfe5ec);
+  border-radius: 12px;
+  background: var(--surface-muted, #f7f9fb);
+}
+
+.picker-heading,
+.picker-filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.picker-heading small {
+  color: var(--muted, #667085);
+}
+
+.picker-filters {
+  margin: 12px 0;
+  justify-content: stretch;
+}
+
+.picker-filters > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.curriculum-results {
+  display: grid;
+  gap: 8px;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.curriculum-result {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px;
+  border: 1px solid var(--line, #dfe5ec);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.curriculum-result > span {
+  display: grid;
+  gap: 3px;
+}
+
+.curriculum-result small {
+  color: var(--muted, #667085);
+}
+
+@media (max-width: 700px) {
+  .picker-heading,
+  .picker-filters {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
 .builder-sidebar {
   position: sticky;
   top: 132px;

@@ -39,6 +39,29 @@
     clearTimeout(node.timer);
     node.timer = setTimeout(() => node.classList.remove("visible"), 3600);
   };
+  const curriculumPickerMarkup = (id, classes = []) => `<section class="curriculum-picker" data-curriculum-picker="${id}"><div class="picker-heading"><div><p class="eyebrow">Currículo publicado</p><strong>Habilidades opcionais</strong></div><small>Busque por código, descrição ou descritor.</small></div><div class="picker-filters"><select class="field" data-curriculum-class><option value="">Todas as turmas</option>${classes.map((item) => `<option value="${item.id}">${escapeHtml(item.nome)}${item.serie ? ` · ${escapeHtml(item.serie)}` : ""}</option>`).join("")}</select><select class="field" data-curriculum-trimestre><option value="">Todos os trimestres</option><option value="1">1º trimestre</option><option value="2">2º trimestre</option><option value="3">3º trimestre</option></select><input class="field" type="search" data-curriculum-search placeholder="Ex.: EM13LP01 ou D023_P"></div><div class="curriculum-results" data-curriculum-results><small>Pesquise para carregar habilidades.</small></div></section>`;
+  const bindCurriculumPicker = (root, classes = []) => {
+    const picker = root.querySelector("[data-curriculum-picker]");
+    if (!picker) return { selected: () => [], clear: () => {} };
+    const selected = new Set();
+    const classField = picker.querySelector("[data-curriculum-class]");
+    const trimesterField = picker.querySelector("[data-curriculum-trimestre]");
+    const searchField = picker.querySelector("[data-curriculum-search]");
+    const result = picker.querySelector("[data-curriculum-results]");
+    const load = async () => {
+      const classItem = classes.find((item) => item.id === classField.value);
+      const seriesMatch = String(classItem?.serie || "").match(/\d+/);
+      try {
+        const skills = await api().listCurriculumSkills({ materia: config.type, serie: seriesMatch ? Number(seriesMatch[0]) : null, trimestre: trimesterField.value ? Number(trimesterField.value) : null, search: searchField.value.trim() });
+        result.innerHTML = skills.length ? skills.map((skill) => `<label class="curriculum-result"><input type="checkbox" value="${skill.habilidade_id}" ${selected.has(skill.habilidade_id) ? "checked" : ""}><span><strong>${escapeHtml(skill.codigo)}</strong><span>${escapeHtml(skill.descricao)}</span><small>${(skill.descritores || []).length ? `Descritores: ${(skill.descritores || []).map((item) => escapeHtml(item.codigo)).join(", ")}` : "Sem descritor relacionado"} · ${skill.serie}ª série · ${skill.trimestre}º tri</small></span></label>`).join("") : "<small>Nenhuma habilidade EM publicada encontrada.</small>";
+        result.querySelectorAll("input").forEach((input) => input.addEventListener("change", () => input.checked ? selected.add(input.value) : selected.delete(input.value)));
+      } catch (error) { result.innerHTML = `<small class="error-text">${escapeHtml(error.message)}</small>`; }
+    };
+    [classField, trimesterField].forEach((field) => field.addEventListener("change", load));
+    searchField.addEventListener("input", load);
+    return { selected: () => [...selected], clear: () => { selected.clear(); result.innerHTML = "<small>Pesquise para carregar habilidades.</small>"; } };
+  };
+  window.OminiCurriculumPicker = { markup: curriculumPickerMarkup, bind: bindCurriculumPicker };
   const route = (name) => `../${name}/index.html`;
   const shell = () => {
     const writingLink =
@@ -129,8 +152,9 @@
     `<option value="">Modelo sem turma</option>${classes.map((item) => `<option value="${item.id}">${escapeHtml(item.nome)}${item.serie ? ` · ${escapeHtml(item.serie)}` : ""}</option>`).join("")}`;
   const renderLabs = (data) => {
     const content = document.querySelector("[data-portal-content]");
-    content.innerHTML = `<div class="form-layout"><section class="form-card"><p class="eyebrow">Criação guiada</p><h2>${escapeHtml(config.labCreateTitle)}</h2><form data-lab-form><div class="form-grid"><label class="wide">Título<input name="title" required minlength="3" maxlength="140" placeholder="${escapeHtml(config.labTitlePlaceholder)}"></label><label>Turma<select name="classId">${classOptions(data.classes)}</select></label><label>Formato<select name="format">${config.labFormats.map((item) => `<option value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</option>`).join("")}</select></label><label class="wide">Objetivo e orientação<textarea name="description" required rows="4" placeholder="Explique o que o aluno deve investigar, produzir ou demonstrar."></textarea></label><label>${escapeHtml(config.configLabel)}<input name="configValue" required placeholder="${escapeHtml(config.configPlaceholder)}"></label><label>Prazo<input name="deadline" type="datetime-local"></label></div><div class="form-actions"><button class="button secondary" name="intent" value="draft">Salvar rascunho</button><button class="button primary" name="intent" value="publish">Publicar para turma</button></div></form></section><aside class="form-card builder-sidebar"><p class="eyebrow">Conteúdo real</p><h2>Seus laboratórios</h2><div class="content-list" data-lab-list>${listRows(data.labs, "lab")}</div></aside></div>`;
+    content.innerHTML = `<div class="form-layout"><section class="form-card"><p class="eyebrow">Criação guiada</p><h2>${escapeHtml(config.labCreateTitle)}</h2><form data-lab-form><div class="form-grid"><label class="wide">Título<input name="title" required minlength="3" maxlength="140" placeholder="${escapeHtml(config.labTitlePlaceholder)}"></label><label>Turma<select name="classId">${classOptions(data.classes)}</select></label><label>Formato<select name="format">${config.labFormats.map((item) => `<option value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</option>`).join("")}</select></label><label class="wide">Objetivo e orientação<textarea name="description" required rows="4" placeholder="Explique o que o aluno deve investigar, produzir ou demonstrar."></textarea></label><label>${escapeHtml(config.configLabel)}<input name="configValue" required placeholder="${escapeHtml(config.configPlaceholder)}"></label><label>Prazo<input name="deadline" type="datetime-local"></label></div>${curriculumPickerMarkup("lab-curriculum-picker", data.classes)}<div class="form-actions"><button class="button secondary" name="intent" value="draft">Salvar rascunho</button><button class="button primary" name="intent" value="publish">Publicar para turma</button></div></form></section><aside class="form-card builder-sidebar"><p class="eyebrow">Conteúdo real</p><h2>Seus laboratórios</h2><div class="content-list" data-lab-list>${listRows(data.labs, "lab")}</div></aside></div>`;
     const form = document.querySelector("[data-lab-form]");
+    const curriculumPicker = bindCurriculumPicker(form, data.classes);
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       const submitter = event.submitter;
@@ -147,6 +171,7 @@
           configuration: {
             [config.configKey]: values.get("configValue").trim(),
           },
+          skillIds: curriculumPicker.selected(),
           publish: submitter.value === "publish",
         });
         toast(
@@ -166,13 +191,16 @@
     const content = document.querySelector("[data-portal-content]");
     const questions = [];
     content.innerHTML = `<div class="form-layout"><section class="form-card"><p class="eyebrow">Construtor de avaliação</p><h2>${escapeHtml(config.evaluationTitle)}</h2><form data-evaluation-form><div class="form-grid"><label class="wide">Título<input name="title" required minlength="3" maxlength="140" placeholder="${escapeHtml(config.evaluationPlaceholder)}"></label><label>Turma<select name="classId">${classOptions(data.classes)}</select></label><label>Duração em minutos<input name="duration" type="number" min="5" max="300" value="50"></label><label>Valor total<input name="value" type="number" min="0.1" step="0.1" value="10"></label><label>Abertura<input name="opensAt" type="datetime-local"></label><label>Encerramento<input name="closesAt" type="datetime-local"></label><label class="wide">Instruções<textarea name="instructions" rows="3" placeholder="Oriente os alunos sobre critérios, consulta e forma de resposta."></textarea></label></div><div class="panel" style="margin-top:18px;box-shadow:none"><div class="panel-heading"><div><p class="eyebrow">Questão</p><h2>Adicionar questão</h2></div></div><div class="form-grid"><label class="wide">Enunciado<textarea data-question-statement rows="3" placeholder="${escapeHtml(config.questionPlaceholder)}"></textarea></label><label>Tipo<select data-question-type>${config.questionTypes.map((item) => `<option value="${item.value}">${item.label}</option>`).join("")}</select></label><label>Pontos<input data-question-points type="number" min="0.1" step="0.1" value="1"></label><label class="wide">Alternativas ou critérios<textarea data-question-options rows="3" placeholder="Uma opção ou critério por linha"></textarea></label><label class="wide">Resposta esperada<textarea data-question-answer rows="2" placeholder="Resposta, resultado ou critérios de correção"></textarea></label></div><div class="form-actions"><button class="button secondary" type="button" data-add-question>Adicionar à avaliação</button></div></div><div class="form-actions"><button class="button secondary" name="intent" value="draft">Salvar rascunho</button><button class="button primary" name="intent" value="publish">Publicar avaliação</button></div></form></section><aside class="form-card builder-sidebar"><p class="eyebrow">Composição</p><h2>Questões adicionadas</h2><div class="notice">A avaliação e suas questões são gravadas no Supabase somente ao salvar ou publicar.</div><div data-question-list style="margin-top:13px"></div><hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><p class="eyebrow">Avaliações existentes</p><div class="content-list">${listRows(data.evaluations, "evaluation")}</div></aside></div>`;
+    const questionFields = content.querySelector("[data-question-answer]")?.closest(".form-grid");
+    questionFields?.insertAdjacentHTML("beforeend", curriculumPickerMarkup("question-curriculum-picker", data.classes));
+    const questionPicker = bindCurriculumPicker(content, data.classes);
     const renderQuestions = () => {
       const target = document.querySelector("[data-question-list]");
       target.innerHTML = questions.length
         ? questions
             .map(
               (item, index) =>
-                `<article class="question-draft"><strong>${index + 1}. ${escapeHtml(item.statement)}</strong><small>${escapeHtml(item.type.replaceAll("_", " "))} · ${item.points} ponto(s)</small><div class="question-toolbar"><button type="button" data-remove-question="${index}">Remover</button></div></article>`,
+                `<article class="question-draft"><strong>${index + 1}. ${escapeHtml(item.statement)}</strong><small>${escapeHtml(item.type.replaceAll("_", " "))} · ${item.points} ponto(s) · ${item.skillIds.length ? `${item.skillIds.length} habilidade(s)` : "sem habilidade"}</small><div class="question-toolbar"><button type="button" data-remove-question="${index}">Remover</button></div></article>`,
             )
             .join("")
         : '<div class="empty-state" style="min-height:150px"><span class="material-symbols-outlined">playlist_add</span><p>Adicione a primeira questão.</p></div>';
@@ -244,10 +272,12 @@
             .map((item) => item.trim())
             .filter(Boolean),
           answer: document.querySelector("[data-question-answer]").value.trim(),
+          skillIds: questionPicker.selected(),
         });
         document.querySelector("[data-question-statement]").value = "";
         document.querySelector("[data-question-options]").value = "";
         document.querySelector("[data-question-answer]").value = "";
+        questionPicker.clear();
         renderQuestions();
         toast("Questão adicionada à composição.");
       });

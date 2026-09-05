@@ -106,6 +106,9 @@ window.renderPortugueseEssays = async ({
 
   const panel = content.querySelector("[data-writing-panel]");
   const promptDialog = content.querySelector("[data-prompt-dialog]");
+  const promptFields = content.querySelector("[data-prompt-form] .form-grid");
+  promptFields?.insertAdjacentHTML("beforeend", window.OminiCurriculumPicker?.markup("prompt-curriculum-picker", data.classes) || "");
+  const promptPicker = window.OminiCurriculumPicker?.bind(content, data.classes) || { selected: () => [] };
   const globalPromptButton = document.querySelector("[data-new-prompt-global]");
   if (globalPromptButton)
     globalPromptButton.onclick = () => promptDialog.showModal();
@@ -304,6 +307,7 @@ window.renderPortugueseEssays = async ({
           classId: values.get("classId") || null,
           published: submitter.value === "publish",
           pinned: values.get("pinned") === "on",
+          skillIds: promptPicker.selected(),
         });
         toast(
           submitter.value === "publish"

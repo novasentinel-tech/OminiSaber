@@ -141,6 +141,20 @@
             .join("")}</tbody></table></div>`
         : `<div class="activity-empty">${icon("history")}<p>As próximas ações administrativas aparecerão aqui.</p></div>`
     }</section>`;
+    const coverageSection = document.createElement("section");
+    coverageSection.className = "panel curriculum-coverage-panel";
+    coverageSection.innerHTML = `<div class="panel-heading"><div><p class="eyebrow">Uso pedagógico</p><h2>Cobertura de habilidades curriculares</h2><p>Uso em conteúdos, não domínio do aluno.</p></div><div class="form-grid"><select class="field" data-coverage-materia><option value="">Todas as matérias</option><option value="portugues">Português</option><option value="matematica">Matemática</option><option value="fisica">Física</option><option value="redacao">Redação</option><option value="tecnico_administracao">Administração</option><option value="tecnico_informatica">Informática</option></select><select class="field" data-coverage-serie><option value="">Todas as séries</option><option value="1">1ª série</option><option value="2">2ª série</option><option value="3">3ª série</option></select><select class="field" data-coverage-trimestre><option value="">Todos os trimestres</option><option value="1">1º trimestre</option><option value="2">2º trimestre</option><option value="3">3º trimestre</option></select></div></div><div data-curriculum-coverage-body><p>Carregando cobertura...</p></div>`;
+    content().append(coverageSection);
+    const coverageBody = coverageSection.querySelector("[data-curriculum-coverage-body]");
+    const loadCoverage = async () => {
+      coverageBody.innerHTML = "<p>Carregando cobertura...</p>";
+      const rows = await api().getCurriculumCoverage({ materia: coverageSection.querySelector("[data-coverage-materia]").value || null, serie: coverageSection.querySelector("[data-coverage-serie]").value || null, trimestre: coverageSection.querySelector("[data-coverage-trimestre]").value || null });
+      const used = rows.filter((row) => row.utilizada).length;
+      const percent = rows.length ? Math.round((used / rows.length) * 100) : 0;
+      coverageBody.innerHTML = `<div class="metrics"><div class="metric"><span>Habilidades previstas</span><strong>${rows.length}</strong></div><div class="metric"><span>Utilizadas</span><strong>${used}</strong></div><div class="metric"><span>Ainda não trabalhadas</span><strong>${rows.length - used}</strong></div><div class="metric"><span>Cobertura</span><strong>${percent}%</strong></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Habilidade</th><th>Período</th><th>Status</th><th>Uso</th></tr></thead><tbody>${rows.map((row) => `<tr><td><strong>${esc(row.codigo)}</strong><br><small>${esc(row.descricao)}</small></td><td>${row.serie}ª série · ${row.trimestre}º tri</td><td>${row.utilizada ? "Utilizada" : "Ainda não utilizada"}</td><td>${(row.usos || []).map((usage) => esc(`${usage.tipo}: ${usage.recurso}`)).join("; ") || "—"}</td></tr>`).join("") || '<tr><td colspan="4">Nenhuma habilidade encontrada.</td></tr>'}</tbody></table></div>`;
+    };
+    coverageSection.querySelectorAll("[data-coverage-materia],[data-coverage-serie],[data-coverage-trimestre]").forEach((field) => field.addEventListener("change", loadCoverage));
+    loadCoverage().catch((error) => { coverageBody.innerHTML = `<p class="error-text">${esc(error.message)}</p>`; });
     const mode = document.querySelector("#chart-mode");
     mode.addEventListener("change", () => {
       const countMode = mode.value === "count";

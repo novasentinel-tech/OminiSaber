@@ -462,6 +462,18 @@
     return (data || []).map((item) => ({ ...item.turmas, materia: item.materia })).filter((item) => item.id);
   };
 
+  const listCurriculumSkills = async ({ materia, serie = null, trimestre = null, search = '' } = {}) => {
+    if (!ensureConfigured()) return [];
+    const { data, error } = await client.rpc('buscar_habilidades_curriculares', {
+      p_materia: materia,
+      p_serie: serie || null,
+      p_trimestre: trimestre || null,
+      p_busca: search || null
+    });
+    if (error) throw error;
+    return data || [];
+  };
+
   const listTeacherStudentIds = async (classIds) => {
     if (!classIds.length) return [];
     const { data, error } = await client.from('perfis').select('id').eq('role', 'aluno').in('turma_id', classIds);
@@ -469,7 +481,7 @@
     return (data || []).map((item) => item.id);
   };
 
-  const createWritingPrompt = async ({ title, category, command, motivators = [], rubric, deadline, classId = null, className = null, published = false, pinned = false, summary = '', axis = '', difficulty = 'intermediaria', estimatedMinutes = 90, keywords = [], details = {} }) => {
+  const createWritingPrompt = async ({ title, category, command, motivators = [], rubric, deadline, classId = null, className = null, published = false, pinned = false, summary = '', axis = '', difficulty = 'intermediaria', estimatedMinutes = 90, keywords = [], details = {}, skillIds = [] }) => {
     if (!ensureConfigured()) return null;
     const session = await getSession();
     if (!session) throw new Error('Sessão expirada. Entre novamente.');
@@ -498,6 +510,11 @@
       detalhes: details
     }).select().single();
     if (error) throw error;
+    const uniqueSkillIds = [...new Set((skillIds || []).filter(Boolean))];
+    if (uniqueSkillIds.length) {
+      const { error: linkError } = await client.from('propostas_redacao_habilidades').insert(uniqueSkillIds.map((habilidade_id) => ({ proposta_id: data.id, habilidade_id })));
+      if (linkError) { await client.from('propostas_redacao').delete().eq('id', data.id); throw linkError; }
+    }
     return data;
   };
 
@@ -628,7 +645,7 @@
     return data || [];
   };
 
-  const createTeacherLab = async ({ tipoProfessor, title, description, format, configuration = {}, classId = null, deadline = null, publish = false }) => {
+  const createTeacherLab = async ({ tipoProfessor, title, description, format, configuration = {}, classId = null, deadline = null, publish = false, skillIds = [] }) => {
     if (!ensureConfigured()) return null;
     if (!String(title || '').trim() || !String(format || '').trim()) throw new Error('Informe título e formato do laboratório.');
     const { session } = await assertTeacherSpecialty(tipoProfessor);
@@ -645,6 +662,11 @@
       publicado_em: publish ? new Date().toISOString() : null
     }).select().single();
     if (error) throw error;
+    const uniqueSkillIds = [...new Set((skillIds || []).filter(Boolean))];
+    if (uniqueSkillIds.length) {
+      const { error: linkError } = await client.from('laboratorios_docentes_habilidades').insert(uniqueSkillIds.map((habilidade_id) => ({ laboratorio_id: data.id, habilidade_id })));
+      if (linkError) { await client.from('laboratorios_docentes').delete().eq('id', data.id); throw linkError; }
+    }
     return data;
   };
 
@@ -699,6 +721,11 @@
       if (questionsError) {
         await client.from('avaliacoes_docentes').delete().eq('id', evaluation.id);
         throw questionsError;
+      }
+      const skillRows = (insertedQuestions || []).flatMap((questionRow) => [...new Set((questions[questionRow.ordem - 1]?.skillIds || []).filter(Boolean))].map((habilidade_id) => ({ questao_id: questionRow.id, habilidade_id })));
+      if (skillRows.length) {
+        const { error: skillsError } = await client.from('questoes_avaliacao_habilidades').insert(skillRows);
+        if (skillsError) { await client.from('avaliacoes_docentes').delete().eq('id', evaluation.id); throw skillsError; }
       }
       const answerRows = (insertedQuestions || []).map((questionRow) => ({
         questao_id: questionRow.id,
@@ -920,6 +947,19 @@
       optional(managerSelect('solicitacoes_acesso', '*', { order: 'created_at', ascending: false }))
     ]);
     return { classes, profiles, links, descriptors, trails, labs, evaluations, prompts, accesses };
+  };
+
+  const getCurriculumCoverage = async ({ materia = null, serie = null, trimestre = null, turmaId = null, professorId = null } = {}) => {
+    await managerSession();
+    const { data, error } = await client.rpc('cobertura_curricular', {
+      p_materia: materia || null,
+      p_serie: serie || null,
+      p_trimestre: trimestre || null,
+      p_turma_id: turmaId || null,
+      p_professor_id: professorId || null
+    });
+    if (error) throw error;
+    return data || [];
   };
 
   const listManagerClasses = () => managerSelect('turmas', '*', { order: 'nome' });
@@ -1497,6 +1537,7 @@
     getEssayPlanning,
     saveEssayPlanning,
     listTeacherClasses,
+    listCurriculumSkills,
     createWritingPrompt,
     listTeacherWritingPrompts,
     listTeacherEssays,
@@ -1524,6 +1565,7 @@
     getStudentEssay,
     listStudentEssayHistory,
     getManagerOverview,
+    getCurriculumCoverage,
     listManagerClasses,
     saveManagerClass,
     listManagerProfiles,
