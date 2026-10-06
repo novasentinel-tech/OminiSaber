@@ -19,6 +19,11 @@
     ["gerar_ideias", "Ideias", "lightbulb"],
     ["revisar_atividade", "Revisar", "rate_review"],
   ];
+  const PILOT_MODES = [
+    ["generate_activity", "Gerar atividade", "assignment"],
+    ["adapt_question", "Adaptar questão", "edit_note"],
+    ["analyze_class", "Analisar turma", "analytics"],
+  ];
   const escapeHtml = (value) =>
     String(value ?? "").replace(
       /[&<>\"']/g,
@@ -48,7 +53,13 @@
   const contextKeyOf = (classId, trimester, category) =>
     `${classId || ""}|${trimester || ""}|${category || ""}`;
   const creationAction = (mode) =>
-    ["gerar_prova", "gerar_diagnostico"].includes(mode)
+    mode === "generate_activity"
+      ? "gerar_atividade"
+      : mode === "adapt_question"
+        ? "revisar_atividade"
+        : mode === "analyze_class"
+          ? "sugerir_recuperacao"
+          : ["gerar_prova", "gerar_diagnostico"].includes(mode)
       ? "gerar_atividade"
       : mode;
   const accessPreferences = ({
@@ -275,6 +286,18 @@
     ];
     return revised;
   };
+  const mergeAdaptedQuestion = (suggestion, activityIndex, questionIndex, adapted) => {
+    const revised = clone(suggestion);
+    const activities = activitiesOf(revised);
+    const activity = activities[activityIndex];
+    const replacement = activitiesOf(adapted)[0]?.questions?.[0];
+    if (!activity || !replacement || !activity.questions[questionIndex])
+      throw new Error("Não foi possível localizar a questão original para aplicar a adaptação.");
+    activity.questions[questionIndex] = clone(replacement);
+    revised.summary = adapted.summary || revised.summary;
+    revised.warnings = [...new Set([...(revised.warnings || []), ...(adapted.warnings || [])])];
+    return revised;
+  };
   const previewEvaluation = (question, value) => {
     if (!String(value ?? "").trim())
       return {
@@ -334,6 +357,7 @@
     previewEvaluation,
     pointsOf,
     preserveReviewedTrail,
+    mergeAdaptedQuestion,
   });
 
   window.initTeacherCopilot = async ({
@@ -387,7 +411,13 @@
       <div class="copilot-workspace-grid">
         <section class="copilot-conversation" aria-labelledby="copilot-conversation-title">
           <header class="copilot-panel-heading"><span class="copilot-heading-icon">${icon("auto_awesome")}</span><div><h3 id="copilot-conversation-title">Converse com o copiloto</h3><p>Conte o objetivo. Eu preparo os formatos e recursos adequados.</p></div></header>
-          <nav class="copilot-modes" aria-label="Tipo de ajuda">${MODES.map(([value, text, symbol], index) => `<button type="button" data-copilot-mode="${value}" aria-pressed="${index === 0}">${icon(symbol)}${text}</button>`).join("")}</nav>
+          <nav class="copilot-modes" aria-label="Tipo de ajuda">${PILOT_MODES.map(([value, text, symbol], index) => `<button type="button" data-copilot-mode="${value}" aria-pressed="${index === 0}">${icon(symbol)}${text}</button>`).join("")}</nav>
+          <div class="copilot-operation-fields" data-copilot-operation-options>
+            <label data-copilot-generation-controls>Tipo<select data-copilot-activity-type><option value="activity">Atividade</option><option value="exam">Prova</option><option value="diagnostic">Diagnóstica</option></select></label>
+            <label data-copilot-generation-controls>Proposta<select data-copilot-generation-variant><option value="complete">Atividade completa</option><option value="ideas">Ideias de atividade</option></select></label>
+            <label data-copilot-adaptation-controls hidden>Adaptação<select data-copilot-adaptation><option value="simplify">Simplificar</option><option value="increase_difficulty">Aumentar dificuldade</option><option value="alternative">Gerar alternativa</option><option value="custom">Orientação personalizada</option></select></label>
+            <label data-copilot-question-controls hidden>Questão<select data-copilot-question aria-label="Questão para adaptar"></select></label>
+          </div>
           <div class="copilot-messages" data-copilot-messages role="log" aria-label="Conversa com o copiloto" aria-live="polite" aria-relevant="additions"></div>
           <div class="copilot-error" data-copilot-error role="alert" hidden><div>${icon("error_outline")}<p data-copilot-error-text></p></div><button type="button" data-copilot-retry>Tentar novamente</button></div>
           <div class="copilot-refinement-chips" data-copilot-chips aria-label="Sugestões de pedido"></div>
@@ -395,7 +425,7 @@
             <label class="copilot-visually-hidden" for="copilot-message">Seu pedido ao copiloto</label><textarea id="copilot-message" name="objective" rows="3" maxlength="2000" placeholder="Descreva o que deseja que seus alunos aprendam..." required></textarea>
             <div class="copilot-composer-bar"><small>Não inclua dados pessoais de alunos.</small><button type="submit" data-copilot-send aria-label="Enviar pedido ao copiloto">${icon("arrow_upward")}</button></div>
           </form>
-          <div class="copilot-access"><label class="copilot-check"><input type="checkbox" data-copilot-full-access checked><span><strong>Acesso Total</strong><small>O copiloto escolhe os formatos e recursos. Considera o panorama da turma quando seu pedido precisar, usando somente indicadores gerais.</small></span></label></div>
+          <div class="copilot-access" data-copilot-generation-preferences><label class="copilot-check"><input type="checkbox" data-copilot-full-access checked><span><strong>Acesso Total</strong><small>O copiloto escolhe os formatos e recursos para a atividade.</small></span></label></div>
           <label class="copilot-check copilot-exam-option" data-copilot-exam-option hidden><input type="checkbox" data-copilot-secure-exam checked><span><strong>Modo seguro de prova</strong><small>Oculta dicas e correções durante a prova. Solicita tela cheia e registra saídas para revisão do professor.</small></span></label>
           <details class="copilot-options"><summary>${icon("tune")}Personalizar (opcional)</summary><p class="copilot-options-note" data-copilot-options-note>Desmarque Acesso Total para escolher a quantidade, o nível e os formatos.</p><fieldset class="copilot-manual-options" data-copilot-manual-options disabled><div class="copilot-option-fields"><label>Total de questões<input type="number" data-copilot-count min="1" max="12" value="5"></label><label>Nível<select data-copilot-difficulty><option value="equilibrada">Médio · prática acessível</option><option value="introducao">Fácil · primeiros passos</option><option value="aprofundamento">Desafio · aprofundamento</option></select></label></div><p class="copilot-count-note" data-copilot-count-note>Quantidade da atividade. Na trilha, será distribuída entre as etapas.</p><fieldset><legend>Formatos de resposta</legend><div class="copilot-type-options">${TYPES.map(([value, text]) => `<label><input type="checkbox" data-copilot-type="${value}" checked>${text}</label>`).join("")}</div><label class="copilot-check"><input type="checkbox" data-copilot-enable-all checked>Selecionar todos</label></fieldset><label class="copilot-check copilot-consent"><input type="checkbox" data-copilot-consent><span>Considerar sempre o panorama da turma<small>Somente indicadores gerais e temas recentes. Nenhum aluno é identificado.</small></span></label></fieldset><label class="copilot-check"><input type="checkbox" data-copilot-all-classes><span>Preparar para todas as minhas turmas<small>A seleção será levada ao rascunho para sua revisão.</small></span></label></details>
           <p class="copilot-memory-note" data-copilot-memory-note role="status" hidden></p>
@@ -421,13 +451,14 @@
     const drafts = [];
     const previewResponses = new Map();
     let activeDraftId = null;
-    let mode = "gerar_atividade";
+    let mode = "generate_activity";
     let view = "draft";
     let stage = 0;
     let busy = false;
     let generationId = 0;
     let sessionId = null;
     let conversationMemory = null;
+    let latestClassAnalysis = null;
     let previewHidden = false;
     let lastAttempt = null;
     let previousStep = 1;
@@ -562,6 +593,26 @@
     };
     const syncControls = () => {
       const draft = currentDraft();
+      const isGenerate = mode === "generate_activity";
+      const isAdapt = mode === "adapt_question";
+      const isAnalyze = mode === "analyze_class";
+      const sourceActivity = activitiesOf(draft?.payload.suggestion)[stage] || currentActivity();
+      const questionSelect = find("[data-copilot-question]");
+      const previousQuestionIndex = questionSelect.value;
+      questionSelect.innerHTML = (sourceActivity.questions || []).map((question, index) =>
+        `<option value="${index}">Questão ${index + 1}: ${escapeHtml(String(question.statement || "").slice(0, 72))}</option>`,
+      ).join("");
+      if (previousQuestionIndex && sourceActivity.questions?.[Number(previousQuestionIndex)])
+        questionSelect.value = previousQuestionIndex;
+      workspace.querySelectorAll("[data-copilot-generation-controls]").forEach((control) => {
+        control.hidden = !isGenerate;
+      });
+      find("[data-copilot-adaptation-controls]").hidden = !isAdapt;
+      find("[data-copilot-question-controls]").hidden = !isAdapt || !sourceActivity.questions?.length;
+      find(".copilot-access").hidden = !isGenerate;
+      find(".copilot-options").hidden = !isGenerate;
+      find("[data-copilot-exam-option]").hidden = !isGenerate || find("[data-copilot-activity-type]").value !== "exam";
+      composer.required = isGenerate || (isAdapt && find("[data-copilot-adaptation]").value === "custom");
       const issue = draft ? suggestionIssue(draft.payload.suggestion) : "";
       const usable =
         draft &&
@@ -596,25 +647,15 @@
       workspace.querySelectorAll("[data-copilot-idea]").forEach((button) => {
         button.disabled = busy || applying || !!issue;
       });
-      find("[data-copilot-exam-option]").hidden =
-        field("category")?.value !== "avaliacao";
-      find("[data-copilot-count]").min = mode === "gerar_trilha" ? "2" : "1";
-      find("[data-copilot-count-note]").textContent =
-        mode === "gerar_trilha"
-          ? "Total distribuído entre todas as etapas da trilha (mínimo 2)."
-          : "Quantidade da atividade. Na trilha, será distribuída entre as etapas.";
-      composer.placeholder =
-        mode === "revisar_atividade"
-          ? currentDraft()?.payload.suggestion.trail
-            ? `O que devemos melhorar na etapa ${stage + 1}? As outras serão preservadas.`
-            : "O que devemos melhorar no rascunho?"
-          : mode === "gerar_ideias"
-            ? "Sobre qual objetivo você quer explorar ideias?"
-            : mode === "gerar_trilha"
-              ? "Descreva o objetivo e a progressão da trilha..."
-              : currentDraft()
-                ? "Peça um ajuste na proposta..."
-                : "Descreva o que deseja que seus alunos aprendam...";
+      find("[data-copilot-count]").min = "1";
+      find("[data-copilot-count-note]").textContent = "Quantidade de questões da atividade.";
+      composer.placeholder = isAnalyze
+        ? "A análise usa apenas resultados corrigidos e indicadores agregados..."
+        : isAdapt
+          ? "Opcional: detalhe como adaptar a questão selecionada..."
+          : currentDraft()
+            ? "Peça um ajuste na proposta..."
+            : "Descreva o objetivo e o que seus alunos devem aprender...";
       output.setAttribute("aria-busy", String(busy));
       find("[data-copilot-draft-state]").textContent =
         draft?.contextKey !== contextKey()
@@ -641,6 +682,11 @@
     };
     const renderIdeas = (suggestion) => {
       output.innerHTML = `<div class="copilot-ideas"><p class="copilot-eyebrow">Ideias para sua aula</p><h3>Escolha um ponto de partida</h3><p>${escapeHtml(suggestion.summary || "Explore as propostas e transforme uma delas em atividade.")}</p>${suggestion.ideas.map((idea, index) => `<article><div class="copilot-idea-number">${index + 1}</div><div><h4>${escapeHtml(idea.title)}</h4><p>${escapeHtml(idea.objective)}</p>${idea.hook ? `<blockquote>${escapeHtml(idea.hook)}</blockquote>` : ""}<dl><div><dt>O aluno faz</dt><dd>${escapeHtml(idea.studentAction || idea.interaction || "")}</dd></div><div><dt>Evidência de aprendizagem</dt><dd>${escapeHtml(idea.evidence || "")}</dd></div>${Array.isArray(idea.adaptations) && idea.adaptations.length ? `<div><dt>Adaptações e desafios</dt><dd><ul>${idea.adaptations.map((adaptation) => `<li>${escapeHtml(adaptation)}</li>`).join("")}</ul></dd></div>` : ""}</dl><div class="copilot-idea-meta"><span>${icon("schedule")}${Number(idea.duration || idea.estimatedMinutes) || 30} min</span>${idea.materials?.length ? `<span>${escapeHtml(Array.isArray(idea.materials) ? idea.materials.join(" · ") : idea.materials)}</span>` : ""}</div><button class="button secondary" type="button" data-copilot-idea="${index}" ${busy ? "disabled" : ""}>${icon("auto_awesome")}Criar atividade com esta ideia</button></div></article>`).join("")}</div>`;
+    };
+    const renderClassAnalysis = (analysis) => {
+      const skills = Array.isArray(analysis.criticalSkills) ? analysis.criticalSkills : [];
+      const percent = (value) => Math.max(0, Math.min(100, Number(value) || 0));
+      output.innerHTML = `<div class="copilot-class-analysis"><header><p class="copilot-eyebrow">Análise agregada da turma</p><h3>${escapeHtml(analysis.summary)}</h3></header><section><h4>Habilidades e descritores críticos</h4><ul>${skills.map((skill) => `<li><strong>${escapeHtml(skill.code)}</strong> ${escapeHtml(skill.description)}<span>${percent(skill.performancePercent)}% · ${Math.max(0, Number(skill.evidenceCount) || 0)} evidências</span>${skill.descriptors?.length ? `<small>${skill.descriptors.map((descriptor) => `${escapeHtml(descriptor.code)}: ${escapeHtml(descriptor.description)}`).join(" · ")}</small>` : ""}</li>`).join("")}</ul></section><section><h4>Dificuldades recorrentes</h4><ul>${analysis.recurringDifficulties.map((difficulty) => `<li>${escapeHtml(difficulty)}</li>`).join("")}</ul></section><section><h4>Sugestão de recuperação</h4><p>${escapeHtml(analysis.recovery.objective)}</p><ol>${analysis.recovery.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol></section><button class="button secondary" type="button" data-copilot-create-recovery>${icon("auto_awesome")}Preparar atividade de recuperação</button></div>`;
     };
     const questionEditor = (question, index, activity) => {
       const points = pointsOf(activity, index);
@@ -683,7 +729,8 @@
         "aria-labelledby",
         view === "draft" ? "copilot-draft-tab" : "copilot-student-tab",
       );
-      if (!draft) renderEmpty();
+      if (!draft && latestClassAnalysis?.contextKey === contextKey()) renderClassAnalysis(latestClassAnalysis.data);
+      else if (!draft) renderEmpty();
       else {
         const suggestion = draft.payload.suggestion;
         if (suggestion.ideas?.length) renderIdeas(suggestion);
@@ -717,8 +764,8 @@
         state.skills = Array.isArray(skills) ? skills : [];
     };
 
-    const generate = async (text, { retry = false, action = creationAction(mode) } = {}) => {
-      action = creationAction(action);
+    const generate = async (text, { retry = false, operation = mode, action, skillIds: requestedSkillIds } = {}) => {
+      action = creationAction(action || operation);
       if (busy || applying) return;
       const selected = activeClass();
       if (!selected) {
@@ -727,13 +774,13 @@
         );
         return;
       }
-      if (text.trim().length < 3) {
+      if ((operation === "generate_activity" || (operation === "adapt_question" && find("[data-copilot-adaptation]").value === "custom")) && text.trim().length < 3) {
         showError("Conte um pouco mais sobre o que deseja preparar.");
         composer.focus();
         return;
       }
       if (
-        action === "revisar_atividade" &&
+        operation === "adapt_question" &&
         !state.questions?.length &&
         !activitiesOf(currentDraft()?.payload.suggestion).length
       ) {
@@ -758,19 +805,15 @@
         find(".copilot-options").open = true;
         return;
       }
-      const count = preferences.fullAccess
+      const count = ["adapt_question", "analyze_class"].includes(operation) ? 1 : preferences.fullAccess
         ? 5
         : Number(find("[data-copilot-count]").value);
       if (
         !Number.isInteger(count) ||
-        count < (action === "gerar_trilha" ? 2 : 1) ||
+        count < 1 ||
         count > 12
       ) {
-        showError(
-          action === "gerar_trilha"
-            ? "Escolha de 2 a 12 questões no total da trilha."
-            : "Escolha de 1 a 12 questões para a atividade.",
-        );
+        showError("Escolha de 1 a 12 questões para a atividade.");
         find(".copilot-options").open = true;
         return;
       }
@@ -784,7 +827,7 @@
           ? "equilibrada"
           : find("[data-copilot-difficulty]").value,
         allClasses: find("[data-copilot-all-classes]").checked,
-        secureExam: field("category")?.value === "avaliacao"
+        secureExam: find("[data-copilot-activity-type]").value === "exam"
           ? find("[data-copilot-secure-exam]").checked
           : undefined,
       };
@@ -797,19 +840,27 @@
       const activitySnapshot = clone(
         activitiesOf(activeSuggestion)[stage] || currentActivity(),
       );
+      const questionIndex = Number(find("[data-copilot-question]").value) || 0;
+      const targetQuestion = activitySnapshot.questions?.[questionIndex];
+      if (operation === "adapt_question" && !targetQuestion) {
+        showError("Selecione uma questão do rascunho para adaptar.");
+        return;
+      }
+      const activityType = find("[data-copilot-activity-type]").value;
+      const category = { activity: "atividade", exam: "avaliacao", diagnostic: "diagnostica" }[activityType];
       const contextSnapshot = {
         trimester: Number(field("trimester")?.value) || null,
-        category: field("category")?.value || "atividade",
+        category: category || field("category")?.value || "atividade",
         duration: Number(field("duration")?.value) || 50,
         value: Number(field("value")?.value) || 10,
       };
       const reviewingStage =
-        action === "revisar_atividade" && !!activeSuggestion?.trail;
+        operation === "experimental" && action === "revisar_atividade" && !!activeSuggestion?.trail;
       if (reviewingStage) {
         contextSnapshot.duration = activitySnapshot.duration;
         contextSnapshot.value = activitySnapshot.value;
       }
-      lastAttempt = { text, action, key };
+      lastAttempt = { text, action, operation, key };
       if (!retry) addMessage("user", text);
       composer.value = "";
       renderMessages();
@@ -819,12 +870,16 @@
       try {
         await ensureCurriculumSkills(key);
         if (generation !== generationId || key !== contextKey()) return;
-        const objective =
-          text.length >= 10
-            ? text
-            : `${text}. Ajuste a proposta com o contexto desta conversa.`;
+        const objective = operation === "analyze_class"
+          ? "Analise os indicadores agregados e sugira uma recuperação."
+          : text.length >= 10 ? text : `${text}. Ajuste a proposta com o contexto desta conversa.`;
         const payload = await api.requestTeacherCopilot({
+          operation,
           action,
+          activityType,
+          generationVariant: find("[data-copilot-generation-variant]").value,
+          adaptation: find("[data-copilot-adaptation]").value,
+          questionIndex,
           subject: config.type,
           classId: selected.id,
           series: selected.serie,
@@ -839,7 +894,9 @@
           fullAccess: preferenceSnapshot.fullAccess,
           classContextMode: preferenceSnapshot.classContextMode,
           secureExam: preferenceSnapshot.secureExam,
-          skillIds: selectedSkills().map((skill) => skill.habilidade_id),
+          skillIds: requestedSkillIds || (operation === "adapt_question"
+            ? targetQuestion.skillIds || []
+            : selectedSkills().map((skill) => skill.habilidade_id)),
           skillCandidateIds: (state.skills || [])
             .map((skill) => skill.habilidade_id)
             .filter(Boolean)
@@ -847,11 +904,11 @@
           useClassContext: preferenceSnapshot.useClassContext,
           sessionId,
           conversationMemory,
-          messages: boundedMessages(
+          messages: operation === "generate_activity" ? boundedMessages(
             messages.filter((message) => message.contextKey === key),
-          ),
+          ) : [],
           currentActivity: activitySnapshot,
-          currentSuggestion: activeSuggestion,
+          currentSuggestion: operation === "generate_activity" ? activeSuggestion : null,
         });
         if (
           generation !== generationId ||
@@ -859,16 +916,28 @@
           !workspace.isConnected
         )
           return;
-        const returnedSuggestion =
-          payload?.suggestion ||
+        const returnedSuggestion = payload?.data || payload?.suggestion ||
           (payload?.result?.ideas ? { ...payload.result } : null);
-        const suggestion = reviewingStage
-          ? preserveReviewedTrail(
+        if (operation === "analyze_class") {
+          if (!returnedSuggestion?.criticalSkills || !returnedSuggestion?.recovery?.steps?.length)
+            throw new Error("A análise recebida está incompleta. Tente novamente.");
+          latestClassAnalysis = { data: returnedSuggestion, contextKey: key };
+          sessionId = payload.sessionId || sessionId;
+          addMessage("assistant", returnedSuggestion.summary || "Análise da turma pronta para revisão.");
+          renderProposal();
+          status.textContent = "Análise baseada somente em evidências agregadas. Revise a recuperação antes de preparar o rascunho.";
+          return;
+        }
+        const suggestion = operation === "adapt_question"
+          ? mergeAdaptedQuestion(
+              activeSuggestion || { summary: "", warnings: [], activity: activitySnapshot },
+              reviewingStage ? requestedStage : 0,
+              questionIndex,
               returnedSuggestion,
-              activeSuggestion,
-              requestedStage,
             )
-          : returnedSuggestion;
+          : reviewingStage
+            ? preserveReviewedTrail(returnedSuggestion, activeSuggestion, requestedStage)
+            : returnedSuggestion;
         if (!validateSuggestion(suggestion))
           throw new Error(suggestionIssue(suggestion));
         sessionId = payload.sessionId || sessionId;
@@ -894,13 +963,11 @@
             suggestion.trail?.title ||
             suggestion.activity?.title ||
             "Ideias para sua aula",
-          action: suggestion.trail ? "gerar_trilha"
-            : suggestion.activity?.category === "avaliacao" ? "gerar_prova"
-            : suggestion.activity?.category === "diagnostica" ? "gerar_diagnostico"
-            : action,
+          action: operation,
+          activityType,
           payload: clone({ ...payload, suggestion }),
           contextKey: key,
-          targetClassIds: preferenceSnapshot.allClasses
+          targetClassIds: operation === "generate_activity" && preferenceSnapshot.allClasses
             ? allClassIds
             : [selected.id],
           edited: false,
@@ -954,11 +1021,9 @@
     };
     launch.addEventListener("click", () => {
       previousStep = state.step || 1;
-      if (["gerar_atividade", "gerar_prova", "gerar_diagnostico"].includes(mode)) {
-        mode = field("category")?.value === "avaliacao" ? "gerar_prova"
-          : field("category")?.value === "diagnostica" ? "gerar_diagnostico"
-          : "gerar_atividade";
-      }
+      mode = "generate_activity";
+      find("[data-copilot-activity-type]").value = field("category")?.value === "avaliacao" ? "exam"
+        : field("category")?.value === "diagnostica" ? "diagnostic" : "activity";
       refreshContext();
       renderMessages();
       renderProposal();
@@ -980,11 +1045,19 @@
     });
     find("[data-copilot-drafts]").addEventListener("change", (event) => {
       activeDraftId = event.target.value;
-      mode = currentDraft()?.action || "gerar_atividade";
+      mode = currentDraft()?.action || "generate_activity";
+      find("[data-copilot-activity-type]").value = currentDraft()?.activityType || "activity";
       stage = 0;
       renderProposal();
       renderMessages();
     });
+    find("[data-copilot-activity-type]").addEventListener("change", (event) => {
+      if (event.target.value === "exam") find("[data-copilot-secure-exam]").checked = true;
+      syncControls();
+    });
+    ["[data-copilot-generation-variant]", "[data-copilot-adaptation]", "[data-copilot-question]"].forEach((selector) =>
+      find(selector).addEventListener("change", syncControls),
+    );
     find("[data-copilot-full-access]").addEventListener("change", syncAccessControls);
     find("[data-copilot-secure-exam]").addEventListener("change", (event) => {
       const draft = currentDraft();
@@ -1017,6 +1090,10 @@
         lastAttempt = null;
         sessionId = null;
         conversationMemory = null;
+        latestClassAnalysis = null;
+        if (name === "category")
+          find("[data-copilot-activity-type]").value = field("category")?.value === "avaliacao" ? "exam"
+            : field("category")?.value === "diagnostica" ? "diagnostic" : "activity";
         find("[data-copilot-memory-note]").hidden = true;
         errorBox.hidden = true;
         refreshContext();
@@ -1191,26 +1268,10 @@
       }
       else if (button.matches("[data-copilot-context-edit]")) closeWorkspace(1);
       else if (button.matches("[data-copilot-mode]")) {
-        const previousMode = mode;
         mode = button.dataset.copilotMode;
-        const category = {
-          gerar_atividade: "atividade",
-          gerar_prova: "avaliacao",
-          gerar_diagnostico: "diagnostica",
-          gerar_trilha: "atividade",
-        }[mode];
-        if (category && field("category")?.value !== category) {
-          field("category").value = category;
-          field("category").dispatchEvent(new Event("change", { bubbles: true }));
-          if (field("category").value !== category) {
-            mode = previousMode;
-            syncControls();
-            return;
-          }
-        }
-        if (mode === "gerar_prova") find("[data-copilot-secure-exam]").checked = true;
         syncControls();
-        composer.focus();
+        if (mode === "adapt_question") find("[data-copilot-question]").focus();
+        else if (mode !== "analyze_class") composer.focus();
       } else if (button.matches("[data-copilot-view]")) {
         view = button.dataset.copilotView;
         renderProposal();
@@ -1238,9 +1299,22 @@
         lastAttempt &&
         lastAttempt.key === contextKey()
       )
-        generate(lastAttempt.text, { retry: true, action: lastAttempt.action });
+        generate(lastAttempt.text, { retry: true, operation: lastAttempt.operation, action: lastAttempt.action });
       else if (button.matches("[data-copilot-apply]")) await apply(false);
       else if (button.matches("[data-copilot-append]")) await apply(true);
+      else if (button.matches("[data-copilot-create-recovery]") && latestClassAnalysis?.contextKey === contextKey()) {
+        mode = "generate_activity";
+        find("[data-copilot-activity-type]").value = "activity";
+        find("[data-copilot-generation-variant]").value = "complete";
+        const analysis = latestClassAnalysis.data;
+        const objective = `${analysis.recovery.objective} Etapas sugeridas: ${analysis.recovery.steps.join("; ")}`;
+        composer.value = objective;
+        syncControls();
+        generate(objective, {
+          operation: "generate_activity",
+          skillIds: analysis.criticalSkills.map((skill) => skill.id),
+        });
+      }
       else if (button.matches("[data-copilot-stage]")) {
         stage = Number(button.dataset.copilotStage);
         renderProposal();
@@ -1259,11 +1333,12 @@
             Number(button.dataset.copilotIdea)
           ];
         if (idea) {
-          mode = "gerar_atividade";
+          mode = "generate_activity";
+          find("[data-copilot-generation-variant]").value = "complete";
           syncControls();
           generate(
             `Crie uma atividade a partir desta ideia: ${idea.title}. Objetivo: ${idea.objective}. O aluno deve: ${idea.studentAction || idea.interaction || "participar ativamente"}. Evidência de aprendizagem: ${idea.evidence || "atingir o objetivo descrito"}. ${Array.isArray(idea.adaptations) && idea.adaptations.length ? `Adaptações e desafios: ${idea.adaptations.join("; ")}. ` : ""}${idea.teacherPrompt || ""}`,
-            { action: "gerar_atividade" },
+            { operation: "generate_activity" },
           );
         }
       } else if (button.matches("[data-preview-check]")) {

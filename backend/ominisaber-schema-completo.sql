@@ -6,7 +6,7 @@
 begin;
 
 -- ============================================================================
--- ETAPA 1/66: schema/core.sql
+-- ETAPA 1/67: schema/core.sql
 -- ============================================================================
 
 -- OminiSaber | Schema Supabase
@@ -792,7 +792,7 @@ grant execute on function public.aluno_pode_acessar_materia(public.materia_aluno
 -- O arquivo separado permite atualizar bases existentes sem recriar o schema principal.
 
 -- ============================================================================
--- ETAPA 2/66: migrations/20260831_acesso_materias_aluno.sql
+-- ETAPA 2/67: migrations/20260831_acesso_materias_aluno.sql
 -- ============================================================================
 
 do $$ begin
@@ -964,7 +964,7 @@ create policy trilhas_select on public.trilhas for select to authenticated using
 );
 
 -- ============================================================================
--- ETAPA 3/66: schema/configuracoes.sql
+-- ETAPA 3/67: schema/configuracoes.sql
 -- ============================================================================
 
 -- Preferencias e dados editaveis do perfil do aluno.
@@ -991,7 +991,7 @@ drop trigger if exists perfis_updated_at on public.perfis;
 drop function if exists public.atualizar_perfil_updated_at();
 
 -- ============================================================================
--- ETAPA 4/66: schema/biblioteca.sql
+-- ETAPA 4/67: schema/biblioteca.sql
 -- ============================================================================
 
 -- OminiSaber | Biblioteca digital e leituras do aluno
@@ -1306,7 +1306,7 @@ create trigger set_exemplares_updated_at before update on public.exemplares
 for each row execute function public.set_updated_at();
 
 -- ============================================================================
--- ETAPA 5/66: schema/estoque-etapa1.sql
+-- ETAPA 5/67: schema/estoque-etapa1.sql
 -- ============================================================================
 
 -- OminiSaber | Migracao da Etapa 1: autores, obras e exemplares
@@ -1421,7 +1421,7 @@ create trigger set_autores_updated_at before update on public.autores
 for each row execute function public.set_updated_at();
 
 -- ============================================================================
--- ETAPA 6/66: schema/estoque-etapa2.sql
+-- ETAPA 6/67: schema/estoque-etapa2.sql
 -- ============================================================================
 
 -- OminiSaber | Migracao da Etapa 2: secoes fisicas e alocacao
@@ -1525,7 +1525,7 @@ create trigger set_secoes_fisicas_updated_at before update on public.secoes_fisi
 for each row execute function public.set_updated_at();
 
 -- ============================================================================
--- ETAPA 7/66: schema/conquistas.sql
+-- ETAPA 7/67: schema/conquistas.sql
 -- ============================================================================
 
 -- OminiSaber | Catálogo e progresso de conquistas
@@ -1597,7 +1597,7 @@ revoke insert, update, delete on table public.conquistas from anon, authenticate
 revoke insert, update, delete on table public.conquistas_aluno from anon, authenticated;
 
 -- ============================================================================
--- ETAPA 8/66: schema/espacos-docentes.sql
+-- ETAPA 8/67: schema/espacos-docentes.sql
 -- ============================================================================
 
 -- OminiSaber | Espaços funcionais por especialidade docente
@@ -2002,7 +2002,7 @@ revoke all on public.laboratorios_docentes, public.avaliacoes_docentes, public.q
 grant select, insert, update, delete on public.laboratorios_docentes, public.avaliacoes_docentes, public.questoes_avaliacao, public.gabaritos_avaliacao, public.entregas_laboratorio, public.tentativas_avaliacao to authenticated;
 
 -- ============================================================================
--- ETAPA 9/66: migrations/20260831_trilhas_estudos_completos.sql
+-- ETAPA 9/67: migrations/20260831_trilhas_estudos_completos.sql
 -- ============================================================================
 
 create schema if not exists private authorization postgres;
@@ -2422,7 +2422,7 @@ create trigger set_anotacoes_aula_updated_at before update on public.anotacoes_a
 for each row execute function public.set_updated_at();
 
 -- ============================================================================
--- ETAPA 10/66: migrations/20260831_redacao_jornada_completa.sql
+-- ETAPA 10/67: migrations/20260831_redacao_jornada_completa.sql
 -- ============================================================================
 
 create schema if not exists private authorization postgres;
@@ -2790,7 +2790,7 @@ create trigger set_avaliacoes_competencias_redacao_updated_at before update on p
 for each row execute function public.set_updated_at();
 
 -- ============================================================================
--- ETAPA 11/66: migrations/20260831_agenda_notificacoes.sql
+-- ETAPA 11/67: migrations/20260831_agenda_notificacoes.sql
 -- ============================================================================
 
 create extension if not exists pgcrypto;
@@ -3005,7 +3005,7 @@ begin
 end $$;
 
 -- ============================================================================
--- ETAPA 12/66: migrations/20260902_biblioteca_acervo_unificado.sql
+-- ETAPA 12/67: migrations/20260902_biblioteca_acervo_unificado.sql
 -- ============================================================================
 
 -- OminiSaber | Acervo físico, PDFs verificados e reserva transacional
@@ -3335,7 +3335,7 @@ begin
 end $$;
 
 -- ============================================================================
--- ETAPA 13/66: migrations/20260903_portal_gestor.sql
+-- ETAPA 13/67: migrations/20260903_portal_gestor.sql
 -- ============================================================================
 
 alter table public.perfis add column if not exists email_contato text;
@@ -3446,7 +3446,7 @@ grant select, insert on public.solicitacoes_acesso to authenticated;
 grant select on public.gestor_auditoria to authenticated;
 
 -- ============================================================================
--- ETAPA 14/66: migrations/20260903_perfis_gestor_rls.sql
+-- ETAPA 14/67: migrations/20260903_perfis_gestor_rls.sql
 -- ============================================================================
 
 alter table public.perfis add column if not exists ativo boolean not null default true;
@@ -3505,7 +3505,7 @@ grant usage on schema public to authenticated;
 revoke all on public.perfis from anon;
 
 -- ============================================================================
--- ETAPA 15/66: migrations/20260903_importacao_curricular.sql
+-- ETAPA 15/67: migrations/20260903_importacao_curricular.sql
 -- ============================================================================
 
 alter table public.descritores_curriculares
@@ -3742,7 +3742,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 16/66: migrations/20260903_importacao_curricular_fase1.sql
+-- ETAPA 16/67: migrations/20260903_importacao_curricular_fase1.sql
 -- ============================================================================
 
 alter table public.importacoes_curriculo
@@ -3836,7 +3836,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 17/66: migrations/20260903_importacao_curricular_fase2.sql
+-- ETAPA 17/67: migrations/20260903_importacao_curricular_fase2.sql
 -- ============================================================================
 
 alter table public.importacoes_curriculo_itens
@@ -3846,7 +3846,7 @@ alter table public.importacoes_curriculo_itens
   check (tipo in ('habilidade','referencia_ensino_fundamental','descritor','aviso'));
 
 -- ============================================================================
--- ETAPA 18/66: migrations/20260903_importacao_curricular_fase3.sql
+-- ETAPA 18/67: migrations/20260903_importacao_curricular_fase3.sql
 -- ============================================================================
 
 create table if not exists public.documentos_curriculares (
@@ -4082,7 +4082,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 19/66: migrations/20260903_importacao_curricular_fase3_1.sql
+-- ETAPA 19/67: migrations/20260903_importacao_curricular_fase3_1.sql
 -- ============================================================================
 
 create or replace function public.aprovar_importacao_curriculo(p_importacao_id uuid) returns uuid language plpgsql security definer set search_path = '' as $$
@@ -4126,7 +4126,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 20/66: migrations/20260903_redacoes_avaliacoes_portugues.sql
+-- ETAPA 20/67: migrations/20260903_redacoes_avaliacoes_portugues.sql
 -- ============================================================================
 
 -- Rascunhos privados da devolutiva. A redação do aluno permanece imutável até
@@ -4291,7 +4291,7 @@ revoke all on function public.corrigir_redacao(uuid,numeric,text,jsonb,jsonb) fr
 grant execute on function public.corrigir_redacao(uuid,numeric,text,jsonb,jsonb) to authenticated;
 
 -- ============================================================================
--- ETAPA 21/66: migrations/20260904_importacao_curricular_fase3_2.sql
+-- ETAPA 21/67: migrations/20260904_importacao_curricular_fase3_2.sql
 -- ============================================================================
 
 create or replace function public.criar_importacao_curriculo(
@@ -4368,14 +4368,14 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 22/66: migrations/20260904_importacao_curricular_correcao_policy.sql
+-- ETAPA 22/67: migrations/20260904_importacao_curricular_correcao_policy.sql
 -- ============================================================================
 
 drop policy if exists objetos_leitura on public.objetos_conhecimento;
 create policy objetos_leitura on public.objetos_conhecimento for select to authenticated using (exists (select 1 from public.habilidade_objetos ho join public.curriculo_periodos p on p.id = ho.periodo_id join public.curriculos c on c.id = p.curriculo_id where ho.objeto_id = public.objetos_conhecimento.id and (c.status = 'publicado' or (select public.usuario_role()) = 'gestor')));
 
 -- ============================================================================
--- ETAPA 23/66: migrations/20260904_importacao_curricular_fase3_3.sql
+-- ETAPA 23/67: migrations/20260904_importacao_curricular_fase3_3.sql
 -- ============================================================================
 
 create or replace function public.criar_importacao_curriculo(
@@ -4517,7 +4517,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 24/66: migrations/20260904_importacao_curricular_fase3_4.sql
+-- ETAPA 24/67: migrations/20260904_importacao_curricular_fase3_4.sql
 -- ============================================================================
 
 create or replace function public.aprovar_importacao_curriculo(p_importacao_id uuid) returns uuid language plpgsql security definer set search_path = '' as $$
@@ -4654,7 +4654,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 25/66: migrations/20260904_importacao_curricular_fase3_5.sql
+-- ETAPA 25/67: migrations/20260904_importacao_curricular_fase3_5.sql
 -- ============================================================================
 
 create or replace function public.aprovar_importacao_curriculo(p_importacao_id uuid) returns uuid language plpgsql security definer set search_path = '' as $$
@@ -4865,7 +4865,7 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 26/66: migrations/20260905_integracao_curricular_fase4.sql
+-- ETAPA 26/67: migrations/20260905_integracao_curricular_fase4.sql
 -- ============================================================================
 
 create table if not exists public.questoes_avaliacao_habilidades (
@@ -5140,7 +5140,7 @@ revoke all on function public.cobertura_curricular(public.materia_aluno, smallin
 grant execute on function public.cobertura_curricular(public.materia_aluno, smallint, smallint, uuid, uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 27/66: migrations/20260905_integracao_curricular_fase4_1.sql
+-- ETAPA 27/67: migrations/20260905_integracao_curricular_fase4_1.sql
 -- ============================================================================
 
 create or replace function public.habilidade_compativel_com_materia(
@@ -5281,7 +5281,7 @@ with check (
 );
 
 -- ============================================================================
--- ETAPA 28/66: migrations/20260905_descritores_manual_fase2.sql
+-- ETAPA 28/67: migrations/20260905_descritores_manual_fase2.sql
 -- ============================================================================
 
 create or replace function public.salvar_descritores_curriculares_lote(p_descritores jsonb)
@@ -5437,7 +5437,7 @@ revoke all on function public.atualizar_descritor_curricular(uuid, jsonb) from p
 grant execute on function public.atualizar_descritor_curricular(uuid, jsonb) to authenticated;
 
 -- ============================================================================
--- ETAPA 29/66: migrations/20260907_base_comum_enum.sql
+-- ETAPA 29/67: migrations/20260907_base_comum_enum.sql
 -- ============================================================================
 
 -- Execute esta migração isoladamente antes do catálogo em bancos existentes.
@@ -5446,7 +5446,7 @@ alter type public.materia_aluno add value if not exists 'quimica' after 'fisica'
 alter type public.materia_aluno add value if not exists 'biologia' after 'quimica';
 
 -- ============================================================================
--- ETAPA 30/66: migrations/20260907_catalogo_curricular_base_comum.sql
+-- ETAPA 30/67: migrations/20260907_catalogo_curricular_base_comum.sql
 -- ============================================================================
 
 alter table public.habilidade_curriculo_periodos
@@ -5661,7 +5661,7 @@ comment on function public.buscar_catalogo_curricular_detalhado(public.materia_a
 is 'Catálogo oficial detalhado usado pelo motor de atividades do OminiSaber.';
 
 -- ============================================================================
--- ETAPA 31/66: migrations/20260908_engine_atividades_fase2_1.sql
+-- ETAPA 31/67: migrations/20260908_engine_atividades_fase2_1.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 2.1 - fundacao segura do motor de atividades
@@ -6265,7 +6265,7 @@ for select to authenticated using (
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 32/66: migrations/20260908_engine_atividades_fase2_1_ajustes.sql
+-- ETAPA 32/67: migrations/20260908_engine_atividades_fase2_1_ajustes.sql
 -- ============================================================================
 
 -- OminiSaber | Ajustes pós-advisor da Fase 2.1
@@ -6340,7 +6340,7 @@ for delete to authenticated using (
 revoke update on public.questoes_avaliacao_habilidades from authenticated;
 
 -- ============================================================================
--- ETAPA 33/66: migrations/20260908_construtor_atividades_fase2_2.sql
+-- ETAPA 33/67: migrations/20260908_construtor_atividades_fase2_2.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 2.2 - criacao atomica de atividades pelo professor
@@ -6548,7 +6548,7 @@ revoke all on function public.criar_atividade_docente(jsonb) from public, anon;
 grant execute on function public.criar_atividade_docente(jsonb) to authenticated;
 
 -- ============================================================================
--- ETAPA 34/66: migrations/20260908_execucao_correcao_atividades_fase2_3.sql
+-- ETAPA 34/67: migrations/20260908_execucao_correcao_atividades_fase2_3.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 2.3 - execucao do aluno e correcao automatica
@@ -6826,7 +6826,7 @@ grant execute on function public.entregar_tentativa_avaliacao(uuid) to authentic
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 35/66: migrations/20260908_execucao_correcao_atividades_fase2_3_ajustes.sql
+-- ETAPA 35/67: migrations/20260908_execucao_correcao_atividades_fase2_3_ajustes.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 2.3 - ajuste de inicio de tentativa para privilegios do aluno
@@ -6880,7 +6880,7 @@ revoke all on function public.iniciar_tentativa_avaliacao(uuid) from public, ano
 grant execute on function public.iniciar_tentativa_avaliacao(uuid) to authenticated;
 
 -- ============================================================================
--- ETAPA 36/66: migrations/20260908_execucao_correcao_atividades_fase2_3_compatibilidade.sql
+-- ETAPA 36/67: migrations/20260908_execucao_correcao_atividades_fase2_3_compatibilidade.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 2.3 - compatibilidade com validacao legada de tentativas
@@ -6924,7 +6924,7 @@ $$;
 revoke all on function public.validar_atualizacao_tentativa_docente() from public, anon, authenticated;
 
 -- ============================================================================
--- ETAPA 37/66: migrations/20260908_correcao_docente_resultados_fase2_3.sql
+-- ETAPA 37/67: migrations/20260908_correcao_docente_resultados_fase2_3.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 2.3 - correcao docente e resultados por descritor
@@ -7146,7 +7146,7 @@ grant execute on function public.resultados_descritores_avaliacao(uuid) to authe
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 38/66: migrations/20260908_correcao_docente_resultados_fase2_3_ajustes.sql
+-- ETAPA 38/67: migrations/20260908_correcao_docente_resultados_fase2_3_ajustes.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 2.3 - correcao docente com privilegios minimos por RLS
@@ -7277,7 +7277,7 @@ grant execute on function public.corrigir_resposta_avaliacao(uuid, numeric, text
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 39/66: migrations/20260908_vinculos_docentes_compatibilidade_fase2_3.sql
+-- ETAPA 39/67: migrations/20260908_vinculos_docentes_compatibilidade_fase2_3.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 2.3 - compatibilidade dos vinculos criados pelo gestor
@@ -7412,7 +7412,7 @@ using (
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 40/66: migrations/20260908_resultados_recuperacao_fase2_4.sql
+-- ETAPA 40/67: migrations/20260908_resultados_recuperacao_fase2_4.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 2.4 - resultados, ajustes auditáveis e recuperação
@@ -7748,7 +7748,7 @@ grant execute on function public.desempenho_aluno_descritores() to authenticated
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 41/66: migrations/20260908_resultados_recuperacao_fase2_4_ajustes.sql
+-- ETAPA 41/67: migrations/20260908_resultados_recuperacao_fase2_4_ajustes.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 2.4 - correção da validação de habilidades da recuperação
@@ -7838,7 +7838,7 @@ grant execute on function public.criar_recuperacao_descritores(uuid, uuid[], tex
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 42/66: migrations/20260908_resultados_recuperacao_fase2_4_indices.sql
+-- ETAPA 42/67: migrations/20260908_resultados_recuperacao_fase2_4_indices.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 2.4 - índices das relações de auditoria de notas
@@ -7849,7 +7849,7 @@ create index if not exists ajustes_notas_ajustado_por_idx
   on public.ajustes_notas_avaliacao (ajustado_por);
 
 -- ============================================================================
--- ETAPA 43/66: migrations/20260909_corrigir_execucao_criar_atividade_docente.sql
+-- ETAPA 43/67: migrations/20260909_corrigir_execucao_criar_atividade_docente.sql
 -- ============================================================================
 
 -- OminiSaber | Corrige a execução atômica do construtor de atividades.
@@ -7867,7 +7867,7 @@ grant execute on function public.criar_atividade_docente(jsonb) to authenticated
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 44/66: migrations/20260909_atividade_docente_privilegios_minimos.sql
+-- ETAPA 44/67: migrations/20260909_atividade_docente_privilegios_minimos.sql
 -- ============================================================================
 
 -- OminiSaber | Privilégios mínimos para o construtor atômico.
@@ -7889,7 +7889,7 @@ grant execute on function public.criar_atividade_docente(jsonb) to authenticated
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 45/66: migrations/20260909122618_atividades_aluno_dashboard_notificacoes.sql
+-- ETAPA 45/67: migrations/20260909122618_atividades_aluno_dashboard_notificacoes.sql
 -- ============================================================================
 
 alter table public.notificacoes
@@ -8035,7 +8035,7 @@ on conflict (avaliacao_id) where avaliacao_id is not null do update set
   updated_at = now();
 
 -- ============================================================================
--- ETAPA 46/66: migrations/20260910_corrigir_codigos_curriculares_matematica.sql
+-- ETAPA 46/67: migrations/20260910_corrigir_codigos_curriculares_matematica.sql
 -- ============================================================================
 
 create or replace function public.habilidade_curricular_publicada(
@@ -8155,7 +8155,7 @@ grant execute on function public.buscar_habilidades_curriculares(
 ) to authenticated;
 
 -- ============================================================================
--- ETAPA 47/66: migrations/20260910_integridade_formatos_atividade.sql
+-- ETAPA 47/67: migrations/20260910_integridade_formatos_atividade.sql
 -- ============================================================================
 
 -- OminiSaber | Integridade dos formatos interativos e correção automática
@@ -8543,7 +8543,7 @@ for insert to authenticated with check (
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 48/66: migrations/20260910_integridade_formatos_atividade_ajustes.sql
+-- ETAPA 48/67: migrations/20260910_integridade_formatos_atividade_ajustes.sql
 -- ============================================================================
 
 -- OminiSaber | Ajuste de privilégios do validador interno de gabaritos
@@ -8556,7 +8556,7 @@ revoke all on function private.validar_gabarito_avaliacao()
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 49/66: migrations/20260910_laboratorio_medidas_geometricas.sql
+-- ETAPA 49/67: migrations/20260910_laboratorio_medidas_geometricas.sql
 -- ============================================================================
 
 -- OminiSaber | Laboratorio de medidas geometricas 2D e 3D
@@ -8787,7 +8787,7 @@ revoke all on function private.validar_questao_avaliacao()
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 50/66: migrations/20260910_proteger_gabarito_geometria.sql
+-- ETAPA 50/67: migrations/20260910_proteger_gabarito_geometria.sql
 -- ============================================================================
 
 -- OminiSaber | Protege gabarito e resolucao do laboratorio geometrico
@@ -8854,7 +8854,7 @@ for each row execute function private.proteger_configuracao_geometria();
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 51/66: migrations/20260916_proteger_respostas_construtor_atividades.sql
+-- ETAPA 51/67: migrations/20260916_proteger_respostas_construtor_atividades.sql
 -- ============================================================================
 
 -- OminiSaber | Protecao de respostas e resolucoes do construtor de atividades
@@ -8963,7 +8963,7 @@ where configuracao ? 'solution'
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 52/66: migrations/20260916_corrigir_visibilidade_habilidades_atividades.sql
+-- ETAPA 52/67: migrations/20260916_corrigir_visibilidade_habilidades_atividades.sql
 -- ============================================================================
 
 -- OminiSaber | Corrige a leitura dos vinculos curriculares nas atividades
@@ -9007,7 +9007,7 @@ grant execute on function public.habilidade_compativel_com_materia(
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 53/66: migrations/20260917_endurecer_execucao_atividades_aluno.sql
+-- ETAPA 53/67: migrations/20260917_endurecer_execucao_atividades_aluno.sql
 -- ============================================================================
 
 -- OminiSaber | Pente-fino da execucao de atividades pelo aluno
@@ -9195,7 +9195,7 @@ where tipo in ('associacao', 'ordenacao');
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 54/66: migrations/20260917_endurecer_execucao_atividades_aluno_ajuste_associacao.sql
+-- ETAPA 54/67: migrations/20260917_endurecer_execucao_atividades_aluno_ajuste_associacao.sql
 -- ============================================================================
 
 create or replace function private.hidratar_configuracao_geometria()
@@ -9287,7 +9287,7 @@ revoke all on function private.hidratar_configuracao_geometria() from public, an
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 55/66: migrations/20260917_endurecer_execucao_atividades_aluno_ajuste_permissoes.sql
+-- ETAPA 55/67: migrations/20260917_endurecer_execucao_atividades_aluno_ajuste_permissoes.sql
 -- ============================================================================
 
 -- A constraint chama esta função com os privilégios do usuário que grava a
@@ -9299,7 +9299,7 @@ grant execute on function private.resposta_avaliacao_preenchida(jsonb)
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 56/66: migrations/20260909_copiloto_docente_fase3_0.sql
+-- ETAPA 56/67: migrations/20260909_copiloto_docente_fase3_0.sql
 -- ============================================================================
 
 -- OminiSaber | Fase 3.0 - Copiloto docente isolado por feature flag
@@ -9492,7 +9492,7 @@ on conflict (chave) do update set
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 57/66: migrations/20260909081800_fase3_advisors_ajustes.sql
+-- ETAPA 57/67: migrations/20260909081800_fase3_advisors_ajustes.sql
 -- ============================================================================
 
 -- OminiSaber | Ajustes dos advisors após a instalação isolada da Fase 3.0
@@ -9542,7 +9542,7 @@ create index if not exists feature_flag_usuarios_concedida_por_idx
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 58/66: migrations/20260909194704_corrigir_integridade_redacoes.sql
+-- ETAPA 58/67: migrations/20260909194704_corrigir_integridade_redacoes.sql
 -- ============================================================================
 
 -- Uma correção só é válida quando as cinco competências existem e totalizam a
@@ -9780,7 +9780,7 @@ for each row execute function private.validar_integridade_correcao_redacao();
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 59/66: migrations/20260925090000_organizacao_governanca_banco.sql
+-- ETAPA 59/67: migrations/20260925090000_organizacao_governanca_banco.sql
 -- ============================================================================
 
 -- OminiSaber | Governança, observabilidade e índices relacionais do banco
@@ -9953,7 +9953,7 @@ grant execute on function private.database_health_snapshot() to service_role;
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 60/66: migrations/20260926120000_oministudio_persistencia_rls.sql
+-- ETAPA 60/67: migrations/20260926120000_oministudio_persistencia_rls.sql
 -- ============================================================================
 
 -- OminiSaber | OminiStudio - persistencia, publicacao, execucao e RLS
@@ -10749,7 +10749,7 @@ comment on table public.studio_respostas is 'Evidencias e correcao por bloco do 
 comment on table public.studio_auditoria is 'Trilha de auditoria de publicacao, execucao e correcao do OminiStudio.';
 
 -- ============================================================================
--- ETAPA 61/66: migrations/20260927043000_corrigir_persistencia_redacoes.sql
+-- ETAPA 61/67: migrations/20260927043000_corrigir_persistencia_redacoes.sql
 -- ============================================================================
 
 -- O cliente autenticado precisa de privilégios de tabela e de políticas RLS.
@@ -10803,7 +10803,7 @@ comment on policy redacoes_update_aluno on public.redacoes is
   'Aluno autenticado salva e envia somente o próprio rascunho.';
 
 -- ============================================================================
--- ETAPA 62/66: migrations/20260927193604_push_dispositivos_agenda.sql
+-- ETAPA 62/67: migrations/20260927193604_push_dispositivos_agenda.sql
 -- ============================================================================
 
 create table if not exists public.push_dispositivos (
@@ -10930,7 +10930,7 @@ before update on public.push_entregas
 for each row execute function public.set_updated_at();
 
 -- ============================================================================
--- ETAPA 63/66: migrations/20260928_corrigir_recuperacao_ajuste_nota.sql
+-- ETAPA 63/67: migrations/20260928_corrigir_recuperacao_ajuste_nota.sql
 -- ============================================================================
 
 -- OminiSaber | Correções de recuperação e ajuste de nota
@@ -11035,7 +11035,7 @@ grant execute on function public.ajustar_nota_avaliacao(uuid, numeric, text)
 notify pgrst, 'reload schema';
 
 -- ============================================================================
--- ETAPA 64/66: migrations/20261003_omnistudio_fluxo_integrado.sql
+-- ETAPA 64/67: migrations/20261003_omnistudio_fluxo_integrado.sql
 -- ============================================================================
 
 -- OmniStudio: catálogo do aluno, versões retomáveis e percurso validado no servidor.
@@ -11808,7 +11808,7 @@ grant execute on function public.resolver_proximo_bloco_studio(uuid,text) to aut
 grant execute on function public.salvar_resposta_studio(uuid,text,jsonb,boolean) to authenticated;
 
 -- ============================================================================
--- ETAPA 65/66: migrations/20261003_omnistudio_matematica.sql
+-- ETAPA 65/67: migrations/20261003_omnistudio_matematica.sql
 -- ============================================================================
 
 -- OmniStudio: metadados públicos de fórmulas, resolução guiada e plano cartesiano.
@@ -11918,7 +11918,7 @@ comment on function private.studio_validar_trabalho(jsonb) is
   'Valida percurso e metadados matematicos publicos limitados, sem executar expressoes ou expor gabaritos.';
 
 -- ============================================================================
--- ETAPA 66/66: migrations/20261003_copiloto_ideias_trilhas.sql
+-- ETAPA 66/67: migrations/20261003_copiloto_ideias_trilhas.sql
 -- ============================================================================
 
 -- OminiSaber | Copiloto: ideias e trilhas com atividades completas.
@@ -11934,6 +11934,200 @@ alter table public.copiloto_execucoes
 
 comment on column public.copiloto_execucoes.prompt_versao is
   'Versão do contrato pedagógico e validação utilizados; registros anteriores mantêm sua versão original.';
+
+-- ============================================================================
+-- ETAPA 67/67: migrations/20261006_copiloto_operacoes_piloto.sql
+-- ============================================================================
+
+-- OminiSaber | Fase 3 - reserva atômica de uso do Copiloto.
+-- A operação preserva os valores legados de acao para histórico e compatibilidade.
+
+create or replace function public.reservar_execucao_copiloto(
+  p_professor_id uuid,
+  p_limite_por_minuto integer,
+  p_limite_diario integer,
+  p_sessao_id uuid,
+  p_turma_id uuid,
+  p_acao text,
+  p_materia_codigo public.materia_aluno,
+  p_habilidade_ids uuid[],
+  p_solicitacao_resumo jsonb,
+  p_prompt_versao text,
+  p_provedor text,
+  p_modelo text
+)
+returns table (execution_id uuid, limit_reason text)
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_minute_count integer;
+  v_daily_count integer;
+  v_execution_id uuid;
+begin
+  if p_professor_id is null
+     or p_turma_id is null
+     or p_limite_por_minuto < 1
+     or p_limite_diario < 1
+     or jsonb_typeof(p_solicitacao_resumo) <> 'object'
+     or p_acao not in ('gerar_atividade', 'gerar_trilha', 'gerar_ideias', 'revisar_atividade', 'sugerir_recuperacao') then
+    raise exception 'Parâmetros inválidos para reserva do Copiloto.' using errcode = '22023';
+  end if;
+
+  perform pg_catalog.pg_advisory_xact_lock(
+    pg_catalog.hashtextextended(p_professor_id::text, 20261006)
+  );
+
+  select count(*)::integer into v_minute_count
+  from public.copiloto_execucoes
+  where professor_id = p_professor_id
+    and (case when acao = 'gerar_ideias' then 'gerar_atividade' else acao end)
+      = (case when p_acao = 'gerar_ideias' then 'gerar_atividade' else p_acao end)
+    and status in ('processando', 'concluida')
+    and created_at >= now() - interval '1 minute';
+  if v_minute_count >= p_limite_por_minuto then
+    return query select null::uuid, 'minute'::text;
+    return;
+  end if;
+
+  select count(*)::integer into v_daily_count
+  from public.copiloto_execucoes
+  where professor_id = p_professor_id
+    and (case when acao = 'gerar_ideias' then 'gerar_atividade' else acao end)
+      = (case when p_acao = 'gerar_ideias' then 'gerar_atividade' else p_acao end)
+    and status in ('processando', 'concluida')
+    and created_at >= now() - interval '1 day';
+  if v_daily_count >= p_limite_diario then
+    return query select null::uuid, 'daily'::text;
+    return;
+  end if;
+
+  insert into public.copiloto_execucoes (
+    sessao_id, professor_id, turma_id, acao, materia_codigo, habilidade_ids,
+    solicitacao_resumo, prompt_versao, provedor, modelo
+  ) values (
+    p_sessao_id, p_professor_id, p_turma_id, p_acao, p_materia_codigo,
+    coalesce(p_habilidade_ids, '{}'), p_solicitacao_resumo, p_prompt_versao,
+    p_provedor, p_modelo
+  ) returning id into v_execution_id;
+
+  return query select v_execution_id, null::text;
+end;
+$$;
+
+revoke all on function public.reservar_execucao_copiloto(
+  uuid, integer, integer, uuid, uuid, text, public.materia_aluno, uuid[], jsonb, text, text, text
+) from public, anon, authenticated;
+grant execute on function public.reservar_execucao_copiloto(
+  uuid, integer, integer, uuid, uuid, text, public.materia_aluno, uuid[], jsonb, text, text, text
+) to service_role;
+
+comment on function public.reservar_execucao_copiloto(
+  uuid, integer, integer, uuid, uuid, text, public.materia_aluno, uuid[], jsonb, text, text, text
+) is 'Serializa e reserva uma execução do Copiloto dentro dos limites por professor.';
+
+create or replace function public.resumo_habilidades_copiloto(
+  p_turma_id uuid,
+  p_materia_codigo public.materia_aluno
+)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+declare
+  v_professor_id uuid := (select auth.uid());
+  v_result jsonb;
+begin
+  if v_professor_id is null or (select public.usuario_role()) <> 'professor'
+     or not exists (
+       select 1 from public.perfis p
+       where p.id = v_professor_id and p.role = 'professor' and p.ativo = true
+     )
+     or not exists (
+       select 1 from public.professor_turma_materias ptm
+       where ptm.professor_id = v_professor_id
+         and ptm.turma_id = p_turma_id
+         and ptm.materia_codigo = p_materia_codigo
+         and ptm.ativo = true
+     ) then
+    raise exception 'Sem autorização para analisar esta turma e matéria.' using errcode = '42501';
+  end if;
+
+  with scoped_activities as (
+    select a.id
+    from public.avaliacoes_docentes a
+    where a.professor_id = v_professor_id
+      and a.turma_id = p_turma_id
+      and a.materia_codigo = p_materia_codigo
+      and a.status in ('publicado', 'encerrado')
+    order by a.created_at desc
+    limit 20
+  ), latest_attempts as (
+    select distinct on (t.aluno_id, t.avaliacao_id)
+      t.id, t.avaliacao_id, t.status
+    from public.tentativas_avaliacao t
+    join scoped_activities a on a.id = t.avaliacao_id
+    where t.status in ('enviada', 'corrigida')
+    order by t.aluno_id, t.avaliacao_id, t.numero_tentativa desc
+  ), corrected_answers as (
+    select r.questao_id, r.pontos_automaticos, r.pontos_manuais
+    from public.respostas_avaliacao r
+    join latest_attempts t on t.id = r.tentativa_id
+    where t.status = 'corrigida'
+  ), skill_performance as (
+    select h.id, h.codigo, h.descricao,
+      count(*)::integer as evidence_count,
+      round(100 * sum(r.pontos_automaticos + r.pontos_manuais)
+        / nullif(sum(q.pontos), 0), 1) as performance_percent,
+      coalesce((
+        select jsonb_agg(descriptor order by descriptor ->> 'code')
+        from (
+          select distinct jsonb_build_object('code', d.codigo, 'description', d.descricao) as descriptor
+          from public.habilidade_descritores hd
+          join public.descritores_curriculares d on d.id = hd.descritor_id
+          where hd.habilidade_id = h.id
+          limit 8
+        ) descriptor_rows
+      ), '[]'::jsonb) as descriptors
+    from public.questoes_avaliacao_habilidades qh
+    join public.habilidades_curriculares h on h.id = qh.habilidade_id
+    join public.questoes_avaliacao q on q.id = qh.questao_id
+    join scoped_activities a on a.id = q.avaliacao_id
+    join corrected_answers r on r.questao_id = q.id
+    group by h.id, h.codigo, h.descricao
+    having count(*) >= 3 and sum(q.pontos) > 0
+  ), critical_skills as (
+    select * from skill_performance
+    where performance_percent < 60
+    order by performance_percent, evidence_count desc, codigo
+    limit 12
+  )
+  select jsonb_build_object(
+    'activityCount', (select count(*)::integer from scoped_activities),
+    'correctedAttemptCount', (select count(*)::integer from latest_attempts where status = 'corrigida'),
+    'criticalSkills', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'id', id, 'code', codigo, 'description', descricao,
+        'performancePercent', performance_percent, 'evidenceCount', evidence_count,
+        'descriptors', descriptors
+      ) order by performance_percent, codigo)
+      from critical_skills
+    ), '[]'::jsonb)
+  ) into v_result;
+  return v_result;
+end;
+$$;
+
+revoke all on function public.resumo_habilidades_copiloto(uuid, public.materia_aluno)
+  from public, anon;
+grant execute on function public.resumo_habilidades_copiloto(uuid, public.materia_aluno)
+  to authenticated;
+
+comment on function public.resumo_habilidades_copiloto(uuid, public.materia_aluno) is
+  'Retorna somente habilidades abaixo de 60% com pelo menos três evidências corrigidas no escopo do professor autenticado.';
 
 commit;
 

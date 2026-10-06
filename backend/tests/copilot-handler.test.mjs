@@ -18,7 +18,7 @@ const trail = { resumo: 'Um percurso completo de modelagem seguido de aplicaçã
   { titulo: 'Aplicar a um novo cenário', objetivo: 'Transferir a divisão para outra quantidade e verificar o resultado.', interacao_tipo: 'lista', fase: 'transferencia', ponte: 'Explique como o mesmo método funciona com a nova quantidade.', atividade: activity(2) },
 ] } };
 
-function server({ output = ideas, providerStatus = 200, providerError, providerResponses = [], internalError, profileRole = 'professor', budgetCount = 0, session = { id: sessionId, contexto: {} }, sessionReadError, memoryWriteError, configuration = {} } = {}) {
+function server({ output = ideas, providerStatus = 200, providerError, providerResponses = [], internalError, profileRole = 'professor', professorId = professor, authenticated = true, analysisData, budgetCount = 0, session = { id: sessionId, contexto: {} }, sessionReadError, memoryWriteError, configuration = {} } = {}) {
   const queries = []; const providerCalls = []; const providerSignals = []; const diagnostics = [];
   const db = { from(table) {
     const query = { table, filters: [], mutation: null }; queries.push(query);
@@ -32,7 +32,11 @@ function server({ output = ideas, providerStatus = 200, providerError, providerR
         }
         return { data: session, error: sessionReadError ? new Error(sessionReadError) : null };
       }
-      const tables = { perfis: { id: professor, role: profileRole, ativo: true, tipo_professor: 'matematica' }, feature_flags: { habilitada_global: true, configuracao: configuration }, feature_flag_usuarios: null, professor_turma_materias: { turma_id: classId, materia_codigo: 'matematica' }, turmas: { id: classId, nome: 'Turma de teste', serie: '2ª série', ano_letivo: 2026 }, copiloto_execucoes: { id: executionId } };
+      if (table === 'professor_turma_materias') {
+        const owner = query.filters.find(([key]) => key === 'professor_id')?.[1];
+        return { data: owner === professor && professorId === professor ? { turma_id: classId, materia_codigo: 'matematica' } : null, error: null };
+      }
+      const tables = { perfis: { id: professorId, role: profileRole, ativo: true, tipo_professor: 'matematica' }, feature_flags: { habilitada_global: true, configuracao: configuration }, feature_flag_usuarios: null, professor_turma_materias: { turma_id: classId, materia_codigo: 'matematica' }, turmas: { id: classId, nome: 'Turma de teste', serie: '2ª série', ano_letivo: 2026 }, copiloto_execucoes: { id: executionId } };
       return { data: Object.hasOwn(tables, table) ? tables[table] : [], error: null, count: budgetCount };
     };
     const builder = {
@@ -41,13 +45,27 @@ function server({ output = ideas, providerStatus = 200, providerError, providerR
       insert(value) { query.mutation = { kind: 'insert', value }; return builder; }, update(value) { query.mutation = { kind: 'update', value }; return builder; },
       single() { return Promise.resolve(result()); }, maybeSingle() { return Promise.resolve(result()); }, then(resolve, reject) { return Promise.resolve(result()).then(resolve, reject); },
     }; return builder;
+  },
+  async rpc(name, args) {
+    queries.push({ rpc: name, args });
+    if (name === 'reservar_execucao_copiloto') {
+      return { data: budgetCount >= args.p_limite_por_minuto ? [{ execution_id: null, limit_reason: 'minute' }] : [{ execution_id: executionId, limit_reason: null }], error: null };
+    }
+    if (name === 'resumo_habilidades_copiloto') {
+      return { data: analysisData || { activityCount: 4, correctedAttemptCount: 12, criticalSkills: [{ id: '50000000-0000-4000-8000-000000000001', code: 'HAB-01', description: 'Comparar evidências.', performancePercent: 42, evidenceCount: 12, descriptors: [{ code: 'D-01', description: 'Identificar relações.' }] }] }, error: null };
+    }
+    if (name === 'buscar_habilidades_curriculares') {
+      const skillId = '50000000-0000-4000-8000-000000000001';
+      return { data: args.p_serie === 2 && args.p_trimestre === 2 ? [{ habilidade_id: skillId, codigo: 'HAB-01', descricao: 'Comparar evidências.', serie: 2, trimestre: 2, descritores: [{ codigo: 'D-01', titulo: 'Identificar relações.' }] }] : [], error: null };
+    }
+    return { data: null, error: new Error(`Unexpected RPC: ${name}`) };
   } };
   let handler;
   const secrets = { SUPABASE_URL: 'https://synthetic.invalid', SUPABASE_ANON_KEY: 'synthetic-public-key', SUPABASE_SERVICE_ROLE_KEY: 'synthetic-service-key', GEMINI_API_KEY: 'synthetic-model-key' };
   const sandbox = { ...contract, ...studio, crypto: globalThis.crypto, performance, Request, Response, AbortSignal, Error, SyntaxError,
     console: { warn: value => diagnostics.push(JSON.parse(value)) },
     Deno: { env: { get: key => secrets[key] }, serve: callback => { handler = callback; } },
-    createClient: (_url, _key, options) => options.global ? { auth: { getUser: async () => ({ data: { user: { id: professor } }, error: null }) } } : db,
+    createClient: (_url, _key, options) => options.global ? { ...db, auth: { getUser: async () => ({ data: { user: authenticated ? { id: professorId } : null }, error: authenticated ? null : new Error('missing session') }) } } : db,
     supabaseCorsHeaders: {}, PORTUGUESE_PROMPT_CASES: [], GENERAL_PROMPT_CASES: [], selectPortuguesePromptCases: () => [], selectGeneralPromptCases: () => [],
     fetch: async (_url, options) => {
       providerCalls.push(JSON.parse(options.body));
@@ -69,7 +87,7 @@ test('handler gera ideias e trilhas com logging válido, escopo docente e contex
   for (const [action, output] of [['gerar_ideias', ideas], ['gerar_trilha', trail]]) {
     const edge = server({ output });
     const result = await edge.send({ action, currentActivity: { title: 'Rascunho', instructions: 'Investigue dois dados.', aluno_id: 'private-student-id', questions: [] }, messages: [{ role: 'user', content: 'Torne o desafio mais concreto para a turma.' }] });
-    assert.equal(result.status, 200);
+    assert.equal(result.status, 200, JSON.stringify({ body: result.body, queries: edge.queries, diagnostics: edge.diagnostics }));
     assert.equal(result.body.sessionId, sessionId);
     assert.equal(result.body.contextSummary.analysisAuthorized, false);
     assert.equal(result.body.contextSummary.structuredRepairCount, 0);
@@ -80,15 +98,123 @@ test('handler gera ideias e trilhas com logging válido, escopo docente e contex
     assert.equal(input.conversa_recente.length, 1);
     assert.equal(JSON.stringify(input).includes('private-student-id'), false);
     assert.equal(edge.queries.some(query => ['studio_tentativas', 'tentativas_avaliacao'].includes(query.table)), false);
-    const log = edge.queries.find(query => query.table === 'copiloto_execucoes' && query.mutation?.kind === 'insert').mutation.value;
-    assert.equal(log.acao, action);
-    assert.equal(log.professor_id, professor);
-    assert.equal(log.turma_id, classId);
-    assert.equal(log.prompt_versao, contract.PROMPT_VERSION);
+    const log = edge.queries.find(query => query.rpc === 'reservar_execucao_copiloto').args;
+    assert.equal(log.p_acao, action);
+    assert.equal(log.p_professor_id, professor);
+    assert.equal(log.p_turma_id, classId);
+    assert.equal(log.p_prompt_versao, contract.PROMPT_VERSION);
+    assert.equal(JSON.stringify(log.p_solicitacao_resumo).includes('Compare as quantidades'), false);
     assert.equal(edge.queries.find(query => query.mutation?.value.status === 'concluida').mutation.value.tokens_entrada, 12);
     assert.equal(JSON.stringify(result.body).includes('synthetic-service-key'), false);
     if (action === 'gerar_trilha') assert.ok(result.body.suggestion.trail.steps.every(step => Number.isFinite(Number(step.activity.questions[0].answer))));
   }
+});
+
+test('generate_activity consolida atividade, prova e diagnóstico no mesmo contrato', async () => {
+  for (const [activityType, expectedCategory] of [['activity', 'atividade'], ['exam', 'avaliacao'], ['diagnostic', 'diagnostica']]) {
+    const edge = server({ output: { resumo: 'Uma proposta para revisar evidências observáveis.', avisos: [], atividade: activity(1) } });
+    const result = await edge.send({ operation: 'generate_activity', action: 'gerar_atividade', generationVariant: 'complete', activityType, questionCount: 1, value: 1, objective: 'Compare dados e justifique uma conclusão verificável.' });
+    assert.equal(result.status, 200);
+    assert.equal(result.body.success, true);
+    assert.equal(result.body.operation, 'generate_activity');
+    assert.equal(result.body.data.activity.category, expectedCategory);
+    assert.equal(providerInput(edge.providerCalls[0]).operation, 'generate_activity');
+    assert.equal(edge.queries.find(query => query.rpc === 'reservar_execucao_copiloto').args.p_acao, 'gerar_atividade');
+    assert.equal(edge.queries.some(query => /publicar|publish/i.test(query.rpc || query.table || '')), false);
+  }
+  const invalidType = server();
+  assert.equal((await invalidType.send({ operation: 'generate_activity', activityType: 'chat' })).status, 400);
+  assert.equal(invalidType.providerCalls.length, 0);
+});
+
+test('habilidades e descritores são autorizados para série e trimestre obtidos no contexto', async () => {
+  const skillId = '50000000-0000-4000-8000-000000000001';
+  const generatedActivity = activity(1);
+  generatedActivity.questoes[0].habilidade_ids = [skillId];
+  const edge = server({ output: { resumo: 'Uma comparação alinhada às evidências curriculares.', avisos: [], atividade: generatedActivity } });
+  const result = await edge.send({ operation: 'generate_activity', objective: 'Compare dados e registre uma conclusão verificável.', questionCount: 1, value: 1, trimester: 2, skillIds: [skillId] });
+  assert.equal(result.status, 200);
+  const curriculumCall = edge.queries.find(query => query.rpc === 'buscar_habilidades_curriculares');
+  assert.equal(curriculumCall.args.p_serie, 2);
+  assert.equal(curriculumCall.args.p_trimestre, 2);
+  assert.equal(providerInput(edge.providerCalls[0]).habilidades[0].descritores[0].codigo, 'D-01');
+  const invalidTrimester = server();
+  assert.equal((await invalidTrimester.send({ trimester: 4 })).status, 400);
+  assert.equal(invalidTrimester.providerCalls.length, 0);
+  const invalidSkill = server();
+  assert.equal((await invalidSkill.send({ skillIds: ['50000000-0000-4000-8000-000000000099'], trimester: 2 })).status, 400);
+  assert.equal(invalidSkill.providerCalls.length, 0);
+  const clientSelectedSkills = server({ output: { resumo: 'A turma precisa consolidar a comparação de evidências.', dificuldades_recorrentes: ['Distinguir dado de conclusão.'], recuperacao: { objetivo: 'Comparar dados antes de uma conclusão.', etapas: ['Modelar uma comparação curta.', 'Praticar em novo contexto.'] } } });
+  assert.equal((await clientSelectedSkills.send({ operation: 'analyze_class', skillIds: [skillId] })).status, 200);
+  assert.equal(clientSelectedSkills.queries.some(query => query.rpc === 'buscar_habilidades_curriculares'), false);
+});
+
+test('adapt_question envia somente a questão-alvo e uma ação estruturada', async () => {
+  const currentActivity = { title: 'Comparar dados', instructions: 'Leia os dados e calcule a diferença.', duration: 20, value: 2, scoringMode: 'igual', questions: [
+    { type: 'calculo', statement: 'Calcule a diferença entre 18 e 7.', alternatives: [], answer: '11', explanation: 'Subtraia sete de dezoito.', points: 1, skillIds: [] },
+    { type: 'calculo', statement: 'Calcule a diferença entre 25 e 9.', alternatives: [], answer: '16', explanation: 'Subtraia nove de vinte e cinco.', points: 1, skillIds: [] },
+  ] };
+  for (const [adaptation, instruction] of [['simplify', /Simplifique apenas/], ['increase_difficulty', /Aumente moderadamente/], ['alternative', /questão alternativa/]]) {
+    const edge = server({ output: { resumo: 'A questão foi adaptada sem mudar o objetivo.', avisos: [], atividade: activity(1) } });
+    const result = await edge.send({ operation: 'adapt_question', action: 'revisar_atividade', adaptation, questionIndex: 1, currentActivity, objective: '' });
+    assert.equal(result.status, 200);
+    assert.equal(result.body.operation, 'adapt_question');
+    assert.equal(result.body.data.activity.questions.length, 1);
+    const input = providerInput(edge.providerCalls[0]);
+    assert.equal(input.questao_alvo.statement, currentActivity.questions[1].statement);
+    assert.equal(input.atividade_atual, null);
+    assert.equal(input.contexto.adaptation, adaptation);
+    assert.match(edge.providerCalls[0].system_instruction, instruction);
+    assert.equal(edge.providerCalls[0].response_format.schema.properties.atividade.properties.questoes.minItems, 1);
+    assert.equal(JSON.stringify(edge.queries.find(query => query.rpc === 'reservar_execucao_copiloto').args).includes('Calcul'), false);
+    assert.equal(edge.queries.some(query => /publicar|publish/i.test(query.rpc || query.table || '')), false);
+  }
+  const invalidIndex = server();
+  assert.equal((await invalidIndex.send({ operation: 'adapt_question', adaptation: 'simplify', questionIndex: 9, currentActivity, objective: '' })).status, 400);
+  assert.equal(invalidIndex.providerCalls.length, 0);
+});
+
+test('analyze_class usa RPC autorizada, entrega agregados e requer evidência suficiente', async () => {
+  const analysis = { resumo: 'A turma demonstra dificuldade em comparar evidências.', dificuldades_recorrentes: ['Confundir observação com conclusão.'], recuperacao: { objetivo: 'Comparar dados antes de justificar uma conclusão.', etapas: ['Modelar a leitura de uma tabela curta com a turma.', 'Praticar em pares usando dados de um novo contexto.'] } };
+  const edge = server({ output: analysis });
+  const result = await edge.send({ operation: 'analyze_class', action: 'sugerir_recuperacao', objective: 'Não persistir este texto livre: nome de estudante fictício.' });
+  assert.equal(result.status, 200);
+  assert.equal(result.body.success, true);
+  assert.equal(result.body.operation, 'analyze_class');
+  assert.equal(result.body.data.criticalSkills[0].performancePercent, 42);
+  assert.deepEqual(result.body.data.recurringDifficulties, analysis.dificuldades_recorrentes);
+  const provider = providerInput(edge.providerCalls[0]);
+  assert.equal(provider.resultados_agregados.habilidadesCriticas[0].code, 'HAB-01');
+  assert.equal(JSON.stringify(provider).includes('Nome de estudante'), false);
+  assert.equal(JSON.stringify(edge.queries.find(query => query.rpc === 'reservar_execucao_copiloto').args).includes('nome de estudante'), false);
+  assert.equal(edge.queries.some(query => ['tentativas_avaliacao', 'respostas_avaliacao'].includes(query.table)), false);
+  assert.equal(edge.queries.some(query => /publicar|publish/i.test(query.rpc || query.table || '')), false);
+
+  const insufficient = server({ analysisData: { activityCount: 0, correctedAttemptCount: 0, criticalSkills: [] } });
+  const blocked = await insufficient.send({ operation: 'analyze_class', objective: '' });
+  assert.equal(blocked.status, 422);
+  assert.equal(insufficient.providerCalls.length, 0);
+});
+
+test('analyze_class trata JSON incompleto do Gemini sem retornar conteúdo inválido', async () => {
+  const edge = server({ output: { resumo: 'Resposta parcial.' } });
+  const result = await edge.send({ operation: 'analyze_class', objective: '' });
+  assert.equal(result.status, 502);
+  assert.equal(result.body.success, false);
+  assert.match(result.body.error.message, /dificuldade recorrente/);
+  assert.equal(edge.providerCalls.length, 2);
+  assert.equal(JSON.stringify(result.body).includes('Resposta parcial.'), false);
+  assert.equal(edge.queries.some(query => query.table === 'copiloto_execucoes' && query.mutation?.value.status === 'concluida'), false);
+});
+
+test('Professor B, usuário sem sessão e ação de publicação são bloqueados', async () => {
+  const foreign = server({ professorId: '10000000-0000-4000-8000-000000000002' });
+  assert.equal((await foreign.send({ operation: 'generate_activity' })).status, 403);
+  assert.equal(foreign.providerCalls.length, 0);
+  const anonymous = server({ authenticated: false });
+  assert.equal((await anonymous.send({ operation: 'generate_activity' })).status, 401);
+  assert.equal(anonymous.providerCalls.length, 0);
+  assert.equal((await server().send({ operation: 'publish_activity' })).status, 400);
 });
 
 test('compatibilidade com schema rejeitado mantém currículo, validação e o mesmo limite de tempo', async () => {
@@ -283,30 +409,32 @@ test('panorama automático usa agregados apenas quando autorizado e relevante', 
   }
 });
 
-test('memória é carregada e persistida apenas no escopo docente, sem aceitar memória do browser', async () => {
-  const memory = { version: 1, turnCount: 9, updatedAt: '2026-10-04T14:00:00.000Z', turns: Array.from({ length: 5 }, (_, index) => ({ action: 'gerar_ideias', title: `Ideia ${index}`, intent: 'Preferir situações familiares e cores para apoiar a leitura.', outcome: 'Usar duplas para conferir os dados.', answer: 'private-answer-key', aluno_id: 'private-student-id' })) };
-  const edge = server({ session: { id: sessionId, contexto: { existingSetting: 'keep', conversationMemory: memory } } });
+test('memória persistente guarda somente metadados de operação e ignora conteúdo livre histórico', async () => {
+  const legacyMemory = { version: 1, turnCount: 9, turns: [{ action: 'gerar_ideias', intent: 'private-student-name', outcome: 'private answer' }] };
+  const edge = server({ session: { id: sessionId, contexto: { existingSetting: 'keep', conversationMemory: legacyMemory } } });
   const result = await edge.send({ sessionId, conversationMemory: { summary: 'forged-browser-memory' }, messages: [{ role: 'user', content: 'Mantenha as cores e troque o contexto para uma feira escolar.' }] });
   assert.equal(result.status, 200);
   const input = providerInput(edge.providerCalls[0]);
-  assert.match(input.memoria_conversa.summary, /situações familiares/);
-  assert.equal(/private-answer-key|private-student-id|forged-browser-memory/.test(JSON.stringify(input)), false);
-  assert.equal(result.body.contextSummary.memoryUsed, true);
+  assert.equal(input.memoria_conversa, null);
+  assert.equal(/private-student-name|private answer|forged-browser-memory/.test(JSON.stringify(input)), false);
+  assert.equal(result.body.contextSummary.memoryUsed, false);
   assert.equal(result.body.contextSummary.memoryPersisted, true);
-  assert.equal(result.body.conversationMemory.turnCount, 10);
+  assert.equal(result.body.conversationMemory.version, 2);
+  assert.equal(result.body.conversationMemory.turnCount, 1);
   const read = edge.queries.find(query => query.table === 'copiloto_sessoes' && !query.mutation);
   const write = edge.queries.find(query => query.table === 'copiloto_sessoes' && query.mutation?.kind === 'update');
   const filters = [['id', sessionId], ['professor_id', professor], ['turma_id', classId], ['materia_codigo', 'matematica']];
   assert.deepEqual(read.filters, filters); assert.deepEqual(write.filters, filters);
   const saved = write.mutation.value.contexto;
   assert.equal(saved.existingSetting, 'keep');
-  assert.equal(saved.conversationMemory.turns.length, 4);
-  assert.ok(JSON.stringify(saved.conversationMemory).length <= 4200);
-  assert.equal(/private-answer-key|private-student-id|questoes|alternativas/.test(JSON.stringify(saved.conversationMemory)), false);
+  assert.equal(saved.conversationMemory, legacyMemory, 'O contexto histórico v1 é preservado sem ser reutilizado.');
+  assert.equal(saved.conversationMemoryV2.turns.length, 1);
+  assert.equal(JSON.stringify(saved.conversationMemoryV2).includes('private-student-name'), false);
+  assert.deepEqual(JSON.parse(JSON.stringify(saved.conversationMemoryV2.turns[0])), { intent: 'gerar_ideias', outcome: 'Rascunho validado', title: 'Sugestão pedagógica', action: 'gerar_ideias' });
   const second = await edge.send({ sessionId, messages: [{ role: 'user', content: 'Agora preserve a feira e deixe os números menores.' }] });
   assert.equal(second.status, 200);
-  assert.match(providerInput(edge.providerCalls[1]).memoria_conversa.summary, /feira escolar/);
-  assert.equal(second.body.conversationMemory.turnCount, 11);
+  assert.equal(providerInput(edge.providerCalls[1]).memoria_conversa.summary, 'Pedido: gerar_ideias\nResultado: Sugestão pedagógica. Rascunho validado');
+  assert.equal(second.body.conversationMemory.turnCount, 2);
 });
 
 test('sessão ausente ou erro de leitura não reutiliza memória externa e falha não sobrescreve resumo', async () => {

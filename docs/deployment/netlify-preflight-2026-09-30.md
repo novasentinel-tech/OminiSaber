@@ -22,7 +22,7 @@ O projeto está preparado para deploy conectado ao repositório usando `netlify.
 Não entram no pacote publicado:
 
 - `.env` e `.env.phase3`
-- chaves `service_role`, secret ou OpenAI
+- chaves `service_role`, secrets do Supabase ou chaves privadas de provedores de IA, incluindo Gemini
 - migrations e schemas SQL
 - scripts administrativos
 - testes, documentação ou `node_modules`

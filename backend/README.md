@@ -16,7 +16,7 @@ npm run env:sync
 
 O script copia somente `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY` ou a chave
 `anon` legada. `SUPABASE_SECRET_KEY`, `SUPABASE_SERVICE_ROLE_KEY` e
-`OPENAI_API_KEY` nunca são copiadas para o navegador.
+`GEMINI_API_KEY` nunca são copiadas para o navegador.
 
 Consulte [ambientes e deploy](../docs/development/ambientes-e-deploy.md) antes de
 alternar entre beta e Fase 3.

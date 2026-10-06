@@ -1,6 +1,6 @@
 # Status do projeto
 
-Atualizado em **3 de outubro de 2026**.
+Atualizado em **6 de outubro de 2026**.
 
 ## Resumo executivo
 
@@ -27,7 +27,7 @@ teste que impedem declarar o sistema pronto para produção. Consulte a
 | Fase 2.3 — execução e correção      | Implementada          | salvamento, entrega, correção automática e revisão manual  |
 | Fase 2.4 — resultados e recuperação | Implementada no beta  | métricas reais, ajustes auditáveis e recuperação focada    |
 | Descoberta de atividades pelo aluno | Implementada no beta  | dashboard, badges, notificações persistentes e Realtime    |
-| Fase 3.0 — Copiloto docente         | Em validação          | Gemini, contexto agregado, habilidades e trilhas            |
+| Fase 3.0 — Copiloto docente         | Implementada localmente; deploy pendente | Três contratos canônicos, Gemini, agregados e revisão docente |
 | Fase 3.1 — construtor adaptativo    | Implementada          | etapa 3 muda por formato e tipo; Prova Segura configurável |
 | Layout do professor                 | Revisado               | auditoria desktop/mobile e lote de 27 evidências           |
 | Engine de trabalhos interativos     | Protótipo funcional    | seleção de fluxo, criação e documentação própria           |
@@ -59,18 +59,36 @@ dados representativos da escola.
 - contas sintéticas fora do ambiente de testes;
 - publicação automática de rascunhos gerados pela IA.
 
-## Próximos critérios de aceite da Fase 3
+## Fase 3 — Estado Local e Aceite Remoto
 
-1. confirmar o deploy da Edge Function no projeto `mvnuhwlnbhijjlosmnfv`;
-2. cadastrar `GEMINI_API_KEY`, `GEMINI_MODEL` e `ALLOWED_ORIGINS` somente nos
-   secrets da Edge Function;
-3. liberar a flag apenas para professores de teste;
-4. validar isolamento entre contas, turmas, matérias e descritores;
-5. confirmar limites por minuto, por dia e por quantidade de questões;
-6. conferir que a sugestão nunca publica uma atividade automaticamente;
-7. revisar registros para garantir ausência de dados pessoais desnecessários;
-8. testar desktop e celular nas quatro especialidades docentes;
-9. só depois decidir uma liberação gradual.
+O escopo local do piloto agora tem três contratos: `generate_activity` (atividade,
+prova, diagnóstica e ideias), `adapt_question` (simplificar, aumentar dificuldade,
+alternativa ou orientação personalizada) e `analyze_class` (habilidades/descritores
+críticos, dificuldades agregadas e recuperação). Trilhas permanecem no banco e no
+código legado, mas fora do fluxo principal do piloto. Toda proposta exige revisão e
+ação explícita do professor; análise de turma não cria nem publica atividade.
+
+Validações locais executadas em 6 de outubro de 2026: 48 testes em
+`npm --prefix backend run test:copilot`, 26 testes em
+`node --test tests/copilot-workspace.test.mjs`, `npm --prefix backend run
+copilot:check`, `npm --prefix backend run sql:check`, `node --check
+frontend/professor/specialty/teacher-copilot.js` e testes PGlite das migrations/RPCs.
+Esses testes usam dados/provider simulados; não comprovam deploy nem qualidade de
+uma chamada Gemini real.
+
+Antes de declarar a Fase 3 liberada remotamente:
+
+1. criar/confirmar um projeto Supabase isolado para a Fase 3;
+2. aplicar `20261006_copiloto_operacoes_piloto.sql` e confirmar que o schema
+  completo contém essa migration;
+3. configurar `GEMINI_API_KEY`, `GEMINI_MODEL`, `SUPABASE_SECRET_KEY` e
+  `ALLOWED_ORIGINS` somente nos secrets do Supabase;
+4. implantar a Edge Function e conferir `verify_jwt = true`;
+5. liberar a feature flag apenas para professores de teste;
+6. testar Professor A e Professor B, dados insuficientes, quota e os três fluxos
+  em desktop e celular nas quatro especialidades;
+7. verificar logs sem prompts, nomes, respostas ou outros dados pessoais;
+8. só então decidir uma liberação gradual.
 
 ## Débitos conhecidos
 

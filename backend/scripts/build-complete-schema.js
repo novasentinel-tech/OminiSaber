@@ -72,6 +72,7 @@ const sources = [
   "migrations/20261003_omnistudio_fluxo_integrado.sql",
   "migrations/20261003_omnistudio_matematica.sql",
   "migrations/20261003_copiloto_ideias_trilhas.sql",
+  "migrations/20261006_copiloto_operacoes_piloto.sql",
 ];
 
 const removeTransactionWrapper = (sql, source) => {

@@ -92,6 +92,59 @@ export function teacherOutputSchema(action: string, allowed: Set<string>, types:
   return { type: "object", additionalProperties: false, required: ["resumo", "avisos", "atividade"], properties: { ...common, atividade: activity } };
 }
 
+export function classAnalysisOutputSchema() {
+  return {
+    type: "object",
+    additionalProperties: false,
+    required: ["resumo", "dificuldades_recorrentes", "recuperacao"],
+    properties: {
+      resumo: stringSchema(10, 1200),
+      dificuldades_recorrentes: { type: "array", minItems: 1, maxItems: 6, items: stringSchema(10, 500) },
+      recuperacao: {
+        type: "object",
+        additionalProperties: false,
+        required: ["objetivo", "etapas"],
+        properties: {
+          objetivo: stringSchema(15, 600),
+          etapas: { type: "array", minItems: 2, maxItems: 5, items: stringSchema(10, 500) },
+        },
+      },
+    },
+  };
+}
+
+export function normalizeClassAnalysis(value: JsonObject, criticalSkills: JsonObject[]) {
+  const summary = requiredText(value.resumo, "síntese da turma", 10, 1200);
+  const difficulties = Array.isArray(value.dificuldades_recorrentes)
+    ? value.dificuldades_recorrentes.map((item) => requiredText(item, "dificuldade recorrente", 10, 500)).slice(0, 6)
+    : [];
+  if (!difficulties.length) throw new Error("A análise precisa identificar ao menos uma dificuldade recorrente.");
+  const recovery = object(value.recuperacao);
+  const steps = Array.isArray(recovery.etapas)
+    ? recovery.etapas.map((item) => requiredText(item, "etapa de recuperação", 10, 500)).slice(0, 5)
+    : [];
+  if (steps.length < 2) throw new Error("A sugestão de recuperação precisa conter ao menos duas etapas.");
+  return {
+    summary,
+    criticalSkills: criticalSkills.slice(0, 12).map((skill) => ({
+      id: text(skill.id, 80),
+      code: text(skill.code, 80),
+      description: text(skill.description, 500),
+      performancePercent: finite(skill.performancePercent, 0, 100, "desempenho da habilidade"),
+      evidenceCount: Math.max(0, Math.round(Number(skill.evidenceCount) || 0)),
+      descriptors: (Array.isArray(skill.descriptors) ? skill.descriptors : []).slice(0, 8).map((descriptor) => ({
+        code: text(object(descriptor).code, 80),
+        description: text(object(descriptor).description, 500),
+      })),
+    })),
+    recurringDifficulties: difficulties,
+    recovery: {
+      objective: requiredText(recovery.objetivo, "objetivo da recuperação", 15, 600),
+      steps,
+    },
+  };
+}
+
 type ActivityFallback = { category: string; duration: number; totalValue: number; secureExam?: boolean };
 export function normalizeActivity(value: unknown, allowed: Set<string>, fallback: ActivityFallback, types = QUESTION_TYPES, quantity = 12) {
   const raw = object(value);

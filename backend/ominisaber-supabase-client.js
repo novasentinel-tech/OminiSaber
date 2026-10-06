@@ -839,12 +839,16 @@
     if (response && typeof response.clone === "function") {
       try {
         const payload = await response.clone().json();
-        const message = [payload?.error, payload?.message]
+        const message = [
+          typeof payload?.error === "string" ? payload.error : payload?.error?.message,
+          payload?.message,
+        ]
           .find((value) => typeof value === "string" && value.trim());
         if (message) {
           const result = new Error(message.trim().slice(0, 1000));
           result.status = response.status;
-          if (typeof payload.errorCode === "string") result.code = payload.errorCode.slice(0, 80);
+          const errorCode = payload.errorCode || payload.error?.code;
+          if (typeof errorCode === "string") result.code = errorCode.slice(0, 80);
           if (typeof payload.retryable === "boolean") result.retryable = payload.retryable;
           if (typeof payload.requestId === "string") result.requestId = payload.requestId.slice(0, 80);
           return result;

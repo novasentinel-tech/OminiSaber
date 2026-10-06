@@ -40,6 +40,12 @@ test('mensagem válida em JSON prevalece sobre status genérico e mensagem do SD
     const response = new Response(JSON.stringify({ error: {}, message: 'O pedido precisa de uma turma vinculada.' }), { status });
     await assert.rejects(browserClient({ response }).requestTeacherCopilot({}), /O pedido precisa de uma turma vinculada\./);
   }
+  const canonical = new Response(JSON.stringify({ success: false, operation: 'adapt_question', error: { code: 'question_required', message: 'Selecione a questão que deseja adaptar.' } }), { status: 400 });
+  await assert.rejects(browserClient({ response: canonical }).requestTeacherCopilot({}), error => {
+    assert.equal(error.message, 'Selecione a questão que deseja adaptar.');
+    assert.equal(error.code, 'question_required');
+    return true;
+  });
 });
 
 test('HTML, JSON inválido ou diagnóstico sem texto recebem mensagem correta sem supor falta de deploy', async () => {

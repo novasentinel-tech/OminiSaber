@@ -196,7 +196,7 @@ if (/<input\b[^>]*\bdata-copilot-consent\b[^>]*\bchecked\b/.test(ui))
   throw new Error(
     "O contexto agregado exige consentimento, desativado por padrão.",
   );
-if (!/\bmessages\s*:\s*operation\s*!==\s*"generate_activity"\s*\?\s*\[\]\s*:\s*boundedMessages\s*\(/.test(ui))
+if (!/\bmessages\s*:\s*operation\s*===\s*"generate_activity"\s*\?\s*boundedMessages\s*\(/.test(ui) || !/\?\s*boundedMessages\s*\([\s\S]*?:\s*\[\]/.test(ui))
   throw new Error(
     "A conversa enviada precisa passar pelo limitador de contexto.",
   );

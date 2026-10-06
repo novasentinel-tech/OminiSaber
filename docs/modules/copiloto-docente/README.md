@@ -51,6 +51,8 @@ O navegador usa apenas a chave pública do Supabase. `GEMINI_API_KEY` e a chave 
 | `copiloto_sessoes`      | Contexto resumido de uma sequência de pedidos.          |
 | `copiloto_execucoes`    | Auditoria de solicitações, estado, resultado e consumo. |
 | `copiloto_feedback`     | Avaliação útil/não útil feita pelo professor.           |
+| `reservar_execucao_copiloto` | Serializa quota e cria a reserva na mesma transação. |
+| `resumo_habilidades_copiloto` | Calcula desempenho crítico por habilidade/descritor no escopo do professor. |
 
 A migration cria o flag `professor_copiloto` com `habilitada_global = false`. Assim, instalar o schema não ativa a função para beta-testers.
 
@@ -61,7 +63,7 @@ A migration cria o flag `professor_copiloto` com `habilitada_global = false`. As
 3. Abre **Copiloto** no cabeçalho do construtor.
 4. Escolhe uma das três operações. Geração distingue atividade/prova/diagnóstica e ideias; adaptação exige ação e questão-alvo; análise consulta somente indicadores agregados.
 5. Revisa a resposta estruturada. Geração/adaptação permite editar e testar a **Visão do aluno**; análise apresenta descritores, dificuldades e recuperação.
-6. Clica em **Aplicar ao rascunho**.
+6. Em geração/adaptação, clica em **Aplicar ao rascunho**. Na análise, pode pedir uma atividade de recuperação, que volta como nova proposta revisável.
 7. Ajusta questões, gabaritos, pontos e orientações.
 8. Publica usando o fluxo transacional existente da Fase 2.
 
@@ -69,7 +71,7 @@ Na base comum, o vínculo curricular é necessário para publicar, conforme a re
 
 Aplicar altera apenas o rascunho em edição. Salvar e publicar continuam ações próprias do construtor. As solicitações da IA e o feedback mantêm o registro de execução existente.
 
-Um percurso é aplicado como **uma atividade agrupada em etapas**, usando o contrato transacional existente. As questões mantêm `configuration.learningStage` público e a atividade mantém `configuration.learningTrail`. A sequência preserva todas as etapas, apresenta orientações ao aluno e desativa o embaralhamento de questões. Limites excedidos bloqueiam a aplicação inteira, sem cortar etapas. Não cria várias avaliações remotas nem uma trilha independente no catálogo.
+Trilhas continuam preservadas no código, nas migrations e nos registros anteriores, mas estão **experimentais e fora do fluxo do piloto**. O caminho principal não oferece criação, adaptação ou publicação de trilhas.
 
 ## Segurança e privacidade
 
@@ -87,6 +89,7 @@ Um percurso é aplicado como **uma atividade agrupada em etapas**, usando o cont
 - IDs de descritores retornados são limitados ao conjunto autorizado.
 - `reservar_execucao_copiloto` serializa por professor com advisory lock e grava a execução na mesma transação que verifica os limites.
 - O cliente privilegiado é usado somente para escrita de sessões/execuções e para a RPC de reserva, com `EXECUTE` concedido apenas a `service_role`.
+- A RPC de análise valida `auth.uid()`, papel/perfil ativo e vínculo ativo professor/turma/matéria; retorna somente habilidades com pelo menos três evidências corrigidas abaixo de 60%, sem nomes, tentativas ou respostas.
 - RLS protege histórico e feedback; `anon` não recebe privilégios.
 - A interface não contém chaves privadas nem chama o provedor de IA diretamente.
 
@@ -176,6 +179,46 @@ npm run test:copilot
 
 Os testes da Fase 2 também devem continuar verdes para garantir que a integração não alterou criação, execução, correção, resultados ou recuperação.
 
+Na revisão local de 6 de outubro de 2026 passaram os testes dos três contratos,
+isolamento entre professores, normalização de respostas, quota concorrente e
+migrations/RPCs. Os testes usam dados sintéticos e Gemini simulado; ainda não
+comprovam credenciais, deploy ou qualidade de resposta remota.
+
+## Deploy e aceite manual
+
+Use somente o projeto Supabase isolado da Fase 3. Confira o project ref antes de
+executar comandos; `db push` aplica todas as migrations pendentes desse projeto.
+
+```bash
+cd backend
+npx supabase link --project-ref "$SUPABASE_PROJECT_REF"
+npx supabase functions deploy professor-copiloto --project-ref "$SUPABASE_PROJECT_REF"
+```
+
+Aplique `migrations/20261006_copiloto_operacoes_piloto.sql` ao banco isolado pelo
+SQL Editor do Supabase ou com `psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f
+migrations/20261006_copiloto_operacoes_piloto.sql`. O repositório mantém as
+migrations em `backend/migrations/`, separadas da pasta padrão de migrations do
+Supabase CLI; por isso `supabase db push` não é o comando para aplicar este arquivo.
+
+Cadastre no painel de secrets do projeto, sem commit ou arquivo versionado:
+`GEMINI_API_KEY`, `GEMINI_MODEL`, `SUPABASE_SECRET_KEY` e `ALLOWED_ORIGINS`.
+`SUPABASE_URL` e `SUPABASE_ANON_KEY` devem corresponder ao mesmo projeto. A flag
+global continua desligada; atribua acesso somente às contas piloto.
+
+Checklist manual antes de ampliar o piloto:
+
+- Professor A gera atividade, prova, diagnóstica e variante de ideias; cada saída fica como rascunho.
+- Professor A simplifica, aumenta a dificuldade e gera alternativa para uma questão escolhida; outras questões permanecem intactas.
+- Professor A analisa uma turma com resultados corrigidos; confira descritores, evidências, dificuldades e recuperação agregada.
+- Professor B tenta usar turma/matéria de A; o servidor deve responder 403 sem chamar Gemini.
+- Usuário sem sessão recebe 401; turma sem vínculo e habilidades de outra série/trimestre são rejeitadas.
+- Turma sem evidência suficiente recebe resposta tratável sem chamada ao Gemini.
+- Requisições concorrentes atingem os limites por operação; aguarde a janela e valide a liberação posterior.
+- Confirme que “Preparar atividade de recuperação” cria um rascunho e que publicação continua sendo ação docente separada.
+- Repita geração, adaptação e análise em desktop e celular nas quatro especialidades docentes.
+- Revise logs por request ID e confirme ausência de prompts, nomes, respostas e segredos.
+
 ## Última validação do ambiente removido
 
 Os itens abaixo são registro histórico do projeto temporário e não descrevem um
@@ -198,6 +241,6 @@ O advisor ainda aponta funções `SECURITY DEFINER` herdadas do sistema anterior
 - [Supabase — Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
 - [Supabase — secrets de Edge Functions](https://supabase.com/docs/guides/functions/secrets)
 
-O provedor e o modelo continuam configurados na função existente. Este rework melhora o contexto, as instruções pedagógicas, os contratos de saída e a validação; não troca credenciais nem ativa recursos remotamente. Os testes locais usam conteúdo sintético e não demonstram, por si só, a qualidade de uma geração real do provedor. A migration incremental e a função precisam ser implantadas para ativar os novos contratos no ambiente remoto.
+O provedor e o modelo continuam configurados na função existente. Esta revisão melhora os contratos, autorização curricular, agregação de resultados, quota e sanitização; não troca credenciais nem ativa recursos remotamente. Os testes locais usam conteúdo sintético e Gemini simulado e não demonstram, por si só, a qualidade de uma geração real. Migration e Edge Function ainda precisam ser implantadas no projeto isolado.
 
-A revisão de uma trilha atua sobre a etapa aberta: a IA recebe as questões e o orçamento daquela etapa, e a interface conserva todas as demais na nova versão. A pontuação é validada e exibida em centavos, inclusive quando o valor não se divide igualmente pelo número de questões. Os testes de contrato e do handler usam dependências simuladas; o teste PostgreSQL da migration é separado e foi mantido sem dispensas, mas sua última execução local não inicializou o WASM por falta de memória. A sintaxe SQL e a governança do schema foram aprovadas.
+Trilhas permanecem preservadas no legado, mas não fazem parte do fluxo principal do piloto. A quota e a agregação foram exercitadas por testes PostgreSQL locais (PGlite); o deploy e a validação com RLS do projeto remoto continuam pendentes.

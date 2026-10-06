@@ -20,6 +20,7 @@ const {
   creationAction,
   pointsOf,
   preserveReviewedTrail,
+  mergeAdaptedQuestion,
   previewEvaluation,
   suggestionIssue,
   validateSuggestion,
@@ -53,7 +54,10 @@ test("Personalizar mantém os formatos e a decisão explícita sobre panorama", 
   assert.equal(accessPreferences({ fullAccess: false, useClassContext: true }).classContextMode, "always");
 });
 
-test("Prova e Diagnóstica usam a ação existente de geração de atividade", () => {
+test("as três operações piloto mapeiam para ações históricas compatíveis", () => {
+  assert.equal(creationAction("generate_activity"), "gerar_atividade");
+  assert.equal(creationAction("adapt_question"), "revisar_atividade");
+  assert.equal(creationAction("analyze_class"), "sugerir_recuperacao");
   assert.equal(creationAction("gerar_prova"), "gerar_atividade");
   assert.equal(creationAction("gerar_diagnostico"), "gerar_atividade");
   assert.equal(creationAction("gerar_trilha"), "gerar_trilha");
@@ -362,6 +366,17 @@ test("revisar qualquer etapa conserva as demais e a proposta anterior", () => {
     revised.trail.steps[index].activity.title = "Edição posterior";
     assert.equal(response.activity.title, "Argumentar com evidências");
   }
+});
+
+test("adaptar uma questão preserva as demais e não altera o rascunho original", () => {
+  const original = { summary: "Atividade original", activity: activity({ questions: [question(), question({ statement: "Qual hipótese pode ser conferida pelos dados?" })] }) };
+  const adapted = { summary: "Questão simplificada", activity: activity({ questions: [question({ statement: "Qual dado pode ser conferido?" })] }) };
+  const result = mergeAdaptedQuestion(original, 0, 0, adapted);
+  assert.equal(result.activity.questions[0].statement, "Qual dado pode ser conferido?");
+  assert.equal(result.activity.questions[1].statement, original.activity.questions[1].statement);
+  assert.equal(original.activity.questions[0].statement, question().statement);
+  assert.equal(result.summary, "Questão simplificada");
+  assert.throws(() => mergeAdaptedQuestion(original, 0, 4, adapted), /questão original/);
 });
 
 test("a revisão reúne avisos existentes e novos sem duplicar ou alterar a resposta", () => {

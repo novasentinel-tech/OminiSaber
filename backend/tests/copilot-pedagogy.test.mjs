@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { QUESTION_TYPES, teacherOutputSchema, normalizeTeacherSuggestion, cleanRefinementContext, generateValidatedSuggestion } from '../supabase/functions/professor-copiloto/pedagogical-contract.ts';
+import { QUESTION_TYPES, teacherOutputSchema, normalizeTeacherSuggestion, cleanRefinementContext, generateValidatedSuggestion, classAnalysisOutputSchema, normalizeClassAnalysis } from '../supabase/functions/professor-copiloto/pedagogical-contract.ts';
 
 const skillId = '00000000-0000-4000-8000-000000000001';
 const allowed = new Set([skillId]);
@@ -95,6 +95,21 @@ test('schemas separados não obrigam gerar uma atividade quando o professor quer
   assert.equal(teacherOutputSchema('gerar_atividade', allowed, ['numerica'], 3).properties.atividade.properties.questoes.minItems, 3);
   // Use only the documented Gemini schema subset; all deeper checks are in the application.
   assert.equal(/minLength|maxLength|uniqueItems|\$ref/.test(JSON.stringify(trail)), false);
+});
+
+test('análise da turma mantém métricas curriculares calculadas pelo servidor e valida recuperação', () => {
+  const criticalSkills = [{ id: skillId, code: 'HAB-01', description: 'Comparar evidências.', performancePercent: 42, evidenceCount: 12, descriptors: [{ code: 'D-01', description: 'Identificar relações.' }] }];
+  const schema = classAnalysisOutputSchema();
+  assert.deepEqual(schema.required, ['resumo', 'dificuldades_recorrentes', 'recuperacao']);
+  const result = normalizeClassAnalysis({ resumo: 'A turma precisa consolidar a comparação de evidências.', dificuldades_recorrentes: ['Distinguir dado observado de conclusão.'], recuperacao: { objetivo: 'Comparar dados antes de formular conclusões.', etapas: ['Modelar uma comparação curta com dados conhecidos.', 'Praticar em duplas com um novo conjunto de dados.'] }, habilidades_criticas: [{ id: 'inventado' }] }, criticalSkills);
+  assert.deepEqual(result.criticalSkills, criticalSkills);
+  assert.equal(JSON.stringify(result).includes('inventado'), false);
+  assert.equal(result.recovery.steps.length, 2);
+  for (const invalid of [
+    { resumo: 'curto', dificuldades_recorrentes: [], recuperacao: {} },
+    { resumo: 'Síntese suficientemente longa para validar.', dificuldades_recorrentes: [], recuperacao: { objetivo: 'Objetivo claro para a recuperação.', etapas: ['Primeira etapa de prática.', 'Segunda etapa de aplicação.'] } },
+    { resumo: 'Síntese suficientemente longa para validar.', dificuldades_recorrentes: ['Dificuldade recorrente observável.'], recuperacao: { objetivo: 'Objetivo claro para a recuperação.', etapas: ['Curta', 'Segunda etapa de aplicação.'] } },
+  ]) assert.throws(() => normalizeClassAnalysis(invalid, criticalSkills));
 });
 
 test('refinamento mantém somente oito mensagens e campos pedagógicos, com orçamento total', () => {

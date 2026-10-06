@@ -222,7 +222,7 @@ Consequências:
 - contrato do Copiloto e feature flags;
 - sintaxe dos 101 arquivos JavaScript verificados;
 - links locais de HTML/CSS/JS e documentação;
-- ausência de secret/service-role/OpenAI key no frontend.
+- ausência de secrets, service-role ou chaves privadas de provedores de IA no frontend.
 
 “Passou” significa que o contrato coberto pelo verificador está íntegro. Não
 significa que todos os papéis e cenários foram exercitados no banco remoto.

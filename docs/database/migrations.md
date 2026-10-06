@@ -42,6 +42,7 @@ As migrations ficam em `backend/migrations/` e usam prefixo de data.
 - `20260925090000_organizacao_governanca_banco.sql`: completa índices de chaves estrangeiras sem cobertura e instala um diagnóstico interno, restrito ao `service_role`, para RLS, chaves primárias, constraints e índices relacionais.
 - `20261003_omnistudio_fluxo_integrado.sql`: completa os dezesseis tipos do Studio, catálogo e notificações do aluno, retomada de tentativas, snapshot seguro por versão, decisões no servidor, autosalvamento parcial, confirmação, entrega completa por percurso, correção auditada e isolamento de notas. Validada em PostgreSQL local embarcado; o deploy remoto deve ser verificado separadamente.
 - `20261003_omnistudio_matematica.sql`: preserva a validação integrada e acrescenta limites para fórmulas de apoio, variáveis, orientações de resolução e janelas do plano cartesiano. Mantém os helpers privados e as configurações públicas no snapshot do aluno. Validada junto ao fluxo de publicação em PostgreSQL local; não aplicada remotamente nesta sessão.
+- `20261006_copiloto_operacoes_piloto.sql`: cria reserva transacional de quota por professor/operação e análise agregada de habilidades/descritores com autorização explícita; preserva ações e registros históricos. Validada em PGlite e no parser SQL local; deploy remoto pendente.
 
 ## Funcionamento
 
