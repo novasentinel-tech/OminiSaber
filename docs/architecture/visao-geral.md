@@ -23,7 +23,7 @@ Supabase Auth + Data API + PostgreSQL/RLS
           └── Edge Functions
               ├── gestor-contas
               ├── curriculo-upload
-              └── professor-copiloto → OpenAI API
+              └── professor-copiloto → Google Gemini API
 ```
 
 ## Decisões e motivos
@@ -58,7 +58,7 @@ tabelas. Funções PostgreSQL mantêm essas operações atômicas e auditáveis.
 
 ### IA isolada por Edge Function e feature flag
 
-O navegador nunca acessa a OpenAI diretamente. A função valida sessão e escopo,
+O navegador nunca acessa o Google Gemini diretamente. A função valida sessão e escopo,
 reduz dados, limita consumo e devolve somente uma sugestão revisável. A separação de
 ambiente e o flag desligado protegem o beta durante a Fase 3.
 

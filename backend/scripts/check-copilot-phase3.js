@@ -132,8 +132,11 @@ for (const token of [
   "...supabaseCorsHeaders",
   "AbortSignal.timeout(timeoutMs)",
   "prompt_versao: PROMPT_VERSION",
-  "conversa_recente: refinement.messages",
-  "sugestao_anterior: refinement.currentSuggestion",
+  "conversa_recente:",
+  "sugestao_anterior:",
+  "resultados_agregados: operation === \"analyze_class\"",
+  "classAnalysisOutputSchema()",
+  "normalizeClassAnalysis(parsed, criticalSkills)",
 ]) {
   if (!edge.includes(token)) throw new Error(`Edge Function sem ${token}.`);
 }
@@ -160,20 +163,28 @@ for (const token of [
 
 for (const token of [
   'isFeatureEnabled("professor_copiloto")',
+  '"generate_activity"',
+  '"adapt_question"',
+  '"analyze_class"',
+  "data-copilot-activity-type",
+  "data-copilot-generation-variant",
+  "data-copilot-adaptation",
+  "data-copilot-question",
+  "data-copilot-create-recovery",
   "Aplicar ao rascunho",
   "Revise antes de aplicar.",
   "sendTeacherCopilotFeedback",
   "state.questions = activity.questions",
-  "Habilitar tudo",
   "allFormatsEnabled",
   "copilot-workspace",
   "data-copilot-consent",
-  "Considerar o panorama da turma",
+  "Considerar sempre o panorama da turma",
   "data-copilot-drafts",
   "data-copilot-view",
   "Visão do aluno",
   "currentActivity:",
   "currentSuggestion:",
+  "mergeAdaptedQuestion",
   "gerar_trilha",
   "gerar_ideias",
   "revisar_atividade",
@@ -185,7 +196,7 @@ if (/<input\b[^>]*\bdata-copilot-consent\b[^>]*\bchecked\b/.test(ui))
   throw new Error(
     "O contexto agregado exige consentimento, desativado por padrão.",
   );
-if (!/\bmessages\s*:\s*boundedMessages\s*\(/.test(ui))
+if (!/\bmessages\s*:\s*operation\s*!==\s*"generate_activity"\s*\?\s*\[\]\s*:\s*boundedMessages\s*\(/.test(ui))
   throw new Error(
     "A conversa enviada precisa passar pelo limitador de contexto.",
   );

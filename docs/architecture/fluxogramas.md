@@ -139,7 +139,7 @@ sequenceDiagram
   participant UI as Construtor
   participant EF as Edge Function
   participant DB as Supabase
-  participant IA as OpenAI
+  participant IA as Google Gemini
 
   P->>UI: Solicita sugestão pedagógica
   UI->>EF: Contexto + JWT

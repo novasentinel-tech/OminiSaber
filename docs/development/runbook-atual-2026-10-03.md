@@ -2,8 +2,8 @@
 
 Este documento é o ponto de partida operacional para desenvolver, testar e
 publicar o OminiSaber. Ele complementa os documentos de arquitetura e substitui
-instruções antigas que apontem para um projeto Supabase diferente ou para a API
-OpenAI no Copiloto.
+instruções antigas que apontem para um projeto Supabase diferente ou para o
+provedor de IA anterior do Copiloto.
 
 ## Mapa rápido
 
@@ -85,14 +85,15 @@ vínculo de turma/matéria e habilidades. O consentimento de contexto determina 
 indicadores agregados são consultados; nomes, e-mails, matrículas e respostas
 individuais não são enviados à IA.
 
-O Copiloto oferece:
+O contrato piloto oferece `generate_activity` (atividade, prova, diagnóstica e
+variante de ideias), `adapt_question` (simplificar, aumentar dificuldade, gerar
+alternativa ou revisão personalizada) e `analyze_class` (descritores críticos,
+dificuldades agregadas e recuperação). Trilhas seguem preservadas como recurso
+experimental fora do fluxo principal.
 
-- criação e revisão de atividades;
-- escolha automática de habilidades compatíveis quando o professor não seleciona
-  descritores;
-- distribuição para todas as turmas vinculadas à matéria;
-- geração de trilha com etapas progressivas e tipos de interação;
-- revisão obrigatória antes de aplicar ao rascunho ou publicar.
+A análise consulta respostas corrigidas somente no escopo professor/turma/matéria,
+agrega pontos por habilidade e nunca envia resposta, feedback ou identidade de
+aluno ao Gemini. A aplicação continua sendo uma ação separada do professor.
 
 Secrets necessários na Edge Function:
 
@@ -109,6 +110,8 @@ Nunca coloque `GEMINI_API_KEY`, service role key ou secret key em `frontend/` ou
 
 ```powershell
 node --check frontend\professor\specialty\teacher-copilot.js
+node --test backend\tests\copilot-handler.test.mjs
+node --test backend\tests\copilot-migration.test.mjs
 node --check frontend\professor\specialty\activity-builder.js
 node --check backend\ominisaber-supabase-client.js
 node scripts\prepare-netlify-site.mjs

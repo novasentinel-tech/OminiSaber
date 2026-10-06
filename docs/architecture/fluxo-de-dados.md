@@ -29,7 +29,7 @@ e Copiloto estão em [Fluxogramas do sistema](fluxogramas.md).
 1. O professor autenticado seleciona o contexto no construtor.
 2. O navegador chama a Edge Function com JWT.
 3. A função valida papel, feature flag, origem, limites e vínculo.
-4. Apenas contexto pedagógico necessário segue para a OpenAI.
+4. Apenas contexto pedagógico necessário segue para Google Gemini via API Interactions.
 5. A resposta estruturada é normalizada e apresentada como prévia.
 6. O professor pode aplicar a sugestão ao rascunho e editá-la.
 7. A publicação continua sendo uma ação separada e explícita.

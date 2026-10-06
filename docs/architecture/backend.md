@@ -26,7 +26,7 @@
 | -------------------- | -------------------------------------------------------- |
 | `gestor-contas`      | Operações administrativas que exigem credencial elevada  |
 | `curriculo-upload`   | Entrada controlada para documentos curriculares          |
-| `professor-copiloto` | Mediação autenticada e limitada entre professor e OpenAI |
+| `professor-copiloto` | Mediação autenticada e limitada entre professor e Google Gemini |
 
 Chaves secretas existem somente no ambiente dessas funções ou em scripts locais
 administrativos. Elas nunca são copiadas para o frontend.

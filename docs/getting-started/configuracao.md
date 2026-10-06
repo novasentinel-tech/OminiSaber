@@ -22,7 +22,7 @@
 | `SUPABASE_JWKS_URL`         | Validação de assinatura quando necessária   |
 | `APP_ORIGIN`                | Origem local permitida                      |
 | `GEMINI_API_KEY`            | Somente secret da Edge Function do Copiloto |
-| `OPENAI_MODEL`              | Modelo usado pela função                    |
+| `GEMINI_MODEL`              | Modelo Google usado pela Edge Function      |
 | `ALLOWED_ORIGINS`           | Lista de origens aceitas pela Edge Function |
 
 ## Gerar a configuração pública

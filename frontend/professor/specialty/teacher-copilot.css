@@ -366,6 +366,63 @@ body.teacher-copilot-page-open .portal-topbar {
   border-color: #dbe7ff;
   font-weight: 650;
 }
+.copilot-operation-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #edf1f7;
+}
+.copilot-operation-fields label {
+  display: grid;
+  gap: 5px;
+  color: var(--cp-muted);
+  font-size: 11px;
+  font-weight: 650;
+}
+.copilot-class-analysis {
+  display: grid;
+  gap: 22px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 8px 0 22px;
+}
+.copilot-class-analysis h3 {
+  font-size: 20px;
+  line-height: 1.45;
+}
+.copilot-class-analysis section {
+  border-top: 1px solid var(--cp-line);
+  padding-top: 14px;
+}
+.copilot-class-analysis h4 {
+  margin-bottom: 9px;
+  color: var(--cp-navy);
+  font-size: 14px;
+}
+.copilot-class-analysis p,
+.copilot-class-analysis li {
+  color: var(--cp-text);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.copilot-class-analysis ul,
+.copilot-class-analysis ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 21px;
+}
+.copilot-class-analysis li span {
+  display: inline-block;
+  color: var(--cp-muted);
+  font-size: 11px;
+}
+.copilot-class-analysis .button {
+  justify-self: start;
+  max-width: 100%;
+  white-space: normal;
+}
 .copilot-messages {
   overflow-y: auto;
   overscroll-behavior: contain;

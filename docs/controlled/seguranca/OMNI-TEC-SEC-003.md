@@ -15,7 +15,7 @@
 | Publishable/anon | navegador | configuração pública | não autoriza acesso privilegiado |
 | Secret/service role | scripts e servidor | `.env` local seguro ou secret manager | nunca frontend, docs ou logs |
 | JWT de usuário | cliente autenticado | memória/sessão gerenciada | não compartilhar entre contas |
-| OpenAI API key | Edge Function do Copiloto | secret do ambiente | nunca navegador |
+| Google Gemini API key | Edge Function do Copiloto | secret do ambiente | nunca navegador |
 | Token de deploy | automação autorizada | cofre/secret do provedor | nunca repositório |
 
 Conceder acesso nominal, com finalidade e prazo. Revogar na saída ou mudança de função. Revisar trimestralmente e após incidente. Contas compartilhadas e cópia de secrets por mensagem são proibidas.

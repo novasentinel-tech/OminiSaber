@@ -97,20 +97,9 @@ Rascunhos de trilha permanecem privados até publicação do professor.
 `requestTeacherCopilot(payload)` chama exclusivamente a Edge Function
 `professor-copiloto`. O payload mínimo é:
 
-```ts
-{
-  action: "gerar_atividade" | "gerar_trilha" | "revisar_atividade" | "sugerir_recuperacao",
-  subject: string, classId: string, objective: string,
-  skillIds?: string[], skillCandidateIds?: string[],
-  useClassContext: boolean, questionCount?: number,
-  allFormatsEnabled?: boolean
-}
-```
+O contrato canônico recebe `operation: "generate_activity" | "adapt_question" | "analyze_class"` e opções estruturadas. `generate_activity` usa `options.activity_type` (`activity`, `exam` ou `diagnostic`) e `options.variant` (`activity` ou `ideas`). `adapt_question` exige `options.adaptation` (`simplify`, `increase_difficulty`, `alternative` ou `custom`), uma questão-alvo e contexto pedagógico. `analyze_class` obtém seus dados somente no servidor; agregados enviados pelo navegador são ignorados.
 
-A resposta contém `executionId`, `contextSummary` e `suggestion`. Quando a ação
-é `gerar_trilha`, a sugestão também contém `trail.title`, `trail.description` e
-`trail.steps[]`. A resposta é sempre um rascunho; o cliente nunca deve tratar a
-resposta da IA como publicação confirmada.
+A resposta contém `operation`, `executionId`, `contextSummary` e `suggestion`; `analyze_class` retorna `analysis` em vez de uma atividade. Ações antigas permanecem aceitas como aliases de compatibilidade. Trilhas ainda são aceitas por caminhos legados, mas estão fora do fluxo principal do piloto. Nenhuma resposta representa publicação confirmada.
 
 ## 5. Estado de tela
 

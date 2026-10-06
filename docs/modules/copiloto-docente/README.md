@@ -8,17 +8,15 @@ O recurso não publica atividades, não entrega notas, não acessa respostas ind
 
 ## Escopo
 
-- Geração de rascunhos de atividades alinhadas a descritores.
-- Revisão de um rascunho que já esteja no construtor.
-- Refinamentos com histórico limitado da conversa e a proposta atual.
-- Percursos progressivos com todas as atividades de suas etapas preservadas.
-- Ideias com intenção pedagógica, ação do aluno, evidência de aprendizagem, materiais e adaptações.
+- `generate_activity`: gera atividade, prova ou diagnóstico; `ideas` é uma variante que propõe ideias convertíveis em atividade.
+- `adapt_question`: simplifica, aumenta a dificuldade, cria uma alternativa ou executa uma revisão personalizada de uma questão selecionada.
+- `analyze_class`: identifica descritores abaixo do critério de desempenho, resume dificuldades agregadas e sugere recuperação.
 - Edição direta da proposta, prévia do aluno, aplicação explícita e opção de desfazer.
 - Questões objetivas, curtas, dissertativas, numéricas, de cálculo, código e estudo de caso.
 - Registro da execução, consumo, latência, resultado e feedback do professor.
 - Ativação gradual por ambiente e por usuário.
 
-A sugestão de recuperação com base em resultados agregados está prevista no contrato do backend, mas só deve ser exposta na interface de resultados depois da validação do primeiro ciclo de geração.
+Trilhas continuam implementadas e preservadas para compatibilidade/histórico, mas estão fora do fluxo principal do piloto. Nenhuma migration ou registro legado é removido.
 
 ## Arquitetura
 
@@ -32,9 +30,9 @@ Construtor de atividades
         v
 Supabase Edge Function professor-copiloto
         |-- valida perfil e vínculo docente
-        |-- valida feature flag e limites
-        |-- busca descritores autorizados
-        |-- remove dados pessoais do objetivo
+        |-- valida feature flag e reserva quota atomicamente
+        |-- usa cliente JWT/RLS para leituras de autorização e contexto
+        |-- calcula desempenho por habilidade sem enviar respostas
         v
 Gemini Interactions API com saída JSON estruturada
         |
@@ -61,8 +59,8 @@ A migration cria o flag `professor_copiloto` com `habilitada_global = false`. As
 1. O professor entra em **Avaliações** e informa turma e contexto.
 2. Pode selecionar habilidades curriculares; elas são opcionais.
 3. Abre **Copiloto** no cabeçalho do construtor.
-4. Escolhe atividade, percurso, revisão ou ideias e descreve seu pedido.
-5. Conversa para refinar, edita a proposta e testa a **Visão do aluno**.
+4. Escolhe uma das três operações. Geração distingue atividade/prova/diagnóstica e ideias; adaptação exige ação e questão-alvo; análise consulta somente indicadores agregados.
+5. Revisa a resposta estruturada. Geração/adaptação permite editar e testar a **Visão do aluno**; análise apresenta descritores, dificuldades e recuperação.
 6. Clica em **Aplicar ao rascunho**.
 7. Ajusta questões, gabaritos, pontos e orientações.
 8. Publica usando o fluxo transacional existente da Fase 2.
@@ -81,10 +79,14 @@ Um percurso é aplicado como **uma atividade agrupada em etapas**, usando o cont
 - O vínculo ativo em `professor_turma_materias` é obrigatório.
 - Feature flag é revalidado no servidor; esconder o botão não é a barreira de segurança.
 - Limites por minuto e por dia reduzem abuso e custos inesperados.
-- E-mail, CPF e telefone são removidos do texto livre antes do envio.
+- Texto livre não é persistido em título, resumo de solicitação, resultado de execução ou memória; e-mail, CPF e telefone recebem sanitização antes do uso.
+- A memória retém somente ações e metadados estruturados, nunca nomes, pedidos ou resultados textuais do modelo.
+- Análise envia ao Gemini apenas desempenho geral e taxas por habilidade; a resposta individual, texto de resposta e IDs de aluno não são consultados pelo modelo.
 - `store: false` impede o armazenamento da resposta pela API para este fluxo.
 - A saída usa JSON Schema estrito e é normalizada novamente no servidor.
 - IDs de descritores retornados são limitados ao conjunto autorizado.
+- `reservar_execucao_copiloto` serializa por professor com advisory lock e grava a execução na mesma transação que verifica os limites.
+- O cliente privilegiado é usado somente para escrita de sessões/execuções e para a RPC de reserva, com `EXECUTE` concedido apenas a `service_role`.
 - RLS protege histórico e feedback; `anon` não recebe privilégios.
 - A interface não contém chaves privadas nem chama o provedor de IA diretamente.
 
@@ -117,7 +119,7 @@ Defina os secrets da Edge Function com base em `backend/supabase/.env.example`:
 - `SUPABASE_ANON_KEY`
 - `SUPABASE_SECRET_KEY`
 - `GEMINI_API_KEY`
-- `OPENAI_MODEL`
+- `GEMINI_MODEL`
 - `ALLOWED_ORIGINS`
 
 O arquivo local `.env.phase3` referencia um ambiente removido e deve ser tratado
@@ -151,6 +153,7 @@ Critérios mínimos antes de ampliar:
 
 - `backend/migrations/20260909_copiloto_docente_fase3_0.sql`
 - `backend/migrations/20261003_copiloto_ideias_trilhas.sql`
+- `backend/migrations/20261006_copiloto_operacoes_piloto.sql`
 - `backend/supabase/functions/professor-copiloto/index.ts`
 - `backend/supabase/config.toml`
 - `backend/ominisaber-supabase-client.js`
