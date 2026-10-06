@@ -1,56 +1,64 @@
 # Banco de dados do OminiSaber
 
-Todos os arquivos são transacionais e idempotentes para a estrutura que criam. Se um comando falhar, o respectivo arquivo é revertido por inteiro.
-
 ## Instalação nova
-
-### Opção recomendada: arquivo único
 
 No SQL Editor do Supabase, execute somente:
 
 1. `ominisaber-schema-completo.sql`
 
-Esse arquivo reúne toda a instalação em uma única transação. Não execute também os arquivos individuais na mesma instalação.
+O arquivo consolida todas as fontes listadas em
+`scripts/build-complete-schema.js`, dentro de uma transação. Não execute também os
+arquivos individuais na mesma instalação.
 
-Para regerar o arquivo consolidado depois de alterar algum schema de origem:
+## Atualização de banco existente
+
+1. confirme o project ref do destino;
+2. consulte as migrations já aplicadas;
+3. aplique apenas arquivos ausentes de `migrations/`, em ordem cronológica;
+4. rode os verificadores do domínio alterado;
+5. consulte advisors de segurança e desempenho.
+
+Não use o schema completo para “forçar” a atualização de uma base com dados sem
+antes validar compatibilidade. Não use `DROP` destrutivo como procedimento comum.
+
+## Alterar o schema
+
+1. edite o schema modular ou crie uma nova migration;
+2. inclua a migration na ordem de `scripts/build-complete-schema.js`;
+3. regenere o arquivo consolidado;
+4. execute as validações.
 
 ```powershell
 npm run schema:build
-```
-
-### Opção modular
-
-Execute os arquivos abaixo no SQL Editor do Supabase, exatamente nesta ordem:
-
-1. `schema/core.sql`
-2. `migrations/20260831_acesso_materias_aluno.sql`
-3. `schema/configuracoes.sql`
-4. `schema/biblioteca.sql`
-5. `schema/estoque-etapa1.sql`
-6. `schema/estoque-etapa2.sql`
-7. `schema/conquistas.sql`
-8. `schema/espacos-docentes.sql`
-9. `migrations/20260831_trilhas_estudos_completos.sql`
-10. `migrations/20260831_redacao_jornada_completa.sql`
-11. `migrations/20260831_agenda_notificacoes.sql`
-
-`schema/professor.sql` é somente uma atualização de compatibilidade para bancos antigos. Não é necessário executá-lo em uma instalação nova, pois o conteúdo estrutural correspondente já está no schema principal.
-
-## Validação local
-
-Na pasta `backend`, execute:
-
-```powershell
-python -m pip install -r requirements-dev.txt
 npm run sql:check
+npm run database:governance:check
+npm run docs:check
 ```
 
-A validação confere a sintaxe PostgreSQL, transações, concessões globais perigosas e requisitos de segurança das funções `SECURITY DEFINER`.
+O arquivo `ominisaber-schema-completo.sql` é gerado. Não o edite diretamente.
 
-## Segurança
+`database:governance:check` também confirma que toda migration está incluída no
+schema completo, que as tabelas públicas possuem RLS e que o frontend não referencia
+tabelas ausentes. `schema/professor.sql` é uma referência legada e não compõe novas
+instalações.
 
-- O cliente nunca recebe a chave `service_role`.
-- Todas as tabelas expostas possuem RLS.
-- Funções privilegiadas usam `search_path` vazio e permissões explícitas.
-- Tabelas privadas de gabaritos e rotinas internas permanecem no schema `private`.
-- A autorização continua sendo feita no banco, mesmo quando o frontend oculta uma ação.
+## Garantias esperadas
+
+- migrations estruturais transacionais;
+- tabelas públicas com RLS;
+- grants mínimos para `anon` e `authenticated`;
+- gabaritos e rotinas internas sem acesso indevido do cliente;
+- funções privilegiadas com `search_path` e autorização explícitos;
+- índices em FKs e filtros frequentes;
+- nenhuma chave privada escrita em SQL.
+
+## Fases recentes
+
+- Fases 2.1–2.4: motor de atividades, construtor, execução, correção, resultados e
+  recuperação.
+- Fase 3.0: tabelas e policies do Copiloto presentes no código, mas sem ambiente
+  remoto ativo depois da remoção do projeto temporário.
+
+O inventário cronológico fica em
+[Migrations](../docs/database/migrations.md) e a separação de projetos em
+[Ambientes e deploy](../docs/development/ambientes-e-deploy.md).

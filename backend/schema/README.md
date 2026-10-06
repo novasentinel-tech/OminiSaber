@@ -23,7 +23,8 @@ Os schemas divididos por domínio estão nesta pasta. Eles são a fonte organiza
 Arquivos principais:
 
 - `core.sql`: tipos, perfis, turmas e núcleo da aplicação.
-- `professor.sql`: compatibilidade estrutural de bancos antigos.
+- `professor.sql`: referência de compatibilidade para bancos antigos. É legado,
+  não compõe o schema completo e não deve receber estruturas novas.
 - `biblioteca.sql`: biblioteca e materiais.
 - `configuracoes.sql`: configurações.
 - `conquistas.sql`: conquistas e medalhas.

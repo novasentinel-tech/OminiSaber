@@ -7,7 +7,7 @@ end $$;
 
 do $$ begin
   create type public.materia_aluno as enum (
-    'matematica', 'fisica', 'portugues', 'redacao',
+    'matematica', 'fisica', 'quimica', 'biologia', 'portugues', 'redacao',
     'tecnico_administracao', 'tecnico_informatica'
   );
 exception when duplicate_object then null;
@@ -28,6 +28,8 @@ set materia_codigo = case
   when lower(materia) like any (array['%redaç%', '%redac%']) then 'redacao'::public.materia_aluno
   when lower(materia) like any (array['%portugu%', '%literat%', '%linguag%']) then 'portugues'::public.materia_aluno
   when lower(materia) like any (array['%físic%', '%fisic%']) then 'fisica'::public.materia_aluno
+  when lower(materia) like any (array['%químic%', '%quimic%']) then 'quimica'::public.materia_aluno
+  when lower(materia) like any (array['%biolog%', '%genét%', '%genet%', '%ecolog%']) then 'biologia'::public.materia_aluno
   when lower(materia) like any (array['%matem%', '%álgebr%', '%algebr%', '%geometr%', '%estatíst%', '%estatist%']) then 'matematica'::public.materia_aluno
   when lower(materia) like any (array['%admin%', '%gest%', '%empreend%', '%marketing%', '%finan%']) then 'tecnico_administracao'::public.materia_aluno
   when lower(materia) like any (array['%inform%', '%program%', '%tecnolog%', '%banco de dados%', '%redes%']) then 'tecnico_informatica'::public.materia_aluno
@@ -40,6 +42,8 @@ set materia_codigo = case
   when lower(materia) like any (array['%redaç%', '%redac%']) then 'redacao'::public.materia_aluno
   when lower(materia) like any (array['%portugu%', '%literat%', '%linguag%']) then 'portugues'::public.materia_aluno
   when lower(materia) like any (array['%físic%', '%fisic%']) then 'fisica'::public.materia_aluno
+  when lower(materia) like any (array['%químic%', '%quimic%']) then 'quimica'::public.materia_aluno
+  when lower(materia) like any (array['%biolog%', '%genét%', '%genet%', '%ecolog%']) then 'biologia'::public.materia_aluno
   when lower(materia) like any (array['%matem%', '%álgebr%', '%algebr%', '%geometr%', '%estatíst%', '%estatist%']) then 'matematica'::public.materia_aluno
   when lower(materia) like any (array['%admin%', '%gest%', '%empreend%', '%marketing%', '%finan%']) then 'tecnico_administracao'::public.materia_aluno
   when lower(materia) like any (array['%inform%', '%program%', '%tecnolog%', '%banco de dados%', '%redes%']) then 'tecnico_informatica'::public.materia_aluno
@@ -109,7 +113,7 @@ as $$
     where p.id = (select auth.uid())
       and p.role = 'aluno'
       and (
-        materia_input in ('matematica', 'fisica', 'portugues', 'redacao')
+        materia_input in ('matematica', 'fisica', 'quimica', 'biologia', 'portugues', 'redacao')
         or (materia_input = 'tecnico_administracao' and p.curso_tecnico = 'administracao')
         or (materia_input = 'tecnico_informatica' and p.curso_tecnico = 'informatica')
       )

@@ -2,6 +2,44 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
@@ -16,14 +54,17 @@
     />
     <link rel="stylesheet" href="../shared/account-shell.css" />
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
     <script src="../../../backend/ominisaber-supabase-config.js"></script>
-    <script src="../../../backend/ominisaber-supabase-client.js"></script>
-    <script defer src="../shared/account-shell.js"></script>
-    <script defer src="script.js"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="../shared/account-shell.js?v=20260917-1"></script>
+    <script defer src="script.js?v=20260927-1"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260924-5"></script>
   </head>
   <body data-app-role="student" data-required-role="aluno">
-    <aside class="app-sidebar" aria-label="Navegação principal"></aside>
+    
     <main class="app-main">
       <header class="app-topbar">
         <button
@@ -86,6 +127,24 @@
             ><span class="material-symbols-outlined">calendar_month</span>Ver
             agenda</a
           >
+        </section>
+        <section class="device-push-card" data-push-card aria-labelledby="device-push-title">
+          <span class="device-push-icon material-symbols-outlined" aria-hidden="true">devices</span>
+          <div class="device-push-copy">
+            <p class="eyebrow">AVISOS NO DISPOSITIVO</p>
+            <h2 id="device-push-title">Receba compromissos mesmo com o site fechado</h2>
+            <p data-push-description>
+              Ative neste celular ou computador para receber provas, trabalhos e recuperações da sua turma.
+            </p>
+          </div>
+          <div class="device-push-status" data-push-status data-state="loading">
+            <span class="material-symbols-outlined" aria-hidden="true">sync</span>
+            <strong>Verificando...</strong>
+          </div>
+          <button class="button primary" type="button" data-push-toggle disabled>
+            <span class="material-symbols-outlined" aria-hidden="true">notifications_active</span>
+            <span data-push-action>Ativar neste dispositivo</span>
+          </button>
         </section>
         <section class="panel notifications-panel">
           <div class="notification-toolbar">

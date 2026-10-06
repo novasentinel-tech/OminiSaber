@@ -52,7 +52,7 @@ as $$
     join public.curriculo_periodos cp on cp.id = hcp.periodo_id
     join public.curriculos c on c.id = cp.curriculo_id
     where h.id = p_habilidade_id
-      and h.codigo ~ '^EM\d{2}[A-Z]{2}\d{2}$'
+      and h.codigo ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'
       and c.status = 'publicado'
       and c.ativo = true
   );
@@ -101,7 +101,7 @@ as $$
     on hd.habilidade_id = h.id and hd.periodo_id = cp.id
   left join public.descritores_curriculares d on d.id = hd.descritor_id
   where h.materia_codigo = p_materia
-    and h.codigo ~ '^EM\d{2}[A-Z]{2}\d{2}$'
+    and h.codigo ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'
     and c.status = 'publicado'
     and c.ativo = true
     and (p_serie is null or cp.serie = p_serie)
@@ -238,7 +238,7 @@ begin
     join public.curriculo_periodos cp on cp.id = hcp.periodo_id
     join public.curriculos c on c.id = cp.curriculo_id
     where c.status = 'publicado' and c.ativo = true
-      and h.codigo ~ '^EM\d{2}[A-Z]{2}\d{2}$'
+      and h.codigo ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'
       and (p_materia is null or h.materia_codigo = p_materia)
       and (p_serie is null or cp.serie = p_serie)
       and (p_trimestre is null or cp.trimestre = p_trimestre)
@@ -272,3 +272,5 @@ revoke all on function public.cobertura_curricular(public.materia_aluno, smallin
 grant execute on function public.cobertura_curricular(public.materia_aluno, smallint, smallint, uuid, uuid) to authenticated;
 
 commit;
+
+

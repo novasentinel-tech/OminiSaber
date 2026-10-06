@@ -21,9 +21,9 @@ assert(migration.includes('curriculo_novo := true') && migration.includes('if cu
 assert(archivePosition > insertPosition, 'currículo é criado antes do arquivamento de uma versão anterior');
 assert(migration.includes('on conflict (curriculo_id, serie, trimestre) do update'), 'B/C reutilizam períodos por série e trimestre');
 assert(migration.includes('on conflict (habilidade_id, periodo_id) do update'), 'G não duplica vínculo habilidade/período');
-assert(migration.includes('status in (\'ok\', \'aprovado\')') && migration.includes("upper(payload ->> 'codigo') ~ '^EM\\d{2}[A-Z]{2}\\d{2}$'"), 'I preserva a defesa EM da Fase 3.3');
+assert(migration.includes('status in (\'ok\', \'aprovado\')') && migration.includes("upper(payload ->> 'codigo') ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'"), 'I preserva a defesa EM da Fase 3.3');
 assert(approvalGuard >= 0 && approvalGuard < insertPosition, 'habilidade EM aprovada é validada antes do currículo');
-assert(migration.includes("where importacao_id = imp.id\n      and tipo = 'habilidade'\n      and status in ('ok', 'aprovado')\n      and upper(payload ->> 'codigo') ~ '^EM\\d{2}[A-Z]{2}\\d{2}$'\n  loop"), 'D/E/F materializam somente habilidades EM');
+assert(migration.includes("where importacao_id = imp.id\n      and tipo = 'habilidade'\n      and status in ('ok', 'aprovado')\n      and upper(payload ->> 'codigo') ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'\n  loop"), 'D/E/F materializam somente habilidades EM');
 assert(!migration.includes("status = 'publicado' and ativo = true and trimestre"), 'trimestre não participa da identidade anual');
 assert(phase33.includes('reprocessamento_de_id'), 'reprocessamento continua vinculado ao staging existente');
 assert(build.includes('20260904_importacao_curricular_fase3_4.sql'), 'Fase 3.4 incluída no build');

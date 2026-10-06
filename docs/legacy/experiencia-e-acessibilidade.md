@@ -36,4 +36,3 @@ O mapa de domínio permite escolher matérias, entender o conceito atual e inici
 - Erro com ação de recuperação.
 - Sucesso sem interromper a tarefa.
 - Demonstração sem dados pessoais.
-

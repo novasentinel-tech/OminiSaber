@@ -28,11 +28,11 @@ begin
     payload := coalesce(item -> 'payload', '{}'::jsonb);
     codigo := upper(btrim(payload ->> 'codigo'));
     tipo_seguro := case
-      when codigo ~ '^EM\d{2}[A-Z]{2}\d{2}$' then 'habilidade'
+      when codigo ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$' then 'habilidade'
       when codigo ~ '^EF\d{2}[A-Z]{2}\d{2}$' then 'referencia_ensino_fundamental'
       else item ->> 'tipo'
     end;
-    if codigo ~ '^EM\d{2}[A-Z]{2}\d{2}$' then
+    if codigo ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$' then
       payload := jsonb_set(payload, '{codigo}', to_jsonb(codigo), true);
       payload := jsonb_set(payload, '{etapa}', '"ensino_medio"'::jsonb, true);
     elsif codigo ~ '^EF\d{2}[A-Z]{2}\d{2}$' then
@@ -63,7 +63,7 @@ begin
   if public.usuario_role() <> 'gestor' then raise exception 'Apenas gestores podem editar a revisão'; end if;
   if p_status not in ('ok', 'revisar', 'aprovado', 'rejeitado') then raise exception 'Status de revisão inválido'; end if;
   tipo_seguro := case
-    when codigo ~ '^EM\d{2}[A-Z]{2}\d{2}$' then 'habilidade'
+    when codigo ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$' then 'habilidade'
     when codigo ~ '^EF\d{2}[A-Z]{2}\d{2}$' then 'referencia_ensino_fundamental'
     else null
   end;
@@ -100,20 +100,20 @@ begin
     where importacao_id = imp.id
       and tipo = 'habilidade'
       and status in ('ok', 'aprovado')
-      and upper(payload ->> 'codigo') ~ '^EM\d{2}[A-Z]{2}\d{2}$'
+      and upper(payload ->> 'codigo') ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'
   ) then raise exception 'Nenhuma habilidade aprovada para publicação'; end if;
   if exists (
     select 1 from public.importacoes_curriculo_itens
     where importacao_id = imp.id
       and tipo = 'habilidade'
       and status = 'revisar'
-      and upper(payload ->> 'codigo') ~ '^EM\d{2}[A-Z]{2}\d{2}$'
+      and upper(payload ->> 'codigo') ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'
   ) then raise exception 'Existem habilidades pendentes'; end if;
   perform pg_advisory_xact_lock(hashtext(coalesce(imp.origem, '') || ':' || imp.ano_letivo || ':' || imp.materia_codigo::text));
   select coalesce(max(versao), 0) + 1 into versao_num from public.curriculos where origem = coalesce(imp.origem, 'Não identificada') and ano_letivo = imp.ano_letivo and materia_codigo = imp.materia_codigo;
   insert into public.curriculos (nome, origem, ano_letivo, materia_codigo, versao, status, criado_por, importacao_id) values (coalesce(imp.origem, 'Currículo importado') || ' ' || imp.ano_letivo, coalesce(imp.origem, 'Não identificada'), imp.ano_letivo, imp.materia_codigo, versao_num, 'publicado', imp.importado_por, imp.id) returning id into curr_id;
   update public.curriculos set status = 'arquivado', ativo = false, updated_at = now() where origem = coalesce(imp.origem, 'Não identificada') and ano_letivo = imp.ano_letivo and materia_codigo = imp.materia_codigo and id <> curr_id and status = 'publicado';
-  for item in select payload from public.importacoes_curriculo_itens where importacao_id = imp.id and tipo = 'habilidade' and status in ('ok', 'aprovado') and upper(payload ->> 'codigo') ~ '^EM\d{2}[A-Z]{2}\d{2}$' loop
+  for item in select payload from public.importacoes_curriculo_itens where importacao_id = imp.id and tipo = 'habilidade' and status in ('ok', 'aprovado') and upper(payload ->> 'codigo') ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$' loop
     serie_num := nullif((item ->> 'serie')::smallint, 0); tri_num := coalesce(nullif((item ->> 'trimestre')::smallint, 0), imp.trimestre); if serie_num is null or tri_num is null then raise exception 'Habilidade sem série ou trimestre'; end if;
     insert into public.curriculo_periodos (curriculo_id, serie, trimestre) values (curr_id, serie_num, tri_num) on conflict (curriculo_id, serie, trimestre) do update set trimestre = excluded.trimestre returning * into periodo;
     insert into public.habilidades_curriculares (codigo, descricao, materia_codigo) values (upper(item ->> 'codigo'), coalesce(nullif(item ->> 'descricao', ''), 'Descrição pendente'), imp.materia_codigo) on conflict (codigo, materia_codigo) do update set descricao = case when public.habilidades_curriculares.descricao = 'Descrição pendente' then excluded.descricao else public.habilidades_curriculares.descricao end returning * into habilidade;
@@ -139,3 +139,5 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 commit;
+
+

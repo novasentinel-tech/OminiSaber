@@ -47,7 +47,7 @@ begin
     if codigo !~ '^D\d{3}(?:_[A-Z])?$' then raise exception 'Código de descritor inválido no item %', contador; end if;
     if titulo is null or char_length(titulo) not between 3 and 180 then raise exception 'Título inválido no item %', contador; end if;
     if descricao is null or char_length(descricao) not between 1 and 20000 then raise exception 'Descrição inválida no item %', contador; end if;
-    if materia_text not in ('portugues', 'matematica', 'fisica', 'redacao', 'tecnico_administracao', 'tecnico_informatica') then raise exception 'Matéria inválida no item %', contador; end if;
+    if materia_text not in ('portugues', 'matematica', 'fisica', 'quimica', 'biologia', 'redacao', 'tecnico_administracao', 'tecnico_informatica') then raise exception 'Matéria inválida no item %', contador; end if;
     materia := materia_text::public.materia_aluno;
     if serie_num not between 1 and 3 or trimestre_num not between 1 and 3 then raise exception 'Série ou trimestre inválido no item %', contador; end if;
     if status_text not in ('ativo', 'revisao', 'arquivado') then raise exception 'Status inválido no item %', contador; end if;
@@ -113,7 +113,7 @@ begin
   if codigo !~ '^D\d{3}(?:_[A-Z])?$' then raise exception 'Código de descritor inválido'; end if;
   if titulo is null or char_length(titulo) not between 3 and 180 then raise exception 'Título inválido'; end if;
   if descricao is null or char_length(descricao) not between 1 and 20000 then raise exception 'Descrição inválida'; end if;
-  if materia_text not in ('portugues', 'matematica', 'fisica', 'redacao', 'tecnico_administracao', 'tecnico_informatica') then raise exception 'Matéria inválida'; end if;
+  if materia_text not in ('portugues', 'matematica', 'fisica', 'quimica', 'biologia', 'redacao', 'tecnico_administracao', 'tecnico_informatica') then raise exception 'Matéria inválida'; end if;
   materia := materia_text::public.materia_aluno;
   if serie_num not between 1 and 3 or trimestre_num not between 1 and 3 then raise exception 'Série ou trimestre inválido'; end if;
   if status_text not in ('ativo', 'revisao', 'arquivado') then raise exception 'Status inválido'; end if;

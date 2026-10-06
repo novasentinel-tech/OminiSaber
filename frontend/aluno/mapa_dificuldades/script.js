@@ -1,14 +1,13 @@
 (() => {
+  "use strict";
+
   const api = () => window.OminiSaber;
   const subjectMeta = {
     matematica: { label: "Matemática", icon: "functions" },
     fisica: { label: "Física", icon: "experiment" },
     portugues: { label: "Português e Literatura", icon: "menu_book" },
     redacao: { label: "Redação", icon: "edit_note" },
-    tecnico_administracao: {
-      label: "Matérias Administrativas",
-      icon: "business_center",
-    },
+    tecnico_administracao: { label: "Matérias Administrativas", icon: "business_center" },
     tecnico_informatica: { label: "Matérias de Informática", icon: "terminal" },
   };
   const baseSubjects = ["matematica", "fisica", "portugues", "redacao"];
@@ -19,187 +18,176 @@
     content: document.querySelector("[data-map-content]"),
     select: document.querySelector("[data-subject-select]"),
     mapTitle: document.querySelector("[data-map-title]"),
-    network: document.querySelector("[data-network]"),
-    priorityList: document.querySelector("[data-priority-list]"),
+    list: document.querySelector("[data-descriptor-list]"),
+    detail: document.querySelector("[data-descriptor-detail]"),
+    activities: document.querySelector("[data-related-activities]"),
+    general: document.querySelector("[data-general-score]"),
     attention: document.querySelector("[data-attention-count]"),
     progress: document.querySelector("[data-progress-count]"),
     strong: document.querySelector("[data-strong-count]"),
   };
-  let trails = [];
+  let performance = [];
+  let evaluations = [];
   let allowedSubjects = [];
+  let currentSubject = "matematica";
+  let currentFilter = "all";
+  let selectedSkillId = null;
 
   const escapeHTML = (value = "") =>
-    String(value).replace(
-      /[&<>'"]/g,
-      (char) =>
-        ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          "'": "&#39;",
-          '"': "&quot;",
-        })[char],
-    );
-  const normalizeSubject = (item = {}) => {
-    if (item.materia_codigo && subjectMeta[item.materia_codigo])
-      return item.materia_codigo;
-    const value = String(item.materia || "").toLocaleLowerCase("pt-BR");
-    if (/redaç|redac/.test(value)) return "redacao";
-    if (/portugu|literat|linguag/.test(value)) return "portugues";
-    if (/físic|fisic/.test(value)) return "fisica";
-    if (/matem|álgebr|algebr|geometr|estat/.test(value)) return "matematica";
-    if (/admin|gest|empreend|marketing|finan/.test(value))
-      return "tecnico_administracao";
-    if (/inform|program|tecnolog|banco de dados|redes/.test(value))
-      return "tecnico_informatica";
-    return "";
+    String(value).replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character]);
+  const latestAttempt = (item) => item.tentativas_avaliacao?.[0] || null;
+  const isFinished = (attempt) => ["enviada", "corrigida"].includes(attempt?.status);
+  const activityAccess = (item) =>
+    api().getStudentEvaluationAvailability
+      ? api().getStudentEvaluationAvailability(item)
+      : { state: "available", actionable: true };
+
+  const statusFor = (descriptor) => {
+    const score = Number.isFinite(Number(descriptor.desempenho)) ? Math.round(Number(descriptor.desempenho)) : null;
+    if (score === null) return { score, className: "neutral", label: "Sem evidência", icon: "pending" };
+    if (score >= 80) return { score, className: "success", label: "Domínio forte", icon: "verified" };
+    if (score >= 60) return { score, className: "warning", label: "Em evolução", icon: "trending_up" };
+    return { score, className: "danger", label: "Precisa de atenção", icon: "priority_high" };
   };
-  const statusFor = (trail) => {
-    const total = trail.atividades?.length || 0;
-    const score = total
-      ? Math.round(((trail.concluidas || 0) / total) * 100)
-      : null;
-    if (score === null) return { score, className: "", label: "Sem evidência" };
-    if (score >= 80)
-      return { score, className: "success", label: "Domínio forte" };
-    if (score >= 60)
-      return { score, className: "warning", label: "Em evolução" };
-    return { score, className: "danger", label: "Precisa de atenção" };
-  };
+
   const showState = (state) => {
     elements.loading.classList.toggle("is-hidden", state !== "loading");
     elements.error.classList.toggle("is-hidden", state !== "error");
     elements.content.classList.toggle("is-hidden", state !== "ready");
   };
-  const getPosition = (index, count) => {
-    if (count <= 8) {
-      const angle = ((-90 + (360 / count) * index) * Math.PI) / 180;
-      return { x: 50 + Math.cos(angle) * 37, y: 50 + Math.sin(angle) * 36 };
-    }
-    const rows = Math.ceil(count / 2);
-    const row = Math.floor(index / 2);
-    return { x: index % 2 ? 82 : 18, y: ((row + 1) / (rows + 1)) * 100 };
-  };
+
   const updateQuery = (code) => {
     const url = new URL(window.location.href);
     url.searchParams.set("materia", code);
     history.replaceState({}, "", url);
   };
-  const renderMap = (code) => {
-    const visible = trails.filter((trail) => normalizeSubject(trail) === code);
-    const statuses = visible.map((trail) => ({ trail, ...statusFor(trail) }));
-    const totalActivities = visible.reduce(
-      (sum, trail) => sum + (trail.atividades?.length || 0),
-      0,
-    );
-    const totalCompleted = visible.reduce(
-      (sum, trail) => sum + Number(trail.concluidas || 0),
-      0,
-    );
-    const general = totalActivities
-      ? Math.round((totalCompleted / totalActivities) * 100)
-      : null;
-    elements.mapTitle.textContent = `Descritores de ${subjectMeta[code].label}`;
-    elements.attention.textContent = statuses.filter(
-      (item) => item.className === "danger",
-    ).length;
-    elements.progress.textContent = statuses.filter(
-      (item) => item.className === "warning",
-    ).length;
-    elements.strong.textContent = statuses.filter(
-      (item) => item.className === "success",
-    ).length;
-    updateQuery(code);
 
-    if (!visible.length) {
-      elements.network.style.removeProperty("--network-height");
-      elements.network.innerHTML = `<div class="empty-network"><span class="material-symbols-outlined" aria-hidden="true">route</span><h3>Nenhuma trilha publicada nesta matéria</h3><p>Assim que um professor publicar um descritor para sua turma, ele aparecerá aqui conectado ao resultado geral.</p></div>`;
-      elements.priorityList.innerHTML =
-        '<div class="priority-empty"><strong>Nada para priorizar agora</strong><p>Não existem dados publicados para esta matéria.</p></div>';
+  const descriptorHref = (descriptor) =>
+    `../atividades/index.html?materia=${encodeURIComponent(currentSubject)}&habilidade=${encodeURIComponent(descriptor.habilidade_id || "")}`;
+
+  const descriptorKey = (descriptor) =>
+    String(descriptor.habilidade_id || descriptor.codigo || descriptor.descricao || "");
+
+  const recommendationFor = (status) => {
+    if (status.className === "danger") return "Comece por uma atividade curta e refaça as questões que geraram mais dúvida.";
+    if (status.className === "warning") return "Você está perto do domínio. Uma nova prática ajuda a consolidar este conteúdo.";
+    if (status.className === "success") return "Conteúdo consolidado. Revise quando quiser ou avance para outra prioridade.";
+    return "Faça uma atividade ligada a esta matéria para gerar a primeira evidência.";
+  };
+
+  const renderDetail = (item) => {
+    if (!item) {
+      elements.detail.innerHTML = `<div class="detail-empty"><span class="material-symbols-outlined">touch_app</span><strong>Escolha um descritor</strong><p>Os detalhes aparecerão aqui sem tirar você do mapa.</p></div>`;
       return;
     }
+    const status = statusFor(item);
+    const score = status.score === null ? "—" : `${status.score}%`;
+    const obtained = Number(item.pontos_obtidos || 0);
+    const possible = Number(item.pontos_possiveis || 0);
+    elements.detail.innerHTML = `<div class="detail-status ${status.className}"><span class="material-symbols-outlined">${status.icon}</span>${escapeHTML(status.label)}</div><p class="detail-code">${escapeHTML(item.codigo || "Descritor")}</p><h3>${escapeHTML(item.descricao || "Descrição não informada")}</h3><div class="detail-score"><strong>${score}</strong><span>aproveitamento nas correções</span></div><dl><div><dt>Evidências</dt><dd>${Number(item.evidencias || 0)}</dd></div><div><dt>Pontos</dt><dd>${obtained} de ${possible}</dd></div></dl><div class="recommendation"><span class="material-symbols-outlined">lightbulb</span><p><strong>Próximo passo</strong>${recommendationFor(status)}</p></div><a class="detail-action" href="${descriptorHref(item)}">Ver atividades <span class="material-symbols-outlined">arrow_forward</span></a>`;
+  };
 
-    elements.network.style.setProperty(
-      "--network-height",
-      `${Math.max(620, Math.ceil(visible.length / 2) * 170)}px`,
-    );
-    const positions = visible.map((_, index) =>
-      getPosition(index, visible.length),
-    );
-    const lines = positions
-      .map(
-        (position) =>
-          `<line x1="50%" y1="50%" x2="${position.x}%" y2="${position.y}%"></line>`,
-      )
-      .join("");
-    const nodes = statuses
-      .map((item, index) => {
-        const position = positions[index];
-        const codeLabel = item.trail.descritor_sedu || `Trilha ${index + 1}`;
-        const progressText = item.score === null ? "—" : `${item.score}%`;
-        const href = `../modulo_de_trilhas/trilha/index.html?trilha=${encodeURIComponent(item.trail.id)}`;
-        return `<a class="descriptor-node ${item.className}" style="--x:${position.x}%;--y:${position.y}%" href="${href}" aria-label="${escapeHTML(codeLabel)}: ${escapeHTML(item.trail.titulo)}. ${item.label}, ${progressText}."><span class="node-code">${escapeHTML(codeLabel)}</span><strong>${escapeHTML(item.trail.titulo)}</strong><b>${progressText}</b><small>${escapeHTML(item.label)}</small><span class="arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>`;
+  const renderDescriptors = (statuses) => {
+    const visible = statuses.filter((item) => currentFilter === "all" || item.className === currentFilter);
+    if (!visible.length) {
+      elements.list.innerHTML = `<div class="empty-list"><span class="material-symbols-outlined">filter_alt_off</span><strong>Nenhum descritor neste filtro</strong><p>Escolha outro estado para continuar explorando.</p></div>`;
+      renderDetail(null);
+      return;
+    }
+    if (!visible.some((item) => descriptorKey(item.descriptor) === selectedSkillId)) selectedSkillId = descriptorKey(visible[0].descriptor);
+    elements.list.innerHTML = visible
+      .map((item) => {
+        const descriptor = item.descriptor;
+        const selected = descriptorKey(descriptor) === selectedSkillId;
+        const width = item.score === null ? 0 : Math.max(3, item.score);
+        return `<button class="descriptor-row ${item.className}${selected ? " selected" : ""}" type="button" data-skill-id="${escapeHTML(descriptorKey(descriptor))}" aria-pressed="${selected}"><span class="row-status"><i></i><small>${escapeHTML(item.label)}</small></span><span class="row-copy"><strong>${escapeHTML(descriptor.codigo || "Descritor")}</strong><span>${escapeHTML(descriptor.descricao || "Descrição não informada")}</span><em><i style="width:${width}%"></i></em></span><span class="row-evidence"><b>${item.score === null ? "—" : `${item.score}%`}</b><small>${Number(descriptor.evidencias || 0)} evidência(s)</small></span><span class="material-symbols-outlined row-arrow">chevron_right</span></button>`;
       })
       .join("");
-    elements.network.innerHTML = `<svg class="network-lines" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none"><circle cx="50" cy="50" r="18"></circle>${lines}</svg><div class="general-node" style="--x:50%;--y:50%"><small>Geral</small><strong>${general === null ? "—" : `${general}%`}</strong><span>${totalCompleted} de ${totalActivities} etapas concluídas</span></div>${nodes}`;
-
-    const priority = statuses
-      .filter((item) => item.score !== null && item.score < 80)
-      .sort((a, b) => a.score - b.score);
-    elements.priorityList.innerHTML = priority.length
-      ? priority
-          .map(
-            (item, index) =>
-              `<a class="priority-item" href="../modulo_de_trilhas/trilha/index.html?trilha=${encodeURIComponent(item.trail.id)}"><span class="priority-rank">${index + 1}</span><span><strong>${escapeHTML(item.trail.descritor_sedu || item.trail.titulo)}</strong><small>${escapeHTML(item.trail.titulo)} · ${item.trail.atividades.length} etapa(s)</small></span><span class="priority-score">${item.score}%</span></a>`,
-          )
-          .join("")
-      : '<div class="priority-empty"><strong>Excelente avanço</strong><p>Nenhuma trilha com evidência está abaixo de 80% nesta matéria.</p></div>';
+    renderDetail(visible.find((item) => descriptorKey(item.descriptor) === selectedSkillId)?.descriptor || visible[0].descriptor);
   };
+
+  const renderActivities = () => {
+    const items = evaluations.filter((item) => item.materia_codigo === currentSubject).slice(0, 3);
+    if (!items.length) {
+      elements.activities.innerHTML = `<div class="activity-empty"><span class="material-symbols-outlined">assignment</span><div><strong>Nenhuma atividade publicada nesta matéria</strong><p>Quando um professor publicar uma proposta, ela aparecerá aqui.</p></div></div>`;
+      return;
+    }
+    elements.activities.innerHTML = items.map((item) => {
+      const attempt = latestAttempt(item);
+      const access = activityAccess(item);
+      const done = isFinished(attempt);
+      const status = done ? "Entregue" : attempt?.status === "em_andamento" ? "Em andamento" : access.state === "scheduled" ? "Agendada" : access.state === "expired" ? "Prazo encerrado" : "Pendente";
+      const action = done ? "Ver resultado" : attempt ? "Continuar" : "Começar";
+      const actionable = done || access.actionable;
+      return `<article class="related-card"><div class="activity-card-top"><span class="activity-icon material-symbols-outlined">assignment</span><span class="activity-state${done ? " done" : ""}">${status}</span></div><h3>${escapeHTML(item.titulo)}</h3><p>${escapeHTML(item.instrucoes || "Confira as orientações do professor antes de começar.")}</p><div class="activity-meta"><span><i class="material-symbols-outlined">quiz</i>${item.questoes_avaliacao?.length || 0} questões</span><span><i class="material-symbols-outlined">schedule</i>${item.duracao_minutos || "—"} min</span></div>${actionable ? `<a href="../atividades/index.html?atividade=${encodeURIComponent(item.id)}">${action}<span class="material-symbols-outlined">arrow_forward</span></a>` : `<span class="activity-disabled">${status}</span>`}</article>`;
+    }).join("");
+  };
+
+  const renderMap = (code) => {
+    currentSubject = code;
+    selectedSkillId = null;
+    const descriptors = performance.filter((item) => item.materia_codigo === code);
+    const order = { danger: 0, warning: 1, neutral: 2, success: 3 };
+    const statuses = descriptors.map((descriptor) => ({ descriptor, ...statusFor(descriptor) })).sort((a, b) => order[a.className] - order[b.className] || (a.score ?? 101) - (b.score ?? 101));
+    const possible = descriptors.reduce((sum, item) => sum + Number(item.pontos_possiveis || 0), 0);
+    const obtained = descriptors.reduce((sum, item) => sum + Number(item.pontos_obtidos || 0), 0);
+    const general = possible ? Math.round((obtained / possible) * 100) : null;
+    elements.mapTitle.textContent = `Descritores de ${subjectMeta[code].label}`;
+    elements.general.textContent = general === null ? "—" : `${general}%`;
+    elements.attention.textContent = statuses.filter((item) => item.className === "danger").length;
+    elements.progress.textContent = statuses.filter((item) => item.className === "warning").length;
+    elements.strong.textContent = statuses.filter((item) => item.className === "success").length;
+    updateQuery(code);
+    renderDescriptors(statuses);
+    renderActivities();
+  };
+
+  const currentStatuses = () => performance.filter((item) => item.materia_codigo === currentSubject).map((descriptor) => ({ descriptor, ...statusFor(descriptor) })).sort((a, b) => (a.score ?? 101) - (b.score ?? 101));
+
+  document.querySelectorAll("[data-status-filter]").forEach((button) => button.addEventListener("click", () => {
+    currentFilter = button.dataset.statusFilter;
+    selectedSkillId = null;
+    document.querySelectorAll("[data-status-filter]").forEach((item) => item.classList.toggle("active", item === button));
+    renderDescriptors(currentStatuses());
+  }));
+
+  elements.list.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-skill-id]");
+    if (!button) return;
+    selectedSkillId = button.dataset.skillId;
+    renderDescriptors(currentStatuses());
+  });
+
   const load = async () => {
     showState("loading");
     try {
-      if (!api()?.configured)
-        throw new Error("A conexão com o Supabase não está configurada.");
-      const [profile, catalog] = await Promise.all([
+      if (!api()?.configured) throw new Error("A conexão com o Supabase não está configurada.");
+      const [profile, descriptorPerformance, studentEvaluations] = await Promise.all([
         api().getProfile(),
-        api().listStudyCatalog(),
+        api().getStudentDescriptorPerformance(),
+        api().listStudentEvaluations(),
       ]);
-      if (!profile?.curso_tecnico)
-        throw new Error(
-          "Seu curso técnico ainda não foi definido pela escola.",
-        );
-      allowedSubjects = [
-        ...baseSubjects,
-        profile.curso_tecnico === "administracao"
-          ? "tecnico_administracao"
-          : "tecnico_informatica",
-      ];
-      trails = catalog;
-      elements.select.innerHTML = allowedSubjects
-        .map(
-          (code) =>
-            `<option value="${code}">${escapeHTML(subjectMeta[code].label)}</option>`,
-        )
-        .join("");
-      const requested = new URLSearchParams(window.location.search).get(
-        "materia",
-      );
-      const initial = allowedSubjects.includes(requested)
-        ? requested
-        : allowedSubjects[0];
+      if (!profile?.curso_tecnico) throw new Error("Seu curso técnico ainda não foi definido pela escola.");
+      allowedSubjects = [...baseSubjects, profile.curso_tecnico === "administracao" ? "tecnico_administracao" : "tecnico_informatica"];
+      performance = descriptorPerformance;
+      evaluations = studentEvaluations;
+      elements.select.innerHTML = allowedSubjects.map((code) => `<option value="${code}">${escapeHTML(subjectMeta[code].label)}</option>`).join("");
+      const requested = new URLSearchParams(window.location.search).get("materia");
+      const initial = allowedSubjects.includes(requested) ? requested : allowedSubjects[0];
       elements.select.value = initial;
       renderMap(initial);
       showState("ready");
     } catch (error) {
-      elements.errorMessage.textContent =
-        error.message || "Tente novamente em alguns instantes.";
+      elements.errorMessage.textContent = error.message || "Tente novamente em alguns instantes.";
       showState("error");
     }
   };
 
-  elements.select.addEventListener("change", (event) =>
-    renderMap(event.target.value),
-  );
+  elements.select.addEventListener("change", (event) => {
+    currentFilter = "all";
+    document.querySelectorAll("[data-status-filter]").forEach((item) => item.classList.toggle("active", item.dataset.statusFilter === "all"));
+    renderMap(event.target.value);
+  });
   document.querySelector("[data-retry]")?.addEventListener("click", load);
   load();
 })();

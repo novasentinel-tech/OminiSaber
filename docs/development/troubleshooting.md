@@ -6,7 +6,9 @@ Confira URL, chave anon, carregamento da biblioteca e console do navegador.
 
 ## Dados não aparecem
 
-Verifique sessão, perfil, vínculos em `professor_turmas`, turma do aluno, status publicado e RLS.
+Verifique sessão, perfil, vínculos em `professor_turma_materias`, turma do aluno,
+status publicado e RLS. Se o vínculo veio do módulo legado, confirme também se a
+sincronização para a tabela canônica ocorreu.
 
 ## Erro de relacionamento PostgREST
 

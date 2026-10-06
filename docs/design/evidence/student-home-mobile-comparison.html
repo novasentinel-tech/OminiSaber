@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QA visual — início do aluno no celular</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #e9eef7; color: #0f1e3a; font: 600 14px Inter, Arial, sans-serif; }
+      header { height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: #fff; border-bottom: 1px solid #cdd8ea; }
+      main { min-height: calc(100vh - 54px); display: grid; grid-template-columns: minmax(560px, 1fr) 390px; justify-content: center; gap: 18px; padding: 18px; }
+      section { min-width: 0; display: grid; grid-template-rows: 38px 1fr; overflow: hidden; border: 1px solid #cdd8ea; border-radius: 16px; background: #fff; }
+      h2 { margin: 0; padding: 10px 14px; color: #466080; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; border-bottom: 1px solid #dce4f1; }
+      .reference { display: grid; place-items: start center; padding: 12px; background: #f3f6fb; }
+      img { width: 100%; height: auto; display: block; }
+      .phone { width: 390px; height: 844px; overflow: hidden; background: #fff; }
+      iframe { width: 390px; height: 844px; border: 0; background: #fff; }
+    </style>
+  </head>
+  <body>
+    <header><strong>Comparação de fidelidade responsiva</strong><span>Matemática selecionada</span></header>
+    <main>
+      <section>
+        <h2>Referência visual aprovada</h2>
+        <div class="reference"><img src="student-home-subject-filter-reference.png" alt="Página inicial aprovada em desktop" /></div>
+      </section>
+      <section class="phone">
+        <h2>Implementação mobile · 390 × 844</h2>
+        <iframe src="../../../frontend/aluno/dashboard_principal/index.html?materia=matematica" title="Página inicial do aluno no celular"></iframe>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,478 +1,321 @@
 (() => {
+  "use strict";
   const api = () => window.OminiSaber;
-  const elements = {
-    loading: document.querySelector('[data-state="loading"]'),
-    error: document.querySelector('[data-state="error"]'),
-    errorMessage: document.querySelector("[data-error-message]"),
-    dashboard: document.querySelector("[data-dashboard]"),
-    nextStep: document.querySelector("[data-next-step]"),
-    map: document.querySelector("[data-mastery-map]"),
-    detail: document.querySelector("[data-subject-detail]"),
-    filter: document.querySelector("[data-subject-filter]"),
-    weeklyDays: document.querySelector("[data-weekly-days]"),
-    weeklyTotal: document.querySelector("[data-weekly-total]"),
-    toast: document.querySelector("[data-toast]"),
-    transition: document.querySelector("[data-difficulty-transition]"),
+  const $ = (selector) => document.querySelector(selector);
+  const ui = {
+    loading: $('[data-state="loading"]'),
+    error: $('[data-state="error"]'),
+    errorMessage: $("[data-error-message]"),
+    dashboard: $("[data-dashboard]"),
+    next: $("[data-next-step]"),
+    chips: $("[data-subject-chips]"),
+    select: $("[data-subject-filter]"),
+    context: $("[data-filter-context]"),
+    clear: $("[data-clear-subject-filter]"),
+    destinations: $("[data-destination-grid]"),
+    days: $("[data-weekly-days]"),
+    total: $("[data-weekly-total]"),
+    toast: $("[data-toast]"),
+    notifications: $("[data-notification-toggle]"),
   };
-
   const subjectMeta = {
-    matematica: {
-      label: "Matemática",
-      icon: "functions",
-      experienceTotal: 3,
-      route: "../modulo_de_trilhas/matematica/index.html",
-    },
+    matematica: { label: "Matemática", icon: "functions" },
+    portugues: { label: "Português", icon: "menu_book" },
     fisica: { label: "Física", icon: "experiment" },
-    portugues: {
-      label: "Português e Literatura",
-      icon: "menu_book",
-      experienceTotal: 3,
-      route: "../modulo_de_trilhas/portugues/index.html",
-    },
     redacao: { label: "Redação", icon: "edit_note" },
-    tecnico_administracao: {
-      label: "Matérias Administrativas",
-      icon: "business_center",
-    },
-    tecnico_informatica: { label: "Matérias de Informática", icon: "terminal" },
+    tecnico_administracao: { label: "Administração", icon: "business_center" },
+    tecnico_informatica: { label: "Informática", icon: "terminal" },
   };
-  const baseSubjects = ["matematica", "fisica", "portugues", "redacao"];
-  const positions = [
-    ["50%", "17%"],
-    ["21%", "42%"],
-    ["79%", "42%"],
-    ["31%", "78%"],
-    ["69%", "78%"],
+  const baseSubjects = ["matematica", "portugues", "fisica", "redacao"];
+  const destinations = [
+    { key: "avaliacoes", label: "Atividades e avaliações", icon: "assignment_turned_in", tone: "coral", description: "Explore atividades interativas, provas e devolutivas.", href: "../atividades/index.html", query: { view: "evaluations" }, priority: true },
+    { key: "trilhas", label: "Trilhas de aprendizagem", icon: "route", tone: "amber", description: "Siga rotas personalizadas para aprender no seu ritmo.", href: "../modulo_de_trilhas/index.html", priority: true },
+    { key: "materias", label: "Matérias", icon: "school", tone: "green", description: "Explore os conteúdos das suas disciplinas.", href: "../modulo_de_trilhas/index.html", generic: true, priority: true },
+    { key: "exercicios", label: "Exercícios", icon: "calculate", tone: "blue", description: "Pratique com listas e atividades.", href: "../atividades/index.html", query: { tipo: "exercicio" } },
+    { key: "biblioteca", label: "Biblioteca", icon: "menu_book", tone: "violet", description: "Acesse livros, artigos e materiais de apoio.", href: "../biblioteca_digital/index.html" },
+    { key: "agenda", label: "Agenda", icon: "calendar_month", tone: "green", description: "Veja seus compromissos e não perca prazos.", href: "../agenda/index.html", generic: true },
+    { key: "forum", label: "Fórum", icon: "groups", tone: "blue", description: "Organize suas dúvidas e encontre suporte.", href: "../ajuda-suporte/index.html", query: { origem: "forum" } },
+    { key: "sites", label: "Sites úteis", icon: "open_in_new", tone: "coral", description: "Consulte links e recursos recomendados.", href: "../biblioteca_digital/index.html", query: { mode: "digital" } },
   ];
-  let dashboardData;
+  let data;
   let subjects = [];
-  let selectedCode = "";
-  let openingDifficultyMap = false;
-  const draggedPositions = new Map();
-
-  const escapeHTML = (value = "") =>
-    String(value).replace(
-      /[&<>'"]/g,
-      (char) =>
-        ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          "'": "&#39;",
-          '"': "&quot;",
-        })[char],
-    );
-  const initials = (name = "") =>
-    name
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) => part[0])
-      .join("")
-      .toUpperCase() || "AL";
-  const average = (values) =>
-    values.length
-      ? Math.round(
-          values.reduce((sum, value) => sum + value, 0) / values.length,
-        )
-      : null;
-  const showState = (state) => {
-    elements.loading?.classList.toggle("is-hidden", state !== "loading");
-    elements.error?.classList.toggle("is-hidden", state !== "error");
-    elements.dashboard?.classList.toggle("is-hidden", state !== "ready");
-  };
-  const notify = (message) => {
-    if (!elements.toast) return;
-    elements.toast.textContent = message;
-    elements.toast.classList.add("visible");
-    window.clearTimeout(elements.toast.timer);
-    elements.toast.timer = window.setTimeout(
-      () => elements.toast.classList.remove("visible"),
-      3200,
-    );
-  };
+  let activeSubject = "all";
+  let unsubscribeRealtime;
+  let loading = false;
+  const esc = (value = "") => String(value).replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
   const normalizeSubject = (item = {}) => {
-    if (item.materia_codigo && subjectMeta[item.materia_codigo])
-      return item.materia_codigo;
+    if (item.materia_codigo && subjectMeta[item.materia_codigo]) return item.materia_codigo;
     const value = String(item.materia || "").toLocaleLowerCase("pt-BR");
     if (/redaç|redac/.test(value)) return "redacao";
     if (/portugu|literat|linguag/.test(value)) return "portugues";
     if (/físic|fisic/.test(value)) return "fisica";
     if (/matem|álgebr|algebr|geometr|estat/.test(value)) return "matematica";
-    if (/admin|gest|empreend|marketing|finan/.test(value))
-      return "tecnico_administracao";
-    if (/inform|program|tecnolog|banco de dados|redes/.test(value))
-      return "tecnico_informatica";
+    if (/admin|gest|empreend|marketing|finan/.test(value)) return "tecnico_administracao";
+    if (/inform|program|tecnolog|banco de dados|redes/.test(value)) return "tecnico_informatica";
     return "";
   };
-  const statusFor = (score) => {
-    if (score === null) return { label: "Sem registros", className: "" };
-    if (score >= 80) return { label: "Domínio forte", className: "" };
-    if (score >= 60) return { label: "Em evolução", className: "attention" };
-    return { label: "Precisa de atenção", className: "danger" };
+  const initials = (name = "") => name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "AL";
+  const currentSubject = () => subjects.find((item) => item.code === activeSubject) || null;
+  const latest = (evaluation) => evaluation.tentativas_avaliacao?.[0] || null;
+  const finished = (evaluation) => ["enviada", "corrigida"].includes(latest(evaluation)?.status);
+  const actionable = (evaluation) => api().getStudentEvaluationAvailability
+    ? api().getStudentEvaluationAvailability(evaluation).actionable
+    : (!evaluation.abre_em || new Date(evaluation.abre_em) <= new Date()) && (!evaluation.encerra_em || new Date(evaluation.encerra_em) >= new Date());
+  const show = (state) => {
+    ui.loading?.classList.toggle("is-hidden", state !== "loading");
+    ui.error?.classList.toggle("is-hidden", state !== "error");
+    ui.dashboard?.classList.toggle("is-hidden", state !== "ready");
   };
-  const generalScore = () =>
-    average(
-      subjects
-        .map((subject) => subject.score)
-        .filter((score) => score !== null),
-    );
-  const generalStatus = () => statusFor(generalScore());
-  const subjectAccess = (profile) => [
-    ...baseSubjects,
-    profile.curso_tecnico === "administracao"
-      ? "tecnico_administracao"
-      : "tecnico_informatica",
-  ];
-
-  const buildSubjects = (data) =>
-    subjectAccess(data.profile).map((code) => {
-      const trails = data.trails.filter(
-        (trail) => normalizeSubject(trail) === code,
-      );
-      const activities = trails.flatMap((trail) => trail.atividades || []);
-      const experiences = (data.experiences || []).filter(
-        (item) => item.materia_codigo === code && item.concluida,
-      );
-      const completedActivities = activities.filter(
-        (activity) => activity.progresso?.concluida,
-      ).length;
-      const completed = completedActivities + experiences.length;
-      const notes = data.notes
-        .filter((note) => normalizeSubject(note) === code)
-        .map((note) => Number(note.valor) * 10);
-      const essayScores =
-        code === "redacao"
-          ? data.essays
-              .filter(
-                (essay) => essay.status === "corrigida" && essay.nota !== null,
-              )
-              .map((essay) => Number(essay.nota) / 10)
-          : [];
-      const experienceTotal = Number(subjectMeta[code].experienceTotal || 0);
-      const score = average(
-        essayScores.length
-          ? essayScores
-          : notes.length
-            ? notes
-            : activities.length
-              ? [(completedActivities / activities.length) * 100]
-              : experienceTotal
-                ? [(experiences.length / experienceTotal) * 100]
-                : [],
-      );
-      const nextTrail =
-        trails.find((trail) =>
-          trail.atividades.some((activity) => !activity.progresso?.concluida),
-        ) ||
-        trails[0] ||
-        null;
-      const nextActivity =
-        nextTrail?.atividades.find(
-          (activity) => !activity.progresso?.concluida,
-        ) ||
-        nextTrail?.atividades[0] ||
-        null;
-      return {
-        code,
-        ...subjectMeta[code],
-        trails,
-        activities,
-        experiences,
-        completed,
-        score,
-        nextTrail,
-        nextActivity,
-      };
-    });
-
+  const notify = (message) => {
+    if (!ui.toast) return;
+    ui.toast.textContent = message;
+    ui.toast.classList.add("visible");
+    clearTimeout(ui.toast.timer);
+    ui.toast.timer = setTimeout(() => ui.toast.classList.remove("visible"), 2800);
+  };
+  const hrefFor = (destination) => {
+    const url = new URL(destination.href, location.href);
+    Object.entries(destination.query || {}).forEach(([key, value]) => url.searchParams.set(key, value));
+    if (activeSubject !== "all") url.searchParams.set("materia", activeSubject);
+    return `${url.pathname}${url.search}${url.hash}`;
+  };
+  const destinationLabel = (destination) => {
+    const subject = currentSubject();
+    if (!subject || destination.generic) return destination.label;
+    return destination.key === "trilhas" ? `Trilhas de ${subject.label}` : `${destination.label} de ${subject.label}`;
+  };
+  const destinationDescription = (destination) => {
+    const subject = currentSubject();
+    if (!subject || destination.generic) return destination.description;
+    return ({
+      avaliacoes: `Explore atividades, provas e devolutivas de ${subject.label}.`,
+      biblioteca: `Acesse materiais de apoio de ${subject.label}.`,
+      exercicios: `Pratique com listas e atividades de ${subject.label}.`,
+      trilhas: `Siga rotas personalizadas de ${subject.label}.`,
+      forum: `Organize suas dúvidas sobre ${subject.label}.`,
+      sites: `Consulte recursos recomendados de ${subject.label}.`,
+    })[destination.key] || destination.description;
+  };
+  const filteredPending = () => (data?.evaluations || []).filter((item) => actionable(item) && !finished(item) && (activeSubject === "all" || normalizeSubject(item) === activeSubject));
+  const matchesSubject = (item) => activeSubject === "all" || normalizeSubject(item) === activeSubject;
+  const evaluationState = (evaluation) => {
+    if (finished(evaluation)) return "success";
+    const availability = api().getStudentEvaluationAvailability
+      ? api().getStudentEvaluationAvailability(evaluation)
+      : { state: actionable(evaluation) ? "available" : "expired" };
+    return availability.state === "expired" ? "danger" : "warning";
+  };
+  const trailState = (trail) => {
+    const activities = trail.atividades || [];
+    if (activities.length && activities.every((activity) => activity.progresso?.concluida)) return "success";
+    if (trail.prazo && new Date(trail.prazo).getTime() < Date.now()) return "danger";
+    return activities.some((activity) => !activity.progresso?.concluida) ? "warning" : "success";
+  };
+  const summarizeStates = (states) => {
+    const counts = states.reduce((summary, state) => ({ ...summary, [state]: summary[state] + 1 }), { danger: 0, warning: 0, success: 0 });
+    const state = counts.danger ? "danger" : counts.warning ? "warning" : "success";
+    return { state, counts };
+  };
+  const destinationStatus = (key) => {
+    const evaluations = (data?.evaluations || []).filter(matchesSubject);
+    const trails = (data?.trails || []).filter(matchesSubject);
+    if (key === "avaliacoes") {
+      const summary = summarizeStates(evaluations.map(evaluationState));
+      if (summary.state === "danger") return { ...summary, label: `${summary.counts.danger} fora do prazo` };
+      if (summary.state === "warning") return { ...summary, label: `${summary.counts.warning} para fazer` };
+      return data.studioUnavailable ? { ...summary, state: "warning", label: "Atualizar atividades" } : { ...summary, label: evaluations.length ? "Tudo concluído" : "Tudo em dia" };
+    }
+    if (key === "trilhas") {
+      const summary = summarizeStates(trails.map(trailState));
+      if (summary.state === "danger") return { ...summary, label: `${summary.counts.danger} atrasada${summary.counts.danger === 1 ? "" : "s"}` };
+      if (summary.state === "warning") return { ...summary, label: `${summary.counts.warning} em andamento` };
+      return { ...summary, label: trails.length ? "Trilhas concluídas" : "Tudo em dia" };
+    }
+    const summary = summarizeStates([...evaluations.map(evaluationState), ...trails.map(trailState)]);
+    if (summary.state === "danger") return { ...summary, label: "Atenção aos prazos" };
+    if (summary.state === "warning") return { ...summary, label: "Estudos em andamento" };
+    return { ...summary, label: "Tudo em dia" };
+  };
   const renderProfile = (profile) => {
-    const name = profile.nome;
-    const course =
-      profile.curso_tecnico === "administracao"
-        ? "Técnico em Administração"
-        : "Técnico em Informática";
-    document.querySelector("[data-profile-name]").textContent = name;
-    document.querySelector("[data-greeting]").textContent =
-      `Olá, ${name.split(/\s+/)[0]}`;
-    document.querySelector("[data-initials]").textContent = initials(name);
-    document.querySelector("[data-profile-context]").textContent = [
-      profile.turmas?.serie ? `${profile.turmas.serie}º ano` : null,
-      course,
-    ]
-      .filter(Boolean)
-      .join(" · ");
-    document.querySelector("[data-current-date]").textContent =
-      new Intl.DateTimeFormat("pt-BR", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      }).format(new Date());
+    const name = profile.nome || "Aluno";
+    $("[data-profile-name]")?.replaceChildren(name);
+    $("[data-greeting]").textContent = `Olá, ${name.split(/\s+/)[0]}`;
+    $("[data-initials]")?.replaceChildren(initials(name));
+    const course = profile.curso_tecnico === "administracao" ? "Técnico em Administração" : "Técnico em Informática";
+    $("[data-profile-context]")?.replaceChildren([profile.turmas?.serie ? `${profile.turmas.serie}º ano` : null, course].filter(Boolean).join(" · "));
+    $("[data-current-date]").textContent = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" }).format(new Date());
   };
-
-  const renderNextStep = () => {
-    const options = subjects
-      .flatMap((subject) =>
-        subject.trails.map((trail) => ({
-          subject,
-          trail,
-          activity: trail.atividades.find((item) => !item.progresso?.concluida),
-        })),
-      )
-      .filter((item) => item.activity);
-    const next = options[0];
-    if (!next) {
-      elements.nextStep.innerHTML =
-        '<div class="lesson-summary"><p class="section-kicker">Seu próximo passo</p><h2 id="next-step-title">Nenhuma atividade pendente</h2><p>Quando um professor publicar uma etapa para sua turma, ela aparecerá aqui.</p></div>';
+  const renderNext = () => {
+    const evaluations = filteredPending().sort((a, b) => (latest(a)?.status === "em_andamento" ? 0 : 1) - (latest(b)?.status === "em_andamento" ? 0 : 1) || (a.encerra_em ? new Date(a.encerra_em).getTime() : Infinity) - (b.encerra_em ? new Date(b.encerra_em).getTime() : Infinity));
+    const evaluation = evaluations[0];
+    if (evaluation) {
+      const subject = subjectMeta[normalizeSubject(evaluation)] || { label: "Atividade", icon: "assignment" };
+      const started = latest(evaluation)?.status === "em_andamento";
+      const deadline = evaluation.encerra_em ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(new Date(evaluation.encerra_em)) : "Sem prazo";
+      const count = evaluation.origemStudio ? Number(evaluation.total_etapas || 0) : evaluation.questoes_avaliacao?.length || 0;
+      const saved = evaluation.origemStudio ? Number(evaluation.respostas_salvas || 0) : (latest(evaluation)?.respostas_avaliacao || []).filter(response => response.resposta !== null && response.resposta !== undefined && response.resposta !== "").length;
+      const progress = started && count ? Math.min(100, Math.round(saved / count * 100)) : 0;
+      const target = evaluation.origemStudio ? `../atividades/index.html?studio=${encodeURIComponent(evaluation.experiencia_id || evaluation.id)}` : `../atividades/index.html?atividade=${encodeURIComponent(evaluation.id)}`;
+      ui.next.innerHTML = `<div class="lesson-summary"><p class="section-kicker">${started ? "Continue de onde parou" : evaluation.origemStudio ? "Explore no OmniStudio" : "Sua próxima atividade"}</p><div class="lesson-title-row"><span class="subject-icon material-symbols-outlined">${subject.icon}</span><div><h2 id="next-step-title">${esc(evaluation.titulo)}</h2><p>${esc(subject.label)} · ${evaluation.origemStudio ? "Atividade interativa" : esc(evaluation.categoria || "Atividade")}</p></div></div><div class="lesson-progress"><div class="progress-track" role="progressbar" aria-label="Etapas com resposta salva" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}"><span style="width:${progress}%"></span></div><strong>${started ? `${progress}% com respostas salvas` : `${evaluations.length} atividade(s) aguardando você`}</strong></div></div><div class="lesson-meta"><span><span class="material-symbols-outlined">${evaluation.origemStudio ? "route" : "quiz"}</span>${count} ${evaluation.origemStudio ? "etapas" : "questão(ões)"}</span><span><span class="material-symbols-outlined">${evaluation.origemStudio ? "cloud_done" : "schedule"}</span>${evaluation.origemStudio ? "Salvamento automático" : `${Number(evaluation.duracao_minutos || 0) || "—"} min`}</span><span><span class="material-symbols-outlined">event</span>${esc(deadline)}</span><a class="button lesson-action" href="${target}">${started ? "Continuar atividade" : evaluation.origemStudio ? "Explorar atividade" : "Começar atividade"}<span class="material-symbols-outlined">arrow_forward</span></a></div>`;
       return;
     }
-    const done = next.trail.atividades.filter(
-      (item) => item.progresso?.concluida,
-    ).length;
-    const total = next.trail.atividades.length;
-    const progress = total ? Math.round((done / total) * 100) : 0;
-    elements.nextStep.innerHTML = `<div class="lesson-summary"><p class="section-kicker">Seu próximo passo</p><div class="lesson-title-row"><span class="subject-icon material-symbols-outlined">${next.subject.icon}</span><div><h2 id="next-step-title">${escapeHTML(next.activity.titulo)}</h2><p>${escapeHTML(next.trail.titulo)} · etapa ${Number(next.activity.ordem || done + 1)} de ${total}</p></div></div><div class="lesson-progress"><div class="progress-track" role="progressbar" aria-label="Progresso da trilha" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}"><span style="width:${progress}%"></span></div><strong>${progress}% concluído</strong></div></div><div class="lesson-meta"><span><span class="material-symbols-outlined">schedule</span>${Number(next.activity.duracao_minutos || 0)} min</span><span><span class="material-symbols-outlined">school</span>${escapeHTML(next.subject.label)}</span><a class="button lesson-action" href="../modulo_de_trilhas/${["atividade", "quiz", "projeto"].includes(next.activity.tipo_conteudo) ? "atividade" : "aula"}/index.html?atividade=${encodeURIComponent(next.activity.id)}">Continuar aprendendo<span class="material-symbols-outlined">arrow_forward</span></a></div>`;
+    const trail = (data.trails || []).filter((item) => activeSubject === "all" || normalizeSubject(item) === activeSubject).find((item) => (item.atividades || []).some((activity) => !activity.progresso?.concluida));
+    const activity = trail?.atividades?.find((item) => !item.progresso?.concluida);
+    if (trail && activity) {
+      const subject = subjectMeta[normalizeSubject(trail)] || { label: trail.materia || "Conteúdo", icon: "school" };
+      const total = trail.atividades.length;
+      const done = trail.atividades.filter((item) => item.progresso?.concluida).length;
+      const progress = total ? Math.round((done / total) * 100) : 0;
+      ui.next.innerHTML = `<div class="lesson-summary"><p class="section-kicker">Continue de onde parou</p><div class="lesson-title-row"><span class="subject-icon material-symbols-outlined">${subject.icon}</span><div><h2 id="next-step-title">${esc(activity.titulo)}</h2><p>${esc(subject.label)} · ${esc(trail.titulo)}</p></div></div><div class="lesson-progress"><div class="progress-track" role="progressbar" aria-label="Progresso da trilha" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}"><span style="width:${progress}%"></span></div><strong>${progress}% concluído</strong></div></div><div class="lesson-meta"><span><span class="material-symbols-outlined">schedule</span>${Number(activity.duracao_minutos || 0)} min</span><span><span class="material-symbols-outlined">school</span>${esc(subject.label)}</span><a class="button lesson-action" href="../modulo_de_trilhas/${["atividade", "quiz", "projeto"].includes(activity.tipo_conteudo) ? "atividade" : "aula"}/index.html?atividade=${encodeURIComponent(activity.id)}">Continuar aprendendo<span class="material-symbols-outlined">arrow_forward</span></a></div>`;
+      return;
+    }
+    const subject = currentSubject();
+    if (data.studioUnavailable) {
+      ui.next.innerHTML = `<div class="lesson-summary"><p class="section-kicker">Atualização pendente</p><h2 id="next-step-title">Consulte suas atividades interativas</h2><p>Não conseguimos atualizar o OmniStudio agora. A Central de atividades permite tentar novamente.</p></div><div class="lesson-meta"><a class="button lesson-action" href="${hrefFor(destinations[0])}">Abrir atividades<span class="material-symbols-outlined">arrow_forward</span></a></div>`;
+      return;
+    }
+    ui.next.innerHTML = `<div class="lesson-summary"><p class="section-kicker">Tudo em dia</p><h2 id="next-step-title">${subject ? `Nenhuma pendência de ${esc(subject.label)}` : "Nenhuma atividade pendente"}</h2><p>Você concluiu tudo o que está disponível neste filtro.</p></div><div class="lesson-meta"><span><span class="material-symbols-outlined">task_alt</span>Seu estudo está organizado</span><a class="button lesson-action" href="${hrefFor(destinations[0])}">Ver atividades<span class="material-symbols-outlined">arrow_forward</span></a></div>`;
   };
-
-  const renderSubjectDetail = (code) => {
-    const subject = subjects.find((item) => item.code === code);
-    if (!subject) return;
-    selectedCode = code;
-    elements.map.querySelectorAll("[data-subject]").forEach((node) => {
-      const selected = node.dataset.subject === code;
-      node.classList.toggle("selected", selected);
-      node.setAttribute("aria-pressed", String(selected));
-    });
-    const status = statusFor(subject.score);
-    const link =
-      code === "redacao"
-        ? "../laboratorio_de_redacao/index.html"
-        : subject.nextTrail
-          ? `../modulo_de_trilhas/trilha/index.html?trilha=${encodeURIComponent(subject.nextTrail.id)}`
-          : subject.route || "../modulo_de_trilhas/index.html";
-    elements.detail.innerHTML = `<header><span class="detail-icon material-symbols-outlined">${subject.icon}</span><div><h3>${escapeHTML(subject.label)}</h3><p>Desempenho: <strong>${subject.score === null ? "sem registros" : `${subject.score}%`}</strong></p></div></header><div class="detail-section"><p class="detail-label"><span class="material-symbols-outlined">route</span>Conteúdo disponível</p><h4>${subject.trails.length} trilha(s) publicada(s)</h4><p>${subject.activities.length} etapa(s) e ${subject.experiences.length} experiência(s) interativa(s) concluída(s).</p></div><div class="detail-section"><p class="detail-label"><span class="material-symbols-outlined">monitoring</span>Estado atual</p><p>${escapeHTML(status.label)}</p><div class="mini-progress"><span style="width:${subject.score || 0}%"></span></div></div><div class="recommendation"><p><span class="material-symbols-outlined">target</span>Próximo conteúdo real</p><span>${escapeHTML(subject.nextActivity?.titulo || (subject.route ? "Continuar nas experiências da matéria." : "Nenhuma atividade pendente publicada."))}</span></div><div class="suggested-activity"><p class="detail-label"><span class="material-symbols-outlined">assignment</span>Trilha</p><h4>${escapeHTML(subject.nextTrail?.titulo || (subject.route ? "Laboratórios interativos" : "Aguardando publicação"))}</h4><small>${subject.nextActivity ? `${Number(subject.nextActivity.duracao_minutos || 0)} min · ${Number(subject.nextActivity.recompensa_xp || 0)} XP` : "Sem estimativa disponível"}</small><a class="button primary" href="${link}">${subject.nextTrail || code === "redacao" || subject.route ? "Abrir" : "Ver catálogo"}<span class="material-symbols-outlined">arrow_forward</span></a></div>`;
+  const renderFilters = () => {
+    const options = [{ code: "all", label: "Todas" }, ...subjects];
+    ui.chips.innerHTML = options.map((item) => `<button type="button" class="subject-filter-chip ${item.code === activeSubject ? "active" : ""}" data-subject-filter-value="${item.code}" aria-pressed="${item.code === activeSubject}">${esc(item.label)}</button>`).join("");
+    ui.select.innerHTML = options.map((item) => `<option value="${item.code}" ${item.code === activeSubject ? "selected" : ""}>${esc(item.label)}</option>`).join("");
+    const subject = currentSubject();
+    ui.context.innerHTML = subject ? `<span class="material-symbols-outlined" aria-hidden="true">filter_alt</span> Mostrando conteúdos de <strong>${esc(subject.label)}</strong>` : '<span class="material-symbols-outlined" aria-hidden="true">dashboard</span> Mostrando todas as matérias';
+    ui.clear.hidden = activeSubject === "all";
+    if (matchMedia("(max-width: 760px)").matches) {
+      requestAnimationFrame(() => {
+        ui.chips.querySelector(".subject-filter-chip.active")?.scrollIntoView({
+          block: "nearest",
+          inline: "center",
+          behavior: "smooth",
+        });
+      });
+    }
   };
-
-  const renderSubjects = () => {
-    elements.filter.innerHTML =
-      '<option value="all">Todas as matérias</option>' +
-      subjects
-        .map(
-          (subject) =>
-            `<option value="${subject.code}">${escapeHTML(subject.label)}</option>`,
-        )
-        .join("");
-    const score = generalScore();
-    const status = generalStatus();
-    const generalNode = `<div class="subject-node general-node" aria-label="Geral. ${score === null ? "Sem registros" : `${score}% de desempenho`}"><span class="node-icon material-symbols-outlined">insights</span><strong>Geral</strong><b>${score === null ? "—" : `${score}%`}</b><small>${escapeHTML(status.label)}</small></div>`;
-    elements.map.innerHTML = `<svg class="map-links" aria-hidden="true" preserveAspectRatio="none"><line x1="50%" y1="50%" x2="50%" y2="17%"></line><line x1="50%" y1="50%" x2="21%" y2="42%"></line><line x1="50%" y1="50%" x2="79%" y2="42%"></line><line x1="50%" y1="50%" x2="31%" y2="78%"></line><line x1="50%" y1="50%" x2="69%" y2="78%"></line></svg>${generalNode}${subjects
-      .map((subject, index) => {
-        const status = statusFor(subject.score);
-        const saved = draggedPositions.get(subject.code);
-        const [x, y] = saved || positions[index];
-        return `<button class="subject-node ${index === 0 ? "selected" : ""} ${status.className}" style="--x:${x};--y:${y}" data-subject="${subject.code}" aria-pressed="${index === 0}" aria-label="${escapeHTML(subject.label)}. ${subject.score === null ? "Sem registros" : `${subject.score}% de desempenho`}. Clique duas vezes ou pressione Enter para abrir o mapa de dificuldades."><span class="node-icon material-symbols-outlined">${subject.icon}</span><strong>${escapeHTML(subject.label)}</strong><b>${subject.score === null ? "—" : `${subject.score}%`}</b><small>${escapeHTML(status.label)}</small><span class="double-click-cue" aria-hidden="true">2×</span></button>`;
-      })
-      .join("")}`;
-    renderSubjectDetail(subjects[0].code);
+  const renderDestinations = () => {
+    ui.destinations.innerHTML = destinations.map((item) => {
+      const status = item.priority ? destinationStatus(item.key) : null;
+      const badge = status
+        ? `<span class="destination-badge">${esc(status.label)}</span>`
+        : item.key === "agenda" ? '<span class="destination-badge green">Ver hoje</span>' : "";
+      return `<a class="destination-card ${item.priority ? `priority state-${status.state}` : ""} tone-${item.tone}" href="${hrefFor(item)}" data-destination="${item.key}"${status ? ` data-learning-state="${status.state}"` : ""}><span class="destination-icon material-symbols-outlined" aria-hidden="true">${item.icon}</span><span class="destination-copy"><strong>${esc(destinationLabel(item))}</strong><small>${esc(destinationDescription(item))}</small></span>${badge}<span class="destination-arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>`;
+    }).join("");
+    const agendaHref = hrefFor(destinations.find((item) => item.key === "agenda"));
+    $("[data-today-agenda-link]")?.setAttribute("href", agendaHref);
+    $("[data-agenda-shortcut]")?.setAttribute("href", agendaHref);
   };
-
-  const openDifficultyMap = (code) => {
-    if (openingDifficultyMap) return;
-    const subject = subjects.find((item) => item.code === code);
-    if (!subject) return;
-    openingDifficultyMap = true;
-    elements.transition.querySelector("[data-transition-icon]").textContent =
-      subject.icon;
-    elements.transition.querySelector("[data-transition-subject]").textContent =
-      subject.label;
-    elements.transition.hidden = false;
-    requestAnimationFrame(() => elements.transition.classList.add("visible"));
-    window.setTimeout(
-      () => {
-        window.location.href = `../mapa_dificuldades/index.html?materia=${encodeURIComponent(code)}`;
-      },
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 80 : 850,
-    );
-  };
-
   const renderWeek = () => {
     const days = Array.from({ length: 7 }, (_, offset) => {
       const date = new Date();
       date.setHours(0, 0, 0, 0);
       date.setDate(date.getDate() - (6 - offset));
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-      const count = dashboardData.history.filter((item) => {
-        const itemDate = new Date(item.created_at);
-        const itemKey = `${itemDate.getFullYear()}-${String(itemDate.getMonth() + 1).padStart(2, "0")}-${String(itemDate.getDate()).padStart(2, "0")}`;
-        return itemKey === key;
+      const key = date.toISOString().slice(0, 10);
+      const count = (data.history || []).filter((item) => {
+        const itemSubject = normalizeSubject(item);
+        if (activeSubject !== "all" && itemSubject && itemSubject !== activeSubject) return false;
+        return new Date(item.created_at).toISOString().slice(0, 10) === key;
       }).length;
       return { date, count, today: offset === 6 };
     });
     const total = days.reduce((sum, day) => sum + day.count, 0);
-    elements.weeklyDays.innerHTML = days
-      .map(
-        (day) =>
-          `<li class="${day.count ? "done" : ""} ${day.today ? "today" : ""}"><span>${new Intl.DateTimeFormat("pt-BR", { weekday: "short" }).format(day.date).replace(".", "")}</span><b>${day.count}</b></li>`,
-      )
-      .join("");
-    elements.weeklyTotal.innerHTML = `<span class="ring-progress">${total}<small>registros</small></span><p><strong>${dashboardData.xp} XP acumulados</strong><span>Calculados pelo Supabase</span></p>`;
+    ui.days.innerHTML = days.map((day) => `<li class="${day.count ? "done" : ""} ${day.today ? "today" : ""}"><span>${new Intl.DateTimeFormat("pt-BR", { weekday: "short" }).format(day.date).replace(".", "")}</span><b>${day.count}</b></li>`).join("");
+    ui.total.innerHTML = `<span class="ring-progress">${total}<small>registros</small></span><p><strong>${Number(data.xp || 0)} XP acumulados</strong><span>${currentSubject() ? `Filtrados em ${esc(currentSubject().label)}` : "Todas as matérias"}</span></p>`;
   };
-
-  const bindInteractions = () => {
-    let drag = null;
-    const updateDraggedPosition = (event) => {
-      if (!drag) return;
-      const rect = elements.map.getBoundingClientRect();
-      const radius = drag.node.offsetWidth / 2;
-      const x = Math.min(
-        Math.max(event.clientX - rect.left, radius),
-        rect.width - radius,
-      );
-      const y = Math.min(
-        Math.max(event.clientY - rect.top, radius),
-        rect.height - radius,
-      );
-      const xPercent = `${(x / rect.width) * 100}%`;
-      const yPercent = `${(y / rect.height) * 100}%`;
-      drag.node.style.setProperty("--x", xPercent);
-      drag.node.style.setProperty("--y", yPercent);
-      draggedPositions.set(drag.node.dataset.subject, [xPercent, yPercent]);
-      drag.moved = true;
-    };
-    elements.map.addEventListener("pointerdown", (event) => {
-      const node = event.target.closest("[data-subject]");
-      if (!node || event.button === 2) return;
-      drag = {
-        node,
-        startX: event.clientX,
-        startY: event.clientY,
-        moved: false,
-      };
-      node.classList.add("dragging");
-      node.setPointerCapture?.(event.pointerId);
+  const renderNotifications = () => {
+    const unread = (data.notifications || []).filter((item) => !item.readAt).length;
+    ui.notifications?.querySelector(".notification-dot")?.remove();
+    if (unread && ui.notifications) {
+      const dot = document.createElement("span");
+      dot.className = "notification-dot";
+      dot.setAttribute("aria-hidden", "true");
+      ui.notifications.append(dot);
+    }
+  };
+  const applyFilter = (code, announce = true) => {
+    if (code !== "all" && !subjects.some((item) => item.code === code)) return;
+    activeSubject = code;
+    try { localStorage.setItem("ominisaber:student-subject-filter", code); } catch {}
+    const url = new URL(location.href);
+    if (code === "all") url.searchParams.delete("materia");
+    else url.searchParams.set("materia", code);
+    history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+    renderFilters();
+    renderNext();
+    renderDestinations();
+    renderWeek();
+    if (announce) notify(code === "all" ? "Exibindo todas as matérias." : `Filtro de ${subjectMeta[code].label} aplicado em toda a página.`);
+  };
+  const bind = () => {
+    ui.chips.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-subject-filter-value]");
+      if (button) applyFilter(button.dataset.subjectFilterValue);
     });
-    elements.map.addEventListener("pointermove", (event) => {
-      if (!drag) return;
-      if (
-        Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) <=
-        4
-      )
-        return;
-      event.preventDefault();
-      updateDraggedPosition(event);
-    });
-    elements.map.addEventListener("pointerup", (event) => {
-      if (!drag) return;
-      drag.node.classList.remove("dragging");
-      drag.node.releasePointerCapture?.(event.pointerId);
-      if (drag.moved) drag.node.dataset.suppressClick = "true";
-      drag = null;
-    });
-    elements.map.addEventListener("pointercancel", () => {
-      drag?.node.classList.remove("dragging");
-      drag = null;
-    });
-    elements.map.addEventListener("click", (event) => {
-      const node = event.target.closest("[data-subject]");
-      if (!node) return;
-      if (node.dataset.suppressClick) {
-        delete node.dataset.suppressClick;
-        return;
-      }
-      renderSubjectDetail(node.dataset.subject);
-      if (event.detail >= 2) openDifficultyMap(node.dataset.subject);
-    });
-    elements.map.addEventListener("dblclick", (event) => {
-      const node = event.target.closest("[data-subject]");
-      if (node) openDifficultyMap(node.dataset.subject);
-    });
-    elements.map.addEventListener("keydown", (event) => {
-      const node = event.target.closest("[data-subject]");
-      if (node && event.key === "Enter") {
-        event.preventDefault();
-        openDifficultyMap(node.dataset.subject);
-      }
-    });
-    elements.filter.addEventListener("change", (event) => {
-      const code = event.target.value;
-      elements.map.querySelectorAll("[data-subject]").forEach((node) => {
-        node.hidden = code !== "all" && node.dataset.subject !== code;
-      });
-      if (code !== "all") renderSubjectDetail(code);
-      else renderSubjectDetail(selectedCode || subjects[0].code);
-    });
-    document
-      .querySelector("[data-notification-toggle]")
-      ?.addEventListener("click", () => {
-        window.location.href = "../notificacoes/index.html";
-      });
-    const notificationButton = document.querySelector(
-      "[data-notification-toggle]",
-    );
-    if (
-      notificationButton &&
-      !document.querySelector("[data-agenda-shortcut]")
-    ) {
+    ui.select.addEventListener("change", (event) => applyFilter(event.target.value));
+    ui.clear.addEventListener("click", () => applyFilter("all"));
+    ui.notifications?.addEventListener("click", () => { location.href = "../notificacoes/index.html"; });
+    if (ui.notifications && !$("[data-agenda-shortcut]")) {
       const agenda = document.createElement("a");
       agenda.className = "icon-button";
       agenda.dataset.agendaShortcut = "true";
-      agenda.href = "../agenda/index.html";
+      agenda.href = hrefFor(destinations.find((item) => item.key === "agenda"));
       agenda.setAttribute("aria-label", "Abrir agenda");
-      agenda.innerHTML =
-        '<span class="material-symbols-outlined">calendar_month</span>';
-      notificationButton.before(agenda);
+      agenda.innerHTML = '<span class="material-symbols-outlined">calendar_month</span>';
+      ui.notifications.before(agenda);
     }
-    const dialog = document.querySelector("[data-focus-dialog]");
-    document
-      .querySelector("[data-focus-open]")
-      ?.addEventListener("click", () => dialog.showModal());
-    document.querySelectorAll("[data-focus-minutes]").forEach((button) =>
-      button.addEventListener("click", () => {
-        document
-          .querySelectorAll("[data-focus-minutes]")
-          .forEach((item) =>
-            item.classList.toggle("selected", item === button),
-          );
-        dialog.querySelector("h2").textContent =
-          `${button.dataset.focusMinutes}:00`;
-      }),
-    );
-    dialog?.addEventListener("close", () => {
-      if (dialog.returnValue === "start") notify("Sessão de foco iniciada.");
-    });
-    const menuButton = document.querySelector("[data-menu-toggle]");
-    menuButton?.addEventListener("click", () => {
+    const dialog = $("[data-focus-dialog]");
+    $("[data-focus-open]")?.addEventListener("click", () => dialog?.showModal());
+    document.querySelectorAll("[data-focus-minutes]").forEach((button) => button.addEventListener("click", () => {
+      document.querySelectorAll("[data-focus-minutes]").forEach((item) => item.classList.toggle("selected", item === button));
+      dialog.querySelector("h2").textContent = `${button.dataset.focusMinutes}:00`;
+    }));
+    dialog?.addEventListener("close", () => { if (dialog.returnValue === "start") notify("Sessão de foco iniciada."); });
+    const menu = $("[data-menu-toggle]");
+    menu?.addEventListener("click", () => {
       document.body.classList.toggle("menu-open");
-      menuButton.setAttribute(
-        "aria-expanded",
-        String(document.body.classList.contains("menu-open")),
-      );
+      menu.setAttribute("aria-expanded", String(document.body.classList.contains("menu-open")));
     });
   };
-
-  const loadDashboard = async () => {
-    showState("loading");
+  const load = async () => {
+    if (loading) return;
+    loading = true;
+    show("loading");
     try {
-      if (!api()?.configured)
-        throw new Error("A conexão com o Supabase não está configurada.");
-      dashboardData = await api().getStudentDashboard();
-      subjects = buildSubjects(dashboardData);
-      renderProfile(dashboardData.profile);
-      renderNextStep();
-      renderSubjects();
+      if (!api()?.configured) throw new Error("A conexão com o Supabase não está configurada.");
+      const results = await Promise.allSettled([
+        api().getStudentDashboard(),
+        api().listStudentStudioExperiences ? api().listStudentStudioExperiences() : Promise.resolve([]),
+      ]);
+      if (results[0].status === "rejected") throw results[0].reason;
+      data = results[0].value;
+      data.studioUnavailable = results[1].status === "rejected";
+      const studio = results[1].status === "fulfilled" ? results[1].value || [] : [];
+      data.evaluations = [...(data.evaluations || []), ...studio.map(item => ({ ...item, origemStudio: true, tentativas_avaliacao: item.ultima_tentativa ? [item.ultima_tentativa] : [] }))];
+      const profile = data.profile || {};
+      const codes = [...baseSubjects, profile.curso_tecnico === "administracao" ? "tecnico_administracao" : "tecnico_informatica"];
+      subjects = codes.map((code) => ({ code, ...subjectMeta[code] }));
+      const requested = new URLSearchParams(location.search).get("materia");
+      let saved = "";
+      try { saved = localStorage.getItem("ominisaber:student-subject-filter") || ""; } catch {}
+      const allowed = new Set(codes);
+      activeSubject = allowed.has(requested) ? requested : allowed.has(saved) ? saved : "all";
+      renderProfile(profile);
+      renderFilters();
+      renderNext();
+      renderDestinations();
+      renderNotifications();
       renderWeek();
-      showState("ready");
+      show("ready");
     } catch (error) {
-      elements.errorMessage.textContent =
-        error.message || "Tente novamente em alguns instantes.";
-      showState("error");
+      ui.errorMessage.textContent = error.message || "Tente novamente em alguns instantes.";
+      show("error");
+    } finally {
+      loading = false;
     }
   };
-
-  document
-    .querySelector("[data-retry]")
-    ?.addEventListener("click", loadDashboard);
-  bindInteractions();
-  loadDashboard();
+  $("[data-retry]")?.addEventListener("click", load);
+  bind();
+  load();
+  if (api()?.configured) unsubscribeRealtime = api().subscribeToAgenda(() => load());
+  window.addEventListener("beforeunload", () => unsubscribeRealtime?.());
 })();

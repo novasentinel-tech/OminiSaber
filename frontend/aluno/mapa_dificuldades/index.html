@@ -2,124 +2,124 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta
-      name="description"
-      content="Mapa de dificuldades por descritor do aluno no OminiSaber."
-    />
+    <meta name="description" content="Prioridades de estudo por descritor do aluno no OminiSaber." />
     <title>Mapa de dificuldades | OminiSaber</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&family=Material+Symbols+Outlined:FILL@0..1" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=20260920-2" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
     <script src="../../../backend/ominisaber-supabase-config.js"></script>
-    <script src="../../../backend/ominisaber-supabase-client.js?v=20260903-2"></script>
-    <script defer src="script.js?v=20260903-1"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="script.js?v=20260920-2"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260927-3"></script>
   </head>
   <body data-app-role="student" data-required-role="aluno">
+    <header class="map-topbar app-topbar">
+      <a class="icon-button" href="../dashboard_principal/index.html" aria-label="Voltar ao início"><span class="material-symbols-outlined">arrow_back</span></a>
+      <div class="topbar-title"><strong>Central de aprendizagem</strong><span>Seu desempenho transformado em próximos passos</span></div>
+      <div class="topbar-actions">
+        <a class="icon-button" href="../atividades/index.html" aria-label="Abrir atividades"><span class="material-symbols-outlined">assignment</span></a>
+        <a class="icon-button" href="../perfil/index.html" aria-label="Abrir perfil"><span class="material-symbols-outlined">person</span></a>
+      </div>
+    </header>
+
     <main class="difficulty-page" id="conteudo">
-      <header class="page-header">
+      <header class="page-heading">
         <div class="header-copy">
-          <a class="back-link" href="../dashboard_principal/index.html"
-            ><span class="material-symbols-outlined" aria-hidden="true"
-              >arrow_back</span
-            >Voltar ao painel</a
-          >
-          <p class="eyebrow">Diagnóstico da sua jornada</p>
+          <p class="eyebrow">FOCO DE ESTUDO</p>
           <h1>Mapa de dificuldades</h1>
-          <p>
-            Veja onde concentrar seus estudos. Cada ponto é uma trilha publicada
-            e o centro reúne o progresso de todas elas.
-          </p>
+          <p>Entenda o que já está sólido, onde vale revisar e qual atividade fazer agora.</p>
         </div>
-        <label class="subject-picker"
-          ><span>Matéria</span
-          ><select data-subject-select aria-label="Escolher matéria"></select
-        ></label>
+        <label class="subject-picker"><span>Matéria</span><select data-subject-select aria-label="Escolher matéria"></select></label>
       </header>
 
       <section class="loading-state" data-state="loading" aria-live="polite">
-        <span class="loader" aria-hidden="true"></span>
-        <p>Lendo seu progresso no Supabase...</p>
+        <span class="loader" aria-hidden="true"></span><p>Organizando seus resultados...</p>
       </section>
       <section class="error-state is-hidden" data-state="error" role="alert">
-        <span class="material-symbols-outlined" aria-hidden="true"
-          >cloud_off</span
-        >
-        <h2>Não foi possível montar o mapa</h2>
-        <p data-error-message></p>
+        <span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
+        <h2>Não foi possível montar seu plano</h2><p data-error-message></p>
         <button type="button" data-retry>Tentar novamente</button>
       </section>
 
       <div class="map-content is-hidden" data-map-content>
         <section class="summary-strip" aria-label="Resumo do diagnóstico">
-          <article>
-            <span
-              class="summary-icon danger material-symbols-outlined"
-              aria-hidden="true"
-              >priority_high</span
-            >
-            <div>
-              <strong data-attention-count>0</strong
-              ><small>precisam de atenção</small>
-            </div>
-          </article>
-          <article>
-            <span
-              class="summary-icon warning material-symbols-outlined"
-              aria-hidden="true"
-              >trending_up</span
-            >
-            <div>
-              <strong data-progress-count>0</strong><small>em evolução</small>
-            </div>
-          </article>
-          <article>
-            <span
-              class="summary-icon success material-symbols-outlined"
-              aria-hidden="true"
-              >verified</span
-            >
-            <div>
-              <strong data-strong-count>0</strong
-              ><small>com domínio forte</small>
-            </div>
-          </article>
-          <p>
-            <span class="material-symbols-outlined" aria-hidden="true"
-              >database</span
-            >Percentuais calculados com atividades publicadas e concluídas.
-          </p>
+          <article class="summary-main"><span class="summary-icon blue material-symbols-outlined" aria-hidden="true">donut_large</span><div><strong data-general-score>—</strong><small>desempenho geral</small></div></article>
+          <article><span class="summary-icon danger material-symbols-outlined" aria-hidden="true">priority_high</span><div><strong data-attention-count>0</strong><small>pedem atenção</small></div></article>
+          <article><span class="summary-icon warning material-symbols-outlined" aria-hidden="true">trending_up</span><div><strong data-progress-count>0</strong><small>em evolução</small></div></article>
+          <article><span class="summary-icon success material-symbols-outlined" aria-hidden="true">verified</span><div><strong data-strong-count>0</strong><small>com domínio</small></div></article>
         </section>
 
-        <section class="map-card" aria-labelledby="network-title">
-          <div class="map-heading">
-            <div>
-              <p class="eyebrow">Visão conectada</p>
-              <h2 id="network-title" data-map-title>Seus descritores</h2>
+        <section class="study-workspace" aria-labelledby="descriptor-title">
+          <div class="descriptor-panel">
+            <div class="section-heading">
+              <div><p class="eyebrow">PRIORIDADES</p><h2 id="descriptor-title" data-map-title>Descritores da matéria</h2><p>Selecione um item para ver evidências e a ação recomendada.</p></div>
+              <div class="descriptor-filters" role="group" aria-label="Filtrar descritores">
+                <button class="active" type="button" data-status-filter="all">Todos</button>
+                <button type="button" data-status-filter="danger">Atenção</button>
+                <button type="button" data-status-filter="warning">Evolução</button>
+                <button type="button" data-status-filter="success">Domínio</button>
+              </div>
             </div>
-            <div class="legend" aria-label="Legenda">
-              <span><i class="danger"></i>Atenção</span
-              ><span><i class="warning"></i>Evolução</span
-              ><span><i class="success"></i>Domínio</span
-              ><span><i></i>Sem evidência</span>
-            </div>
+            <div class="descriptor-list" data-descriptor-list aria-live="polite"></div>
           </div>
-          <div class="descriptor-network" data-network aria-live="polite"></div>
+
+          <aside class="descriptor-detail" data-descriptor-detail aria-live="polite">
+            <div class="detail-empty"><span class="material-symbols-outlined">touch_app</span><strong>Escolha um descritor</strong><p>Os detalhes aparecerão aqui sem tirar você do mapa.</p></div>
+          </aside>
         </section>
 
-        <section class="priority-section" aria-labelledby="priority-title">
-          <div>
-            <p class="eyebrow">Próximos passos</p>
-            <h2 id="priority-title">Trilhas para priorizar</h2>
-            <p>Comece pelas menores porcentagens e avance no seu ritmo.</p>
+        <section class="activity-section" aria-labelledby="activity-title">
+          <div class="section-heading">
+            <div><p class="eyebrow">PRATIQUE AGORA</p><h2 id="activity-title">Atividades desta matéria</h2><p>Propostas reais dos seus professores, com situação e tempo estimado.</p></div>
+            <a class="view-all" href="../atividades/index.html">Ver todas <span class="material-symbols-outlined">arrow_forward</span></a>
           </div>
-          <div class="priority-list" data-priority-list></div>
+          <div class="related-activities" data-related-activities></div>
         </section>
+
+        <p class="evidence-note"><span class="material-symbols-outlined">database</span>Os percentuais usam somente respostas reais já corrigidas. Atividades pendentes aparecem separadamente.</p>
       </div>
     </main>
   </body>

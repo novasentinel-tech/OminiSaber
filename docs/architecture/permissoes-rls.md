@@ -1,24 +1,41 @@
-# Permissões e RLS
+# Permissões e Row Level Security
 
-## Objetivo
+## Princípio
 
-Garantir que cada papel veja e altere somente os dados necessários.
+Toda tabela exposta pela Data API deve ter RLS. A regra efetiva combina grants e
+policies; filtros do frontend existem apenas para experiência de uso.
 
-## Funcionamento
+## Escopos
 
-As policies usam `auth.uid()`, funções auxiliares como `usuario_role()`, `usuario_turma_id()` e `usuario_tipo_professor()`, além de vínculos em `professor_turmas`.
+| Papel         | Escopo principal                                                      |
+| ------------- | --------------------------------------------------------------------- |
+| Aluno         | Perfil e produção próprios; conteúdo publicado para sua turma         |
+| Professor     | Perfil próprio; turmas e matérias vinculadas; produção de sua autoria |
+| Gestor        | Administração institucional autorizada e auditoria                    |
+| Bibliotecária | Acervo, exemplares e circulação, sem acesso pedagógico indevido       |
 
-## Regras principais
+## Vínculo docente canônico
 
-- Aluno: próprios dados, conteúdos publicados da turma e próprio progresso.
-- Professor: perfil próprio, turmas vinculadas, alunos dessas turmas e recursos de sua especialidade.
-- Gestor: administração global conforme as policies.
-- Bibliotecária: operação de biblioteca, sem acesso pedagógico indevido.
+`professor_turma_materias` é a fonte atual para autorização por disciplina. A tabela
+`professor_turmas` permanece para compatibilidade e sincronização de módulos antigos,
+mas código novo não deve inferir autorização apenas dela nem de `perfis.turma_id`.
 
-## Banco de dados
+## Funções auxiliares
 
-As policies estão no schema completo e nas migrations correspondentes. Consultas relacionais do PostgREST devem explicitar FKs quando houver mais de uma relação possível.
+Policies e RPCs usam `auth.uid()`, `usuario_role()`, `usuario_turma_id()`,
+`usuario_tipo_professor()` e verificações de vínculo. Funções `SECURITY DEFINER`
+devem definir `search_path`, validar a sessão e receber apenas os grants necessários.
 
-## Pontos de atenção
+## PostgREST
 
-RLS não deve ser desativado como solução de diagnóstico ou desenvolvimento.
+Quando duas ou mais FKs ligam as mesmas tabelas, a consulta deve indicar a constraint
+explicitamente. Isso evita o erro de relacionamento ambíguo e impede que uma página
+dependa de heurística do cache do schema.
+
+## Regras operacionais
+
+- não desligar RLS para corrigir uma tela;
+- testar leitura e escrita permitidas e negadas;
+- nunca conceder `service_role` ou secret key ao navegador;
+- revisar advisors após migrations;
+- tratar dados de teste com as mesmas policies usadas no fluxo real.

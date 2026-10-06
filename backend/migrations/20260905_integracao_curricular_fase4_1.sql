@@ -18,7 +18,7 @@ as $$
     join public.curriculos c on c.id = cp.curriculo_id
     where h.id = p_habilidade_id
       and h.materia_codigo = p_materia
-      and h.codigo ~ '^EM\d{2}[A-Z]{2}\d{2}$'
+      and h.codigo ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'
       and c.status = 'publicado'
       and c.ativo = true
   );
@@ -138,3 +138,5 @@ with check (
 );
 
 commit;
+
+

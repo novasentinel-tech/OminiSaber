@@ -1,0 +1,166 @@
+body.os-parties-ready[data-party-role="student"] {
+  --os-accent: #155be8;
+  --os-accent-strong: #0d47c8;
+  --os-accent-soft: #edf3ff;
+}
+
+body.os-parties-ready[data-party-role="teacher"] {
+  --os-accent: #155be8;
+  --os-accent-strong: #0d47c8;
+  --os-accent-soft: #edf3ff;
+}
+
+body.os-parties-ready[data-party-role="manager"] {
+  --os-accent: #155be8;
+  --os-accent-strong: #0d47c8;
+  --os-accent-soft: #edf3ff;
+}
+
+body.os-parties-ready[data-party-role="library"] {
+  --os-accent: #155be8;
+  --os-accent-strong: #0d47c8;
+  --os-accent-soft: #edf3ff;
+}
+
+body.os-parties-ready[data-party-role="public"] {
+  --os-accent: #155be8;
+  --os-accent-strong: #0d47c8;
+  --os-accent-soft: #edf3ff;
+}
+
+body.os-parties-ready {
+  --accent: var(--os-accent);
+  --accent-dark: var(--os-accent-strong);
+  --accent-soft: var(--os-accent-soft);
+  --primary: var(--os-accent);
+  --primary-dark: var(--os-accent-strong);
+  --primary-soft: var(--os-accent-soft);
+  --ink: var(--os-ink);
+  --muted: var(--os-ink-muted);
+  --line: var(--os-line);
+  --canvas: var(--os-canvas);
+  --surface: var(--os-surface);
+  --danger: var(--os-red);
+  --warning: var(--os-yellow);
+  --success: var(--os-green);
+}
+
+/* Superfícies editoriais escuras mantêm contraste mesmo quando a tipografia
+   global do Parties é carregada depois do CSS específico da página. */
+body.os-parties-ready :where(.catalog-hero, .trail-hero, .achievements-hero) :where(h1, h2, h3, h4) {
+  color: #fff !important;
+}
+
+body.os-parties-ready :where(.catalog-hero, .trail-hero, .achievements-hero) :where(.eyebrow, .kicker, .section-kicker) {
+  color: #a8c3ff !important;
+}
+
+body.os-parties-ready :where(.button, .primary-button, .action-button, .btn):not(.secondary):not(.disabled):not(.danger):not(.destructive):not(.delete) {
+  border-color: var(--os-accent) !important;
+  background: var(--os-accent) !important;
+  color: var(--os-on-accent) !important;
+  box-shadow: none !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-student-sidebar, .sidebar) {
+  color: var(--os-ink) !important;
+  background: #fff !important;
+  background-image: none !important;
+  border-right: 1px solid var(--os-line) !important;
+  box-shadow: none !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-student-sidebar)::before {
+  display: none !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-student-brand, .sidebar-brand, .brand) {
+  color: var(--os-ink) !important;
+  border-bottom-color: var(--os-line) !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-student-brand-mark, .brand-mark, .logo-mark) {
+  color: #fff !important;
+  background: var(--os-accent) !important;
+  box-shadow: none !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-student-nav a, .sidebar-nav a) {
+  color: var(--os-ink-muted) !important;
+  border-radius: var(--os-radius-md) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-student-nav a, .sidebar-nav a).active {
+  color: var(--os-accent-strong) !important;
+  background: var(--os-accent-soft) !important;
+  box-shadow: none !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-student-nav a, .sidebar-nav a).active::before {
+  background: var(--os-accent) !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-student-nav a, .sidebar-nav a):hover {
+  color: var(--os-accent-strong) !important;
+  background: color-mix(in srgb, var(--os-accent) 7%, white) !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-student-account, .sidebar-account, .user-card) {
+  color: var(--os-ink) !important;
+  background: var(--os-surface-muted) !important;
+  border-color: var(--os-line) !important;
+  box-shadow: none !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-student-avatar) {
+  color: var(--os-accent-strong) !important;
+  background-color: var(--os-accent-soft) !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-student-signout, .sidebar-signout, .logout-button) {
+  color: var(--os-red) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+body.os-parties-ready[data-party-role="student"] :where(.omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile) {
+  color: var(--os-accent-strong) !important;
+  background: var(--os-accent-soft) !important;
+  border: 1px solid color-mix(in srgb, var(--os-accent) 24%, var(--os-line)) !important;
+  box-shadow: var(--os-shadow-sm) !important;
+}
+
+body.os-parties-ready[data-party-role="teacher"] :where(.sidebar, .app-sidebar, .portal-sidebar),
+body.os-parties-ready[data-party-role="manager"] :where(.sidebar, .app-sidebar, .portal-sidebar),
+body.os-parties-ready[data-party-role="library"] :where(.sidebar, .app-sidebar, .library-sidebar) {
+  color: var(--os-ink) !important;
+  background: #fff !important;
+  background-image: none !important;
+  border-right: 1px solid var(--os-line) !important;
+  box-shadow: none !important;
+}
+
+body.os-parties-ready[data-party-role="teacher"] :where(.sidebar, .app-sidebar, .portal-sidebar) :where(a, button),
+body.os-parties-ready[data-party-role="manager"] :where(.sidebar, .app-sidebar, .portal-sidebar) :where(a, button),
+body.os-parties-ready[data-party-role="library"] :where(.sidebar, .app-sidebar, .library-sidebar) :where(a, button) {
+  color: var(--os-ink-muted) !important;
+}
+
+body.os-parties-ready[data-party-role="teacher"] :where(.nav-link.active, nav a.active, nav a[aria-current="page"]),
+body.os-parties-ready[data-party-role="manager"] :where(.nav-link.active, nav a.active, nav a[aria-current="page"]),
+body.os-parties-ready[data-party-role="library"] :where(.nav-link.active, nav a.active, nav a[aria-current="page"]) {
+  border-radius: var(--os-radius-md) !important;
+  background: var(--os-accent) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+body.os-parties-ready[data-party-role="teacher"] :where(.nav-link, nav a):hover,
+body.os-parties-ready[data-party-role="manager"] :where(.nav-link, nav a):hover,
+body.os-parties-ready[data-party-role="library"] :where(.nav-link, nav a):hover {
+  color: var(--os-accent-strong) !important;
+  background: var(--os-accent-soft) !important;
+}

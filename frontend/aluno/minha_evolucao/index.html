@@ -1,242 +1,71 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta
-      name="description"
-      content="Níveis, conquistas e evolução acadêmica no OminiSaber."
-    />
-    <title>Minha evolução | OminiSaber</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css?v=20260902-evolution-1" />
-    <link rel="stylesheet" href="sidebar-responsive.css?v=20260903-1" />
-    <link rel="stylesheet" href="../../shared/sidebar.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../../../backend/ominisaber-supabase-config.js"></script>
-    <script src="../../../backend/ominisaber-supabase-client.js?v=20260903-2"></script>
-    <script defer src="levels.js?v=20260902-1"></script>
-    <script defer src="script.js?v=20260902-evolution-1"></script>
-  </head>
-  <body data-app-role="student" data-required-role="aluno">
-    <aside class="sidebar" data-sidebar aria-label="Navegação principal">
-      <a class="brand" href="../dashboard_principal/index.html"
-        ><span class="brand-mark material-symbols-outlined">school</span
-        ><span>OminiSaber</span></a
-      >
-      <nav>
-        <a href="../dashboard_principal/index.html"
-          ><span class="material-symbols-outlined">home</span>Início</a
-        >
-        <a href="../modulo_de_trilhas/index.html"
-          ><span class="material-symbols-outlined">route</span>Trilhas</a
-        >
-        <a href="../laboratorio_de_redacao/index.html"
-          ><span class="material-symbols-outlined">edit_note</span>Redação</a
-        >
-        <a class="active" href="index.html" aria-current="page"
-          ><span class="material-symbols-outlined">monitoring</span>Evolução</a
-        >
-        <a href="../biblioteca_digital/index.html"
-          ><span class="material-symbols-outlined">bookmark</span>Biblioteca</a
-        >
-      </nav>
-      <div class="profile">
-        <span class="avatar" data-initials aria-hidden="true">AL</span>
-        <div>
-          <strong data-profile-name>Carregando...</strong
-          ><span data-profile-grade>Ensino Médio</span>
-        </div>
-      </div>
-    </aside>
-
-    <main>
-      <header class="topbar">
-        <button
-          class="icon-button menu-button"
-          type="button"
-          data-menu-toggle
-          aria-label="Abrir navegação"
-          aria-expanded="false"
-          onclick="
-            document.body.classList.toggle('menu-open');
-            this.setAttribute(
-              'aria-expanded',
-              String(document.body.classList.contains('menu-open')),
-            );
-          "
-        >
-          <span class="material-symbols-outlined">menu</span>
-        </button>
-        <div>
-          <p class="eyebrow">Sua jornada</p>
-          <h1 data-greeting>Minha evolução</h1>
-        </div>
-        <a
-          class="icon-button"
-          href="../perfil/index.html"
-          aria-label="Abrir perfil"
-          ><span class="material-symbols-outlined">person</span></a
-        >
-      </header>
-
-      <section class="state-panel" data-state="loading" aria-live="polite">
-        <span class="loader"></span>
-        <p>Montando sua jornada...</p>
-      </section>
-      <section class="state-panel is-hidden" data-state="error" role="alert">
-        <span class="material-symbols-outlined">cloud_off</span>
-        <h2>Não foi possível carregar sua evolução</h2>
-        <p data-error-message>Tente novamente.</p>
-        <button class="button primary" data-retry>Tentar novamente</button>
-      </section>
-
-      <div class="evolution is-hidden" data-evolution>
-        <section class="level-hero">
-          <div class="level-copy">
-            <p class="eyebrow">Nível atual</p>
-            <div class="level-title">
-              <span class="level-number" data-level-number>1</span>
-              <div>
-                <h2 data-level-title>Curiosa</h2>
-                <p data-level-description>
-                  Seu primeiro passo na jornada do conhecimento.
-                </p>
-              </div>
-            </div>
-            <div class="xp-row">
-              <div>
-                <strong><span data-xp-total>0</span> XP</strong
-                ><span data-xp-detail>500 XP para o próximo nível</span>
-              </div>
-              <span class="xp-next"
-                >Próximo: <b data-next-level>Leitora</b></span
-              >
-            </div>
-            <div
-              class="xp-track"
-              role="progressbar"
-              aria-label="Progresso para o próximo nível"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              aria-valuenow="0"
-            >
-              <span data-xp-bar style="width: 0"></span>
-            </div>
-          </div>
-          <button
-            class="level-emblem"
-            type="button"
-            data-level-open
-            aria-label="Ver detalhes do nível Curiosa"
-          >
-            <span class="material-symbols-outlined">flag</span
-            ><strong>Nível 1</strong><small>Curiosa</small>
-          </button>
-        </section>
-
-        <section class="level-path" aria-labelledby="path-title">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Expedição do conhecimento</p>
-              <h2 id="path-title">Seu caminho de níveis</h2>
-            </div>
-            <p>Selecione um nível para conhecer o marco.</p>
-          </div>
-          <div
-            class="path-scroll"
-            data-level-path
-            aria-label="Caminho de níveis"
-          ></div>
-          <div
-            class="milestone-detail"
-            data-milestone-detail
-            aria-live="polite"
-          >
-            <span class="material-symbols-outlined">flag</span>
-            <div>
-              <strong>Curiosa · Nível 1</strong>
-              <p>Início da jornada.</p>
-            </div>
-            <span class="status">Atual</span>
-          </div>
-        </section>
-
-        <section class="progress-overview">
-          <article>
-            <p class="eyebrow">Ritmo semanal</p>
-            <h2 data-week-title>Sua semana começa aqui</h2>
-            <div
-              class="week-pulses"
-              data-week-pulses
-              aria-label="Ações de estudo nos últimos sete dias"
-            ></div>
-          </article>
-          <article class="next-goal">
-            <span class="material-symbols-outlined">target</span>
-            <div>
-              <p class="eyebrow">Próximo desafio</p>
-              <h2 data-goal-title>Chegar ao nível Leitora</h2>
-              <p data-goal-description>Continue estudando para avançar.</p>
-              <div class="goal-progress">
-                <span data-goal-progress style="width: 0"></span>
-              </div>
-            </div>
-          </article>
-        </section>
-
-        <section class="achievements" aria-labelledby="achievement-title">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Coleção de conquistas</p>
-              <h2 id="achievement-title">Medalhas que contam sua história</h2>
-            </div>
-            <div class="filters" role="group" aria-label="Filtrar conquistas">
-              <button class="active" data-filter="all">Todas</button
-              ><button data-filter="unlocked">Conquistadas</button
-              ><button data-filter="locked">Próximas</button>
-            </div>
-          </div>
-          <div class="achievement-grid" data-achievement-grid></div>
-        </section>
-
-        <section class="recent-journey">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Últimos passos</p>
-              <h2>O que fez você avançar</h2>
-            </div>
-            <a href="medalhas.html"
-              >Ver galeria completa
-              <span class="material-symbols-outlined">arrow_forward</span></a
-            >
-          </div>
-          <ol data-recent-journey></ol>
-        </section>
-      </div>
-    </main>
-
-    <dialog data-level-dialog>
-      <form method="dialog">
-        <button class="icon-button close" aria-label="Fechar">
-          <span class="material-symbols-outlined">close</span></button
-        ><span class="dialog-emblem material-symbols-outlined" data-dialog-icon
-          >flag</span
-        >
-        <p class="eyebrow" data-dialog-level>Nível 1</p>
-        <h2 data-dialog-title>Curiosa</h2>
-        <p data-dialog-description>
-          Seu primeiro passo na jornada do conhecimento.
-        </p>
-        <ul data-dialog-list></ul>
-        <button class="button primary">Continuar explorando</button>
-      </form>
-    </dialog>
-    <div class="toast" data-toast role="status" aria-live="polite"></div>
-  </body>
+<head>
+<meta charset="utf-8">
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Visão geral | OminiSaber</title>
+<link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5">
+<script src="/backend/vendor/supabase-2.112.3.js"></script>
+<script src="../../../backend/ominisaber-supabase-config.js"></script>
+<script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+<script defer src="levels.js?v=20260902-1"></script>
+<script defer src="../../Parties/parties.js?v=20260924-5"></script>
+<script defer src="../../Parties/evolution.js?v=20260923-1"></script>
+</head>
+<body data-app-role="student" data-required-role="aluno" data-evolution-page="overview">
+<main class="ev-main">
+<header class="topbar"><div class="topbar-title"><strong>Minha evolução</strong><span>Seu aprendizado, passo a passo</span></div><a class="ev-profile" href="../perfil/index.html" aria-label="Abrir perfil"><span class="material-symbols-outlined" aria-hidden="true">person</span></a></header>
+<div class="ev-wrap">
+<nav class="ev-nav" aria-label="Páginas da evolução">
+<a href="index.html" aria-current="page">Visão geral</a>
+<a href="desempenho.html">Meu desempenho</a>
+<a href="conquistas.html">Conquistas e níveis</a>
+<a href="historico.html">Histórico de estudo</a>
+</nav>
+<div class="ev-heading"><p class="ev-kicker">SUA JORNADA</p><h1>Visão geral</h1><p data-ev-intro></p></div>
+<div data-ev-state role="status">Carregando seus registros…</div>
+<button class="ev-button" data-ev-retry hidden>Tentar novamente</button>
+<div data-ev-content hidden></div>
+</div>
+</main>
+<dialog class="ev-dialog" data-ev-dialog><form method="dialog"><button class="ev-button" aria-label="Fechar detalhes">Fechar</button></form><div data-ev-detail></div></dialog>
+</body>
 </html>

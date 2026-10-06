@@ -1,0 +1,172 @@
+/* Teacher workspace: shared desktop layout and touch-first mobile surfaces. */
+body.os-parties-ready[data-party-role="teacher"] {
+  --accent: #1557ef; --accent-dark: #1043bb; --accent-soft: #edf3ff;
+  --surface: #f5f7fb; --ink: #14233c; --muted: #61718a; --line: #dfe6ef;
+  background: #f5f7fb; min-width: 0;
+}
+body.os-parties-ready[data-party-role="teacher"] .portal-sidebar {
+  width: 248px; padding: 28px 18px 20px; gap: 8px; overflow-y: auto;
+}
+body.os-parties-ready[data-party-role="teacher"] .portal-brand { margin: 0 8px 28px; gap: 12px; font-size: 19px; }
+body.os-parties-ready[data-party-role="teacher"] :is(.portal-brand,.portal-brand small,.metric > strong) { font-family: var(--os-font); }
+body.os-parties-ready[data-party-role="teacher"] .portal-brand small { text-transform: none; }
+body.os-parties-ready[data-party-role="teacher"] .portal-brand > span:first-child { background: #1557ef; color: white; box-shadow: none; border-radius: 12px; }
+body.os-parties-ready[data-party-role="teacher"] .portal-brand small { color: #63738a; font-size: 10px; letter-spacing: .03em; margin-top: 5px; }
+body.os-parties-ready[data-party-role="teacher"] .portal-nav { gap: 8px; }
+body.os-parties-ready[data-party-role="teacher"] .portal-nav a { min-height: 48px; padding: 12px; font-size: 13px; line-height: 1.5; border-radius: 10px; }
+body.os-parties-ready[data-party-role="teacher"] .portal-nav a.active { background: #edf3ff !important; color: #1557ef !important; box-shadow: inset 3px 0 #1557ef !important; }
+body.os-parties-ready[data-party-role="teacher"] .portal-profile { border-top: 1px solid #e0e7f0; padding-top: 20px; }
+body.os-parties-ready[data-party-role="teacher"] .portal-profile :is(small,div > span) { color: #63738a; font-size: 11px; line-height: 1.5; }
+body.os-parties-ready[data-party-role="teacher"] .portal-profile strong { font-size: 12px; line-height: 1.5; }
+body.os-parties-ready[data-party-role="teacher"] .portal-avatar { background: #edf3ff; color: #1557ef; flex-shrink: 0; }
+body.os-parties-ready[data-party-role="teacher"] .portal-main { margin-left: 248px; min-width: 0; padding: 0; }
+body.os-parties-ready[data-party-role="teacher"] .portal-topbar {
+  min-height: 100px; padding: 20px 32px; background: white; gap: 20px; flex-wrap: wrap;
+  position: relative; backdrop-filter: none; align-items: center;
+}
+body.os-parties-ready[data-party-role="teacher"] .portal-topbar > div:first-of-type { flex: 1 1 260px; min-width: 0; }
+body.os-parties-ready[data-party-role="teacher"] .portal-topbar h1 { font-size: clamp(22px,2.4vw,30px); line-height: 1.25; letter-spacing: -.035em; }
+body.os-parties-ready[data-party-role="teacher"] .portal-topbar p:not(.eyebrow) { color: #61718a; font-size: 13px; line-height: 1.5; }
+body.os-parties-ready[data-party-role="teacher"] :is(.portal-actions,.topbar-actions,.form-actions,.builder-intro-actions) { display: flex; flex-wrap: wrap; gap: 10px; }
+body.os-parties-ready[data-party-role="teacher"] .portal-content { max-width: 1440px; margin: auto; padding: 32px; display: flow-root; }
+body.os-parties-ready[data-party-role="teacher"] :is(.button,.icon-button) { min-height: 44px; border-radius: 10px; white-space: normal; justify-content: center; }
+body.os-parties-ready[data-party-role="teacher"] .button.primary { color: white; background: #1557ef; border-color: #1557ef; box-shadow: none; }
+body.os-parties-ready[data-party-role="teacher"] .button.secondary { color: #17489f; background: white; border: 1px solid #cfdced; }
+body.os-parties-ready[data-party-role="teacher"] :is(.hero,.builder-intro,.review-hero) { background: white; background-image: none; border: 1px solid #dfe6ef; border-radius: 16px; box-shadow: none; padding: 28px; color: #14233c; margin-bottom: 24px; }
+body.os-parties-ready[data-party-role="teacher"] .hero { border-left: 4px solid #1557ef; }
+body.os-parties-ready[data-party-role="teacher"] .hero-symbol { background: #edf3ff; color: #1557ef; border-radius: 16px; width: 64px; height: 64px; box-shadow: none; flex-shrink: 0; }
+body.os-parties-ready[data-party-role="teacher"] :is(.panel,.form-card,.builder-stage,.results-panel,.metric) { border: 1px solid #dfe6ef; border-radius: 16px; box-shadow: none; background: white; min-width: 0; }
+body.os-parties-ready[data-party-role="teacher"] :is(.metrics,.workspace-grid,.form-layout,.review-layout,.results-grid,.evidence-grid) { gap: 24px; }
+body.os-parties-ready[data-party-role="teacher"] .metrics { margin-block: 24px; }
+body.os-parties-ready[data-party-role="teacher"] .metric { padding: 24px; }
+body.os-parties-ready[data-party-role="teacher"] .metric > span { font-size: 12px; color: #61718a; }
+body.os-parties-ready[data-party-role="teacher"] .metric > strong { font-size: 30px; color: #14233c; }
+body.os-parties-ready[data-party-role="teacher"] :is(.panel-heading,.review-hero,.builder-intro) { gap: 16px; flex-wrap: wrap; }
+body.os-parties-ready[data-party-role="teacher"] .quick-grid a { border: 1px solid #e0e7f0; background: #f9fbff; padding: 20px; border-radius: 12px; min-height: 96px; }
+body.os-parties-ready[data-party-role="teacher"] :is(input,select,textarea) { max-width: 100%; min-width: 0; font-size: 16px; border-radius: 9px; }
+body.os-parties-ready[data-party-role="teacher"] :is(input:not([type="checkbox"]):not([type="radio"]),select) { min-height: 46px; }
+body.os-parties-ready[data-party-role="teacher"] :is(h1,h2,h3,p,strong,label) { overflow-wrap: anywhere; }
+body.os-parties-ready[data-party-role="teacher"] :is(button,a,input,textarea,select):focus-visible { outline: 3px solid #8cb1ff; outline-offset: 3px; }
+body.os-parties-ready[data-party-role="teacher"] .result-table { max-width: 100%; overflow-x: auto; }
+body.os-parties-ready[data-party-role="teacher"] .grade-dialog { max-height: calc(100dvh - 32px); overflow-y: auto; margin: auto; }
+body.os-parties-ready[data-party-role="teacher"] .grade-dialog .dialog-close { display: grid; place-items: center; width: 44px; height: 44px; top: 8px; right: 8px; color: #17489f; border-radius: 10px; }
+body.os-parties-ready[data-party-role="teacher"] .grade-dialog form > .eyebrow { padding-right: 40px; min-height: 28px; }
+body.os-parties-ready[data-party-role="teacher"] .grade-dialog textarea { resize: vertical; }
+@media(min-width:901px) {
+  body.os-parties-ready[data-party-role="teacher"] .portal-sidebar { transform: none !important; visibility: visible; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-topbar .menu-button { display: none; }
+}
+@media(max-width:1100px) {
+  body.os-parties-ready[data-party-role="teacher"] :is(.workspace-grid,.form-layout,.review-layout,.results-grid,.evidence-grid) { grid-template-columns: minmax(0,1fr); }
+  body.os-parties-ready[data-party-role="teacher"] :is(.builder-sidebar,.review-settings) { position: static; }
+}
+@media(max-width:900px) {
+  /* The shared mobile header has a fixed height; teacher actions wrap. */
+  body.os-parties-ready[data-party-role="teacher"] .portal-topbar.os-standard-header { height: auto; max-height: none; flex-shrink: 0; }
+  body.os-parties-ready[data-party-role="teacher"] .form-actions > .button { flex: 0 0 auto; height: auto; min-height: 44px; padding: 12px 16px; }
+  body.os-parties-ready[data-party-role="teacher"] .correction-total { flex-wrap: wrap; gap: 12px; }
+  body.os-parties-ready[data-party-role="teacher"] .correction-total > strong { white-space: nowrap; overflow-wrap: normal; flex-shrink: 0; }
+  body.os-parties-ready[data-party-role="teacher"] .panel-header { flex-wrap: wrap; }
+  body.os-parties-ready[data-party-role="teacher"] .panel-header .field.compact { display: grid; grid-template-columns: 1fr; gap: 8px; flex: 1 1 180px; min-width: 0; }
+  body.os-parties-ready[data-party-role="teacher"] .builder-steps button strong { display: block; }
+  body.os-parties-ready[data-party-role="teacher"] { min-width: 0; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-main { width: 100%; max-width: 100%; margin: 0 !important; padding: 0 !important; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-sidebar {
+    position: fixed !important; inset: 0 auto 0 0 !important; z-index: 1001 !important;
+    display: flex !important; width: min(88vw,320px) !important; height: 100dvh !important;
+    padding: max(72px,env(safe-area-inset-top)) 18px max(20px,env(safe-area-inset-bottom)) !important;
+    transform: translateX(-105%) !important; visibility: hidden; overflow-y: auto;
+    transition: transform .24s ease,visibility .24s !important;
+  }
+  body.os-parties-ready[data-party-role="teacher"].os-mobile-menu-open .portal-sidebar { transform: translateX(0) !important; visibility: visible; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-sidebar .os-mobile-close { display: grid !important; width: 44px; height: 44px; background: #edf3ff; color: #1557ef !important; border: 0; border-radius: 10px; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-topbar { padding: 16px 20px; gap: 12px; min-height: 76px; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-topbar > div:first-of-type { flex: 1 1 calc(100% - 64px); }
+  body.os-parties-ready[data-party-role="teacher"] .portal-topbar :is(.portal-actions,.topbar-actions) { width: 100%; margin: 0; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-actions .secondary { display: inline-flex; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-actions > * { flex: 1 1 150px; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-topbar .menu-button { display: inline-flex; flex: 0 0 44px; width: 44px; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-content { padding: 24px 20px 32px; }
+  body.os-parties-ready[data-party-role="teacher"] .os-mobile-nav { grid-template-columns: repeat(5,minmax(0,1fr)); }
+  body.os-parties-ready[data-party-role="teacher"] :is(.form-layout,.review-workspace,.agenda-layout,.review-grid,.answer-comparison,.grade-fields) { grid-template-columns: minmax(0,1fr); }
+  body.os-parties-ready[data-party-role="teacher"] :is(.metrics,.result-metrics) { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  body.os-parties-ready[data-party-role="teacher"] .result-row { min-width: 0; grid-template-columns: 1fr; gap: 8px; padding: 18px; border: 1px solid #e0e7f0; border-radius: 12px; margin-bottom: 12px; }
+  body.os-parties-ready[data-party-role="teacher"] .result-row.head { display: none; }
+  body.os-parties-ready[data-party-role="teacher"] .result-row-five:not(.head) > span:nth-child(2)::before { content: 'Automática: '; color: #61718a; }
+  body.os-parties-ready[data-party-role="teacher"] .result-row-five:not(.head) > span:nth-child(3)::before { content: 'Manual: '; color: #61718a; }
+  body.os-parties-ready[data-party-role="teacher"] .result-row-five:not(.head) > span:nth-child(4)::before { content: 'Nota: '; color: #61718a; }
+  body.os-parties-ready[data-party-role="teacher"] :is(.form-grid,.builder-grid) { grid-template-columns: minmax(0,1fr); }
+  body.os-parties-ready[data-party-role="teacher"] .builder-footer { position: static; flex-wrap: wrap; gap: 12px; }
+  body.os-parties-ready[data-party-role="teacher"] .builder-footer [data-publish-actions] { display: flex; flex-wrap: wrap; gap: 12px; }
+  body.os-parties-ready[data-party-role="teacher"] .builder-footer [data-publish-actions][hidden] { display: none; }
+  body.os-parties-ready[data-party-role="teacher"] .day-panel { position: static; }
+}
+@media(max-width:960px) {
+  body.os-parties-ready[data-party-role="teacher"] .event-form-panel {
+    position: fixed; inset: 0 0 0 auto; z-index: 1002;
+    width: min(430px,100%); height: 100dvh; max-height: 100dvh;
+    overflow-y: auto; overscroll-behavior: contain; visibility: hidden;
+    padding-bottom: max(24px,env(safe-area-inset-bottom));
+  }
+  body.os-parties-ready[data-party-role="teacher"].form-open .event-form-panel { visibility: visible; }
+}
+@media(max-width:540px) {
+  body.os-parties-ready[data-party-role="teacher"] .builder-steps { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  body.os-parties-ready[data-party-role="teacher"] .builder-steps button { min-width: 0; flex-direction: column; gap: 6px; padding: 12px 6px; }
+  body.os-parties-ready[data-party-role="teacher"] .builder-steps button strong { display: block; font-size: 12px; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-content { padding: 20px 14px 28px; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-topbar { padding: 16px 14px; }
+  body.os-parties-ready[data-party-role="teacher"] :is(.hero,.builder-intro,.review-hero,.panel,.form-card,.builder-stage) { padding: 20px; }
+  body.os-parties-ready[data-party-role="teacher"] .hero { flex-direction: column; }
+  body.os-parties-ready[data-party-role="teacher"] .hero-symbol { display: none; }
+  body.os-parties-ready[data-party-role="teacher"] :is(.quick-grid,.metrics,.result-metrics,.experience-cards) { grid-template-columns: minmax(0,1fr); }
+  body.os-parties-ready[data-party-role="teacher"] .form-actions { flex-direction: column; }
+  body.os-parties-ready[data-party-role="teacher"] .os-mobile-nav a span:last-child { font-size: 10px; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-commandbar :is(.portal-actions,.topbar-actions) { display: none; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-topbar.portal-commandbar { min-height: 72px; flex-wrap: nowrap; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-context { flex-basis: calc(100% - 56px); }
+}
+@media(prefers-reduced-motion:reduce) { body.os-parties-ready[data-party-role="teacher"] .portal-sidebar { transition: none !important; } }
+
+/* Teacher command bar: compact context and responsive action rail. */
+body.os-parties-ready[data-party-role="teacher"] .portal-topbar.portal-commandbar {
+  min-height: 82px; padding: 13px 30px; flex-wrap: nowrap; position: sticky; top: 0;
+}
+body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-context {
+  min-width: 0; flex: 1 1 280px; display: flex; align-items: center; gap: 13px;
+}
+body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-context > div { min-width: 0; }
+body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-context-icon {
+  width: 44px; height: 44px; flex: 0 0 44px; display: grid; place-items: center;
+  color: #1557ef; background: #edf3ff; border-radius: 12px;
+}
+body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-breadcrumb {
+  display: flex; align-items: center; gap: 7px; margin: 0 0 3px; color: #7b8aa1;
+  font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+}
+body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-breadcrumb i { color: #c4cedc; font-style: normal; }
+body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-breadcrumb strong { color: #1557ef; }
+body.os-parties-ready[data-party-role="teacher"] .portal-commandbar h1 { font-size: 19px; line-height: 1.25; letter-spacing: -.025em; }
+body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-context-help { margin-top: 2px; font-size: 10px; }
+body.os-parties-ready[data-party-role="teacher"] .portal-commandbar :is(.portal-actions,.topbar-actions) { flex: 0 1 auto; flex-wrap: nowrap; }
+body.os-parties-ready[data-party-role="teacher"] .portal-commandbar :is(.portal-actions,.topbar-actions) .button { min-height: 42px; white-space: nowrap; }
+body.os-parties-ready[data-party-role="teacher"] :is(.os-mobile-close,.shared-sidebar-toggle,.sidebar-edge-reveal) {
+  background: #1557ef !important; color: #fff !important; border-color: #1557ef !important;
+}
+body.os-parties-ready[data-party-role="teacher"] :is(.os-mobile-close,.shared-sidebar-toggle,.sidebar-edge-reveal) .material-symbols-outlined { color: #fff !important; }
+@media(max-width:900px) {
+  body.os-parties-ready[data-party-role="teacher"] .portal-topbar.portal-commandbar { min-height: 74px; padding: 10px 16px; flex-wrap: wrap; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-context { flex: 1 1 calc(100% - 60px); }
+  body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-context-help { display: none; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-commandbar :is(.portal-actions,.topbar-actions) {
+    width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; padding-bottom: 2px;
+  }
+  body.os-parties-ready[data-party-role="teacher"] .portal-commandbar :is(.portal-actions,.topbar-actions) .button { flex: 0 0 auto; min-height: 38px; padding-block: 8px; }
+}
+@media(max-width:540px) {
+  body.os-parties-ready[data-party-role="teacher"] .portal-topbar.portal-commandbar { height: 74px; max-height: 74px; min-height: 74px; flex-wrap: nowrap; overflow: hidden; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-context-icon { width: 40px; height: 40px; flex-basis: 40px; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-commandbar h1 { font-size: 17px; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-context-help { display: none; }
+  body.os-parties-ready[data-party-role="teacher"] .portal-commandbar .portal-breadcrumb { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}

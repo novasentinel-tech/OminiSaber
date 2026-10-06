@@ -51,26 +51,23 @@ button {
   background: var(--card);
   border-bottom: 1px solid var(--line);
 }
-.brand {
+.library-header-copy {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--primary);
-  font:
-    700 21px Poppins,
-    sans-serif;
+  min-width: 230px;
+  flex-direction: column;
 }
-.brand-mark {
-  display: grid;
-  width: 34px;
-  height: 34px;
-  place-items: center;
-  color: white;
-  background: var(--primary);
-  border-radius: 9px;
+.library-header-copy strong,
+.library-header-copy span {
+  display: block;
 }
-.brand-mark .material-symbols-outlined {
-  font-size: 19px;
+.library-header-copy strong {
+  color: var(--ink);
+  font: 800 15px/1.2 Inter, sans-serif;
+}
+.library-header-copy span {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
 }
 .header-nav {
   display: flex;
@@ -123,6 +120,7 @@ h3 {
 }
 .hero h1 {
   margin-bottom: 13px;
+  color: #fff !important;
   font-size: clamp(29px, 5vw, 49px);
   line-height: 1.1;
 }

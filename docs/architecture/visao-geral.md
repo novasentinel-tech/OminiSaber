@@ -1,27 +1,78 @@
 # Visão geral da arquitetura
 
-O OmniSaber é organizado como frontend estático por papel, cliente Supabase compartilhado e PostgreSQL protegido por RLS.
+O OminiSaber é uma aplicação web estática por perfil, conectada a um backend
+Supabase. A interface apresenta as ações; PostgreSQL decide autorização, valida
+regras de negócio e persiste o estado.
 
-## Objetivo
+## Componentes
 
-Separar apresentação, acesso a dados e autorização sem introduzir um framework frontend.
+```text
+Navegador
+├── frontend/aluno
+├── frontend/professor
+├── frontend/gestor
+└── frontend/bibliotecaria
+          │
+          v
+backend/ominisaber-supabase-client.js
+          │
+          v
+Supabase Auth + Data API + PostgreSQL/RLS
+          │
+          ├── Storage e Realtime
+          └── Edge Functions
+              ├── gestor-contas
+              ├── curriculo-upload
+              └── professor-copiloto → OpenAI API
+```
 
-## Estrutura
+## Decisões e motivos
 
-- `frontend/aluno/`: experiência do aluno.
-- `frontend/professor/`: área docente e especialidades.
-- `frontend/gestor/`: administração acadêmica.
-- `frontend/bibliotecaria/`: operação da biblioteca.
-- `backend/`: schema, migrations, cliente e Edge Functions.
+### Frontend estático sem framework
 
-## Funcionamento
+Mantém implantação simples, compatibilidade com a estrutura já criada e baixo
+custo operacional. Em troca, componentes compartilhados, caminhos relativos e
+estado de tela precisam de disciplina adicional.
 
-As páginas HTML carregam CSS e JavaScript por módulo. O cliente em `backend/ominisaber-supabase-client.js` centraliza sessão, consultas e mutações. O Supabase aplica autenticação, policies, funções e realtime.
+### Cliente Supabase compartilhado
 
-## Fluxo
+As páginas não repetem acesso ao banco. O gateway
+`backend/ominisaber-supabase-client.js` normaliza sessão, perfil, consultas, RPCs e
+mensagens de erro.
 
-Login → sessão Supabase → perfil em `perfis` → rota por papel/especialidade → consultas autorizadas por RLS.
+### Autorização no banco
 
-## Pontos de atenção
+Ocultar um botão não é segurança. RLS, grants, constraints e funções validam cada
+operação usando usuário, papel, turma, matéria e vínculo persistido.
 
-As rotas são arquivos HTML relativos. Alterações de diretório exigem auditoria de todos os links.
+### Motor único, experiências docentes diferentes
+
+As quatro especialidades possuem identidade e ferramentas próprias, mas usam o
+mesmo contrato para avaliações, questões, tentativas, correção e resultados. Isso
+evita regras de nota divergentes entre matérias.
+
+### Operações compostas em RPCs
+
+Criação de atividade, entrega, correção, ajuste e recuperação atravessam várias
+tabelas. Funções PostgreSQL mantêm essas operações atômicas e auditáveis.
+
+### IA isolada por Edge Function e feature flag
+
+O navegador nunca acessa a OpenAI diretamente. A função valida sessão e escopo,
+reduz dados, limita consumo e devolve somente uma sugestão revisável. A separação de
+ambiente e o flag desligado protegem o beta durante a Fase 3.
+
+## Princípios
+
+- dados reais ou estados vazios explícitos; sem mocks como fallback;
+- responsividade para desktop e celular;
+- separação entre configuração pública e segredos;
+- publicação intencional e conteúdo versionado;
+- auditoria em decisões que alteram nota ou acesso;
+- migrations incrementais e schema completo regenerável.
+
+## Limites atuais
+
+Não há bundler nem API própria fora do Supabase. A aplicação depende de caminhos
+relativos corretos e deve ser servida por HTTP. O estado de cada fase está em
+[Status do projeto](../development/status-do-projeto.md).

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-BR"><meta charset="utf-8"><title>Regressões de layout mobile</title>
+<style>iframe{height:740px;border:1px solid #ccc}output{display:block;white-space:pre-wrap}</style>
+<h1>Teste isolado — sem dados reais</h1><output id="results">Executando…</output>
+<script>
+(async()=>{
+ const results=[];
+ for(const width of [320,390,768]){
+  const frame=document.createElement('iframe');frame.width=width;document.body.append(frame);
+  const ready=new Promise(resolve=>frame.onload=resolve);
+  frame.srcdoc=`<!doctype html><html><head><link rel="stylesheet" href="/frontend/professor/specialty/portal.css"><link rel="stylesheet" href="/frontend/Parties/parties.css?v=20260924-4"></head><body class="os-parties-ready" data-party-role="teacher"><header class="portal-topbar os-standard-header"><button class="menu-button">Menu</button><div><h1>Laboratório matemático</h1></div><div class="portal-actions"><a class="button secondary">Agenda</a><a class="button secondary">Novo laboratório</a><a class="button primary">Nova avaliação</a></div></header><main><h2>Conteúdo</h2><div class="form-actions"><button class="button secondary">Salvar rascunho</button><button class="button primary">Publicar para turma</button></div><div class="correction-total"><span>Nota calculada pelas 5 competências</span><strong>760/1000</strong></div><section class="os-eval-dialog"><header><div><h2>Leitura crítica e argumentação</h2></div><button class="button secondary" data-close>Fechar</button></header></section></main></body></html>`;
+  await ready;const d=frame.contentDocument; const box=s=>d.querySelector(s).getBoundingClientRect();
+  const assert=(value,label)=>results.push(`${value?'OK':'FALHOU'} · ${width}px · ${label}`);
+  assert(box('.portal-topbar').bottom>=box('.portal-actions').bottom,'cabeçalho contém as ações');
+  assert([...d.querySelectorAll('.form-actions button')].every(b=>b.getBoundingClientRect().height<=64),'botões sem altura excessiva');
+  assert(d.defaultView.getComputedStyle(d.querySelector('.correction-total strong')).whiteSpace==='nowrap','nota sem quebra');
+  assert(d.defaultView.getComputedStyle(d.querySelector('[data-close]')).whiteSpace==='nowrap','Fechar sem quebra');
+ }
+ document.querySelector('#results').textContent=results.join('\n');
+})();
+</script></html>

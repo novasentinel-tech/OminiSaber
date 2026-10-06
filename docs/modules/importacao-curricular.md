@@ -2,7 +2,7 @@
 
 ## Arquitetura
 
-A página de Descritores do Portal Gestor recebe PDFs oficiais e extrai texto por página no navegador com PDF.js. O parser híbrido em `frontend/gestor/shared/curriculo-parser.js` usa regex para códigos de habilidades (`EM13LP01`, `EM13CO15`) e descritores (`D023_P`) e heurísticas para série, trimestre, quinzena, semana, expectativas e objetos. A análise é colocada em staging; não há publicação automática.
+A página de Descritores do Portal Gestor recebe PDFs oficiais e extrai texto por página no navegador com PDF.js. O parser híbrido em `frontend/gestor/shared/curriculo-parser.js` aceita códigos de Linguagens (`EM13LP01`), Matemática (`EM13MAT501`), Ciências da Natureza e extensões do Espírito Santo (`EM13CNT101QUIa/ES`) e Computação (`EM13CO15`), além de descritores como `D023_P`. A análise é colocada em staging; não há publicação automática.
 
 A camada de interpretação é deliberadamente independente do layout de uma disciplina. Novos formatos podem ser atendidos adicionando detectores/adaptadores ao parser sem alterar o modelo relacional.
 
@@ -23,6 +23,7 @@ No escopo exclusivo de Ensino Médio, códigos `EM...` são emitidos como `habil
 - `habilidades_curriculares`: catálogo deduplicado por código e componente.
 - `habilidade_curriculo_periodos`: quinzena, semana e página da fonte.
 - `descritores_curriculares`: catálogo legado reutilizado; série/trimestre podem ficar nulos porque o contexto pertence ao vínculo.
+- `descritor_curriculo_periodos`: distribuição de um descritor por todas as séries e trimestres em que ocorre.
 - `habilidade_descritores`: relação muitos-para-muitos por período. Uma habilidade sem descritor permanece armazenada sem linhas nessa tabela.
 - `expectativas_aprendizagem`, `objetos_conhecimento` e `habilidade_objetos`: estruturas pedagógicas normalizadas por habilidade e período.
 - `importacoes_curriculo` e `importacoes_curriculo_itens`: staging, metadados, erros, resumo, confiança e revisão.

@@ -19,7 +19,7 @@ relationTables.forEach((table) => {
   assert(migration.includes(`on public.${table} (`), `${table} possui índice de habilidade`);
 });
 assert(migration.includes('buscar_habilidades_curriculares'), 'A seleção curricular possui RPC');
-assert(migration.includes("h.codigo ~ '^EM\\d{2}[A-Z]{2}\\d{2}$'") && migration.includes("c.status = 'publicado'") && migration.includes('c.ativo = true'), 'A/B/L seleção somente EM publicado ativo');
+assert(migration.includes("h.codigo ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'") && migration.includes("c.status = 'publicado'") && migration.includes('c.ativo = true'), 'A/B/L seleção somente EM publicado ativo');
 assert(migration.includes('p_busca') && migration.includes('ds.codigo ilike') && migration.includes('h.descricao ilike'), 'A busca cobre código, descrição e descritor');
 assert(migration.includes('cobertura_curricular') && migration.includes("Apenas gestores podem consultar cobertura"), 'J cobertura restrita ao Gestor');
 assert(migration.includes('union all') && migration.includes("'avaliação'") && migration.includes("'laboratório'") && migration.includes("'atividade'") && migration.includes("'redação'"), 'J cobertura agrega usos pedagógicos');
@@ -34,3 +34,4 @@ assert(!redacoes.includes('competencia') || redacoes.includes('competencias'), '
 assert(executive.includes('getCurriculumCoverage') && executive.includes('Ainda não trabalhadas') && executive.includes('data-coverage-trimestre'), 'J/K Gestor exibe cobertura filtrável');
 console.log('OK integração curricular: relações N:N, seleção EM publicada, RLS, avaliações, laboratórios, redações e cobertura do Gestor.');
 console.log('Smoke/static Fase 4: cobre A-M por invariantes SQL/cliente; sem PostgreSQL/Supabase real, não são testes comportamentais.');
+

@@ -241,10 +241,16 @@ input:focus {
   margin: 0;
   accent-color: var(--blue);
 }
-a[data-forgot-password] {
+button[data-forgot-password] {
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--blue-dark);
+  font: inherit;
   font-weight: 700;
+  text-decoration: underline;
   text-underline-offset: 4px;
+  cursor: pointer;
 }
 .submit-button {
   display: flex;

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>QA responsivo · Atividades</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@700;800&family=Material+Symbols+Outlined:FILL@0..1" rel="stylesheet" />
+    <link rel="stylesheet" href="../frontend/aluno/shared/account-shell.css" />
+    <link rel="stylesheet" href="../frontend/aluno/atividades/style.css" />
+    <style>
+      body { padding: 0; }
+      .qa-topbar { height: 68px; padding: 0 clamp(16px, 4vw, 48px); display: flex; align-items: center; border-bottom: 1px solid var(--line); background: #fff; }
+      .qa-topbar strong { font: 800 15px Manrope; }
+    </style>
+  </head>
+  <body>
+    <header class="qa-topbar"><strong>Central de atividades</strong></header>
+    <main class="page activity-page" data-activity-root></main>
+    <script>
+      const evaluation = (id, materia, titulo, encerra, attempt = null, extra = {}) => ({
+        id, materia_codigo: materia, titulo, encerra_em: encerra, abre_em: null,
+        categoria: "avaliacao", instrucoes: "Resolva com atenção e revise antes de enviar.",
+        duracao_minutos: 40, valor: 10, tentativas_permitidas: 2,
+        configuracao: { author: { name: "Prof. Helena Duarte" } }, questoes_avaliacao: Array.from({ length: 6 }, (_, ordem) => ({ id: `${id}-${ordem}`, ordem })),
+        tentativas_avaliacao: attempt ? [attempt] : [], ...extra,
+      });
+      const attempts = {
+        progress: { id: "t1", status: "em_andamento", numero_tentativa: 1, respostas_avaliacao: [
+          { id: "r1", questao_id: "a1-0", resposta: "x = 2" },
+          { id: "r2", questao_id: "a1-1", resposta: ["A"] },
+          { id: "r3", questao_id: "a1-2", resposta: { value: 4 } },
+        ] },
+        today: { id: "t2", status: "corrigida", nota: 9, numero_tentativa: 1, enviada_em: "2026-09-30T13:30:00-03:00", corrigida_em: "2026-09-30T14:20:00-03:00" },
+        week: { id: "t3", status: "enviada", nota: null, numero_tentativa: 1, enviada_em: "2026-09-27T11:00:00-03:00" },
+        old: { id: "t4", status: "corrigida", nota: 8.5, numero_tentativa: 1, enviada_em: "2026-09-12T09:00:00-03:00", corrigida_em: "2026-09-14T10:00:00-03:00" },
+      };
+      const rows = [
+        evaluation("a1", "matematica", "Lista de equações do 2º grau", "2026-09-30T23:59:00-03:00", attempts.progress),
+        evaluation("a2", "portugues", "Interpretação de texto: crônica contemporânea", "2026-09-30T22:00:00-03:00"),
+        evaluation("a3", "fisica", "Leis de Newton na prática", "2026-10-03T20:00:00-03:00"),
+        evaluation("a4", "biologia", "Células e organelas", null),
+        evaluation("a5", "quimica", "Misturas e soluções", "2026-09-30T18:00:00-03:00", attempts.today),
+        evaluation("a6", "matematica", "Funções do 1º grau", "2026-09-28T18:00:00-03:00", attempts.week),
+        evaluation("a7", "portugues", "Produção de texto argumentativo", "2026-09-15T18:00:00-03:00", attempts.old),
+      ];
+      window.StudentShell = { notify() {} };
+      window.OminiSaber = {
+        listStudentEvaluations: async () => rows,
+        getStudentEvaluationAvailability: (item) => ({ state: "available", actionable: !["enviada", "corrigida"].includes(item.tentativas_avaliacao?.[0]?.status) }),
+      };
+    </script>
+    <script src="../frontend/aluno/atividades/script.js"></script>
+    <script>
+      document.dispatchEvent(new CustomEvent("ominisaber:ready", { detail: { session: { user: { id: "qa" } } } }));
+      const requestedView = { done: "Entregues", all: "Todas" }[location.hash.slice(1)];
+      if (requestedView) setTimeout(() => document.querySelectorAll("[data-filter]").forEach((button) => {
+        if (button.textContent.trim() === requestedView) button.click();
+      }), 50);
+    </script>
+  </body>
+</html>

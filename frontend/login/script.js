@@ -67,6 +67,14 @@
   const presentAuthError = (error) => {
     const message = normalizedError(error);
     if (
+      error?.status === 429 ||
+      message.includes("over_request_rate_limit") ||
+      message.includes("over_email_send_rate_limit") ||
+      message.includes("too many requests")
+    ) {
+      return "Muitas tentativas em pouco tempo. Aguarde um minuto antes de tentar novamente.";
+    }
+    if (
       message.includes("email_not_confirmed") ||
       message.includes("email not confirmed")
     ) {

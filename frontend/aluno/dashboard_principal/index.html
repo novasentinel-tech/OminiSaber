@@ -2,6 +2,44 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
@@ -11,55 +49,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Material+Symbols+Outlined:FILL@0..1"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=20260930-5" />
     <link rel="stylesheet" href="../../shared/sidebar.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
     <script src="../../../backend/ominisaber-supabase-config.js"></script>
-    <script src="../../../backend/ominisaber-supabase-client.js?v=20260903-2"></script>
-    <script defer src="script.js?v=20260903-1"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="script.js?v=20261003-1"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260927-3"></script>
   </head>
   <body data-app-role="student">
-    <aside class="sidebar" data-sidebar aria-label="Navegação principal">
-      <a class="brand" href="index.html"
-        ><span class="brand-mark material-symbols-outlined" aria-hidden="true"
-          >school</span
-        ><span>OminiSaber</span></a
-      >
-      <nav class="sidebar-nav">
-        <a class="nav-link active" href="index.html" aria-current="page"
-          ><span class="material-symbols-outlined">home</span
-          ><span>Início</span></a
-        >
-        <a class="nav-link" href="../modulo_de_trilhas/index.html"
-          ><span class="material-symbols-outlined">route</span
-          ><span>Trilhas</span></a
-        >
-        <a class="nav-link" href="../laboratorio_de_redacao/index.html"
-          ><span class="material-symbols-outlined">edit_note</span
-          ><span>Redação</span></a
-        >
-        <a class="nav-link" href="../minha_evolucao/index.html"
-          ><span class="material-symbols-outlined">monitoring</span
-          ><span>Evolução</span></a
-        >
-        <a class="nav-link" href="../biblioteca_digital/index.html"
-          ><span class="material-symbols-outlined">bookmark</span
-          ><span>Biblioteca</span></a
-        >
-      </nav>
-      <div class="sidebar-profile">
-        <span class="avatar" data-initials aria-hidden="true"></span>
-        <div>
-          <strong data-profile-name></strong><span data-profile-context></span>
-        </div>
-        <a href="../perfil/index.html" aria-label="Abrir perfil"
-          ><span class="material-symbols-outlined">person</span></a
-        >
-      </div>
-    </aside>
+    
 
     <main class="main-content">
       <header class="topbar">
@@ -116,45 +120,42 @@
           data-next-step
         ></section>
 
-        <section class="mastery-section" aria-labelledby="mastery-title">
-          <div class="section-heading">
-            <div>
-              <p class="section-kicker">Dados reais da sua jornada</p>
-              <h2 id="mastery-title">Matérias disponíveis</h2>
-              <p class="map-instruction">
-                <span class="material-symbols-outlined" aria-hidden="true"
-                  >ads_click</span
-                >Um clique consulta. Dois cliques abrem o mapa de dificuldades.
-              </p>
+        <section class="learning-hub" aria-labelledby="learning-hub-title">
+          <h2 id="learning-hub-title" class="sr-only">
+            Central de aprendizagem
+          </h2>
+          <div class="subject-filter-bar" aria-label="Filtrar toda a página por matéria">
+            <div class="subject-filter-heading">
+              <span class="material-symbols-outlined" aria-hidden="true">filter_alt</span>
+              <strong>Filtrar por matéria</strong>
             </div>
-            <label class="filters"
-              ><span class="sr-only">Filtrar matéria</span
-              ><select data-subject-filter>
-                <option value="all">Todas as matérias</option>
-              </select></label
-            >
+            <div class="subject-filter-chips" data-subject-chips role="group" aria-label="Matérias"></div>
+            <label class="subject-filter-mobile">
+              <span>Matéria</span>
+              <select data-subject-filter aria-label="Filtrar por matéria"></select>
+            </label>
+            <p class="subject-filter-context" data-filter-context aria-live="polite"></p>
+            <button class="clear-subject-filter" type="button" data-clear-subject-filter aria-label="Limpar filtro" hidden>
+              <span class="clear-subject-label">Limpar filtro</span>
+              <span class="clear-subject-label-short" aria-hidden="true">Limpar</span>
+            </button>
           </div>
-          <div class="mastery-layout">
-            <div
-              class="mastery-map"
-              data-mastery-map
-              aria-label="Selecione uma matéria para consultar o desempenho"
-            ></div>
-            <aside
-              class="subject-detail"
-              data-subject-detail
-              aria-live="polite"
-            ></aside>
-          </div>
+
+          <div class="destination-grid" data-destination-grid></div>
         </section>
 
-        <section class="weekly-progress" aria-labelledby="weekly-title">
-          <div>
-            <h2 id="weekly-title">Atividade nos últimos 7 dias</h2>
-            <p>Registros reais do seu histórico de estudos</p>
+        <section class="today-strip" aria-labelledby="weekly-title">
+          <div class="today-strip-heading">
+            <p class="section-kicker">Seu histórico</p>
+            <h2 id="weekly-title">Hoje e nesta semana</h2>
+            <p>Registros reais dos últimos 7 dias</p>
           </div>
           <ol data-weekly-days></ol>
           <div class="weekly-total" data-weekly-total></div>
+          <a class="today-agenda-link" href="../agenda/index.html" data-today-agenda-link>
+            Ver agenda
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+          </a>
         </section>
       </div>
     </main>
@@ -187,7 +188,7 @@
       data-difficulty-transition
       hidden
       aria-live="assertive"
-      aria-label="Abrindo mapa de dificuldades"
+      aria-label="Abrindo experiência da matéria"
     >
       <div class="transition-orbit" aria-hidden="true">
         <span></span><span></span><span></span>
@@ -197,10 +198,7 @@
           >route</span
         >
       </div>
-      <p>
-        Organizando seus descritores de
-        <strong data-transition-subject>aprendizagem</strong>...
-      </p>
+      <p data-transition-message>Abrindo sua experiência de aprendizagem...</p>
     </div>
     <div class="toast" data-toast role="status" aria-live="polite"></div>
   </body>

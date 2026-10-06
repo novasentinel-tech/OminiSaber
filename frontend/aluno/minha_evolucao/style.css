@@ -238,6 +238,7 @@ main {
 .level-title h2 {
   font: 700 28px Poppins;
   margin: 0;
+  color: #fff !important;
 }
 .level-title p {
   color: #cfcef4;

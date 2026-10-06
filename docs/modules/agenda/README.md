@@ -10,12 +10,19 @@ Professor: `frontend/professor/agenda/`. Aluno: `frontend/aluno/agenda/`. Backen
 
 ## Funcionamento
 
-O professor cria, atualiza ou cancela eventos das turmas vinculadas. Alunos veem eventos publicados de sua turma. Notificações podem ser geradas para eventos relevantes.
+O professor cria, atualiza ou cancela eventos das turmas vinculadas. Alunos veem
+eventos publicados de sua turma. Eventos relevantes e atividades publicadas pelo
+motor de avaliações geram notificações persistentes para a turma.
 
 ## Banco de dados
 
-`eventos_agenda` possui FKs para turma e professor; `notificacoes` possui destino, criador e evento; `notificacoes_lidas` registra leitura.
+`eventos_agenda` possui FKs para turma e professor; `notificacoes` possui destino,
+criador e vínculo opcional com evento ou avaliação; `notificacoes_lidas` registra
+a leitura individual. O gatilho de avaliação mantém uma única notificação por
+publicação e a remove se o registro deixar o estado publicado.
 
 ## Permissões
 
-RLS limita criação ao professor autenticado e à sua relação em `professor_turmas`; leitura considera papel, vínculo e status publicado.
+RLS limita criação ao professor autenticado e à combinação ativa em
+`professor_turma_materias`; leitura considera papel, turma e status publicado.
+`professor_turmas` permanece apenas como compatibilidade sincronizada.

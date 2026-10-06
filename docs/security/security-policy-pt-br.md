@@ -2,13 +2,13 @@
 
 ## Versões com suporte
 
-O OmniSaber está em desenvolvimento ativo e ainda não adota uma política formal de versionamento semântico ou suporte de longo prazo.
+O OminiSaber está em desenvolvimento ativo e ainda não adota uma política formal de versionamento semântico ou suporte de longo prazo.
 
-| Versão ou branch | Status de suporte |
-| --- | --- |
-| `main` e versão mais recente do projeto | Recebem correções de segurança |
-| Versões antigas | Suporte sob melhores esforços, sem garantia |
-| Forks de terceiros | Não são suportados pelos mantenedores do OmniSaber |
+| Versão ou branch                        | Status de suporte                                   |
+| --------------------------------------- | --------------------------------------------------- |
+| `main` e versão mais recente do projeto | Recebem correções de segurança                      |
+| Versões antigas                         | Suporte sob melhores esforços, sem garantia         |
+| Forks de terceiros                      | Não são suportados pelos mantenedores do OminiSaber |
 
 As correções de segurança são aplicadas prioritariamente à branch `main` e à versão mais recente do projeto. Esta seção será atualizada quando forem adotadas releases versionadas formais.
 
@@ -70,13 +70,49 @@ Podem ser reportados problemas de segurança envolvendo:
 
 ## Fora do escopo
 
-Os itens abaixo ficam fora do escopo, salvo quando demonstrarem impacto concreto no OmniSaber:
+Os itens abaixo ficam fora do escopo, salvo quando demonstrarem impacto concreto no OminiSaber:
 
 - engenharia social ou phishing contra mantenedores, usuários ou escolas;
 - spam, tráfego abusivo ou reclamações de moderação de conteúdo;
 - ataques físicos ou acesso a instalações e dispositivos;
 - ataques deliberados de negação de serviço ou exaustão de recursos;
-- vulnerabilidades de dependências já corrigidas upstream sem impacto confirmado no OmniSaber.
+- vulnerabilidades de dependências já corrigidas upstream sem impacto confirmado no OminiSaber.
+
+## Controles técnicos adotados
+
+- autenticação centralizada no Supabase Auth;
+- Row Level Security em todas as tabelas públicas expostas pela Data API;
+- grants mínimos separados de policies por papel;
+- vínculo canônico professor–turma–matéria para operações pedagógicas;
+- gabaritos inacessíveis ao navegador do aluno;
+- operações compostas e validações críticas no PostgreSQL;
+- histórico de correção e ajuste de nota sem sobrescrever a evidência anterior;
+- publishable/anon key apenas em clientes públicos;
+- secret/service role key restrita a servidor e Edge Functions;
+- secrets fora do Git e de arquivos publicados;
+- Copiloto mediado por Edge Function, JWT, limites, redução de dados e feature flag;
+- validação de SQL, contratos de módulo, documentação e links por scripts locais.
+
+## Pendências antes de produção
+
+Os controles acima descrevem a arquitetura adotada, não uma certificação de
+segurança. A auditoria de 9 de setembro de 2026 ainda exige:
+
+- mitigar enumeração em `email_por_matricula(text)`;
+- ativar proteção contra senhas vazadas no Supabase Auth;
+- revisar grants e validações de papel das funções `SECURITY DEFINER` sinalizadas
+  pelo advisor;
+- fixar a versão do SDK Supabase entregue pelo CDN;
+- executar testes negativos de RLS com aluno, professor, gestor e bibliotecária.
+
+Consulte a [auditoria geral](../development/auditoria-sistema-2026-09-09.md).
+
+## Privacidade no Copiloto
+
+O Copiloto recebe contexto pedagógico necessário, não respostas individuais ou
+cadastros completos de alunos. Identificadores enviados para segurança são
+derivados, a resposta não é armazenada pela API nesse fluxo e a sugestão não publica
+atividade nem altera nota. Consulte [Copiloto docente](../modules/copiloto-docente/README.md).
 
 ## Safe Harbor
 

@@ -1,0 +1,412 @@
+{
+  "summary": {
+    "generatedAt": "2026-10-01T11:02:50.063Z",
+    "pagesScanned": 79,
+    "findings": 0,
+    "bySeverity": {
+      "P0": 0,
+      "P1": 0,
+      "P2": 0,
+      "P3": 0
+    },
+    "byRule": {}
+  },
+  "pages": [
+    {
+      "page": "frontend/Parties/index.html",
+      "bytes": 4881,
+      "ids": 6
+    },
+    {
+      "page": "frontend/aluno/agenda/index.html",
+      "bytes": 8748,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/ajuda-suporte/index.html",
+      "bytes": 7585,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/atividades/index.html",
+      "bytes": 5100,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/biblioteca_digital/index.html",
+      "bytes": 8700,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/dashboard_principal/index.html",
+      "bytes": 8455,
+      "ids": 2
+    },
+    {
+      "page": "frontend/aluno/laboratorio_de_redacao/corrigida/index.html",
+      "bytes": 3968,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/laboratorio_de_redacao/escrita/index.html",
+      "bytes": 9110,
+      "ids": 5
+    },
+    {
+      "page": "frontend/aluno/laboratorio_de_redacao/historico/index.html",
+      "bytes": 4050,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/laboratorio_de_redacao/index.html",
+      "bytes": 23106,
+      "ids": 11
+    },
+    {
+      "page": "frontend/aluno/laboratorio_de_redacao/revisao/index.html",
+      "bytes": 3954,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/mapa_dificuldades/index.html",
+      "bytes": 7849,
+      "ids": 3
+    },
+    {
+      "page": "frontend/aluno/minha_evolucao/index.html",
+      "bytes": 3692,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/algebra/index.html",
+      "bytes": 3706,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/artes/index.html",
+      "bytes": 3699,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/atividade/index.html",
+      "bytes": 3210,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/aula/index.html",
+      "bytes": 3182,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/biologia/index.html",
+      "bytes": 3764,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/educacao-fisica/index.html",
+      "bytes": 3803,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/filosofia/index.html",
+      "bytes": 3748,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/fisica/index.html",
+      "bytes": 3653,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/geografia/index.html",
+      "bytes": 3687,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/geometria/index.html",
+      "bytes": 3756,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/historia/index.html",
+      "bytes": 3791,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/historico/index.html",
+      "bytes": 3191,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/ide/index.html",
+      "bytes": 3279,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/index.html",
+      "bytes": 3171,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/ingles-espanhol/index.html",
+      "bytes": 3691,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/literatura/index.html",
+      "bytes": 3837,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/matematica/estudio-de-areas/index.html",
+      "bytes": 10054,
+      "ids": 1
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/matematica/index.html",
+      "bytes": 10685,
+      "ids": 3
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/matematica/maquina-de-padroes/index.html",
+      "bytes": 11049,
+      "ids": 2
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/matematica/reta-em-movimento/index.html",
+      "bytes": 15683,
+      "ids": 5
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/portugues/index.html",
+      "bytes": 10922,
+      "ids": 3
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/portugues/interpretacao-visual/index.html",
+      "bytes": 12194,
+      "ids": 1
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/portugues/investigacao-argumentativa/index.html",
+      "bytes": 13621,
+      "ids": 9
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/portugues/mapa-da-lingua/index.html",
+      "bytes": 10979,
+      "ids": 5
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/quimica/index.html",
+      "bytes": 3890,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/redacao/index.html",
+      "bytes": 3799,
+      "ids": 1
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/resultado/index.html",
+      "bytes": 3201,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/salvos/index.html",
+      "bytes": 3183,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/sociologia/index.html",
+      "bytes": 3823,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/modulo_de_trilhas/trilha/index.html",
+      "bytes": 3201,
+      "ids": 0
+    },
+    {
+      "page": "frontend/aluno/notificacoes/index.html",
+      "bytes": 8500,
+      "ids": 1
+    },
+    {
+      "page": "frontend/aluno/perfil/index.html",
+      "bytes": 7919,
+      "ids": 0
+    },
+    {
+      "page": "frontend/bibliotecaria/configuracoes/index.html",
+      "bytes": 5271,
+      "ids": 0
+    },
+    {
+      "page": "frontend/bibliotecaria/dashboard/index.html",
+      "bytes": 6931,
+      "ids": 1
+    },
+    {
+      "page": "frontend/bibliotecaria/estoque/index.html",
+      "bytes": 12676,
+      "ids": 1
+    },
+    {
+      "page": "frontend/bibliotecaria/gestao_emprestimos/index.html",
+      "bytes": 5609,
+      "ids": 1
+    },
+    {
+      "page": "frontend/cadastro/index.html",
+      "bytes": 13226,
+      "ids": 9
+    },
+    {
+      "page": "frontend/erro/index.html",
+      "bytes": 2506,
+      "ids": 1
+    },
+    {
+      "page": "frontend/gestor/acessos/index.html",
+      "bytes": 1290,
+      "ids": 1
+    },
+    {
+      "page": "frontend/gestor/alunos/index.html",
+      "bytes": 1279,
+      "ids": 1
+    },
+    {
+      "page": "frontend/gestor/auditoria/index.html",
+      "bytes": 1285,
+      "ids": 1
+    },
+    {
+      "page": "frontend/gestor/conteudos-publicados/index.html",
+      "bytes": 1308,
+      "ids": 1
+    },
+    {
+      "page": "frontend/gestor/dashboard/index.html",
+      "bytes": 1285,
+      "ids": 1
+    },
+    {
+      "page": "frontend/gestor/descritores/index.html",
+      "bytes": 1608,
+      "ids": 1
+    },
+    {
+      "page": "frontend/gestor/perfil/index.html",
+      "bytes": 1279,
+      "ids": 1
+    },
+    {
+      "page": "frontend/gestor/professores/index.html",
+      "bytes": 1289,
+      "ids": 1
+    },
+    {
+      "page": "frontend/gestor/turmas/index.html",
+      "bytes": 1279,
+      "ids": 1
+    },
+    {
+      "page": "frontend/gestor/vinculos/index.html",
+      "bytes": 1284,
+      "ids": 1
+    },
+    {
+      "page": "frontend/login/index.html",
+      "bytes": 6105,
+      "ids": 9
+    },
+    {
+      "page": "frontend/professor/agenda/index.html",
+      "bytes": 9487,
+      "ids": 1
+    },
+    {
+      "page": "frontend/professor/dashboard/index.html",
+      "bytes": 2001,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_matematica/avaliacoes/index.html",
+      "bytes": 1659,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_matematica/dashboard/index.html",
+      "bytes": 1814,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_matematica/laboratorio/index.html",
+      "bytes": 1632,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_portugues/avaliacoes/index.html",
+      "bytes": 1641,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_portugues/dashboard/index.html",
+      "bytes": 1826,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_portugues/laboratorio/index.html",
+      "bytes": 1631,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_portugues/redacoes/index.html",
+      "bytes": 1563,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_tecnico_administracao/avaliacoes/index.html",
+      "bytes": 1660,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_tecnico_administracao/dashboard/index.html",
+      "bytes": 1827,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_tecnico_administracao/laboratorio/index.html",
+      "bytes": 1642,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_tecnico_informatica/avaliacoes/index.html",
+      "bytes": 1652,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_tecnico_informatica/dashboard/index.html",
+      "bytes": 1817,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/professor_tecnico_informatica/laboratorio/index.html",
+      "bytes": 1655,
+      "ids": 0
+    },
+    {
+      "page": "frontend/professor/redacoes/index.html",
+      "bytes": 785,
+      "ids": 0
+    },
+    {
+      "page": "frontend/redefinir-senha/index.html",
+      "bytes": 7686,
+      "ids": 5
+    }
+  ],
+  "findings": []
+}

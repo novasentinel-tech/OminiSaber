@@ -1,0 +1,11 @@
+{
+  "name": "OminiSaber",
+  "short_name": "OminiSaber",
+  "description": "Ambiente de aprendizagem OminiSaber",
+  "lang": "pt-BR",
+  "start_url": "/frontend/aluno/dashboard_principal/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#1f5eea"
+}

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Sala de escrita focada do Laboratório de Redação OminiSaber."
+    />
+    <title>Sala de escrita | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@500;600&family=Poppins:wght@500;600;700&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=20260927-3" />
+    <script src="../../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="script.js?v=20260927-4"></script>
+  </head>
+  <body data-required-role="aluno" data-sidebar="hidden">
+    <a class="skip-link" href="#editor">Ir para o editor</a>
+    <header class="focus-header">
+      <a class="focus-brand" href="../index.html" aria-label="Voltar ao Laboratório de Redação">
+        <span class="brand-mark material-symbols-outlined" aria-hidden="true">edit_note</span>
+        <span><strong>OminiSaber</strong><small>Sala de escrita</small></span>
+      </a>
+      <div class="focus-header-center">
+        <span class="focus-dot" aria-hidden="true"></span>
+        <span>Modo foco ativo</span>
+      </div>
+      <div class="focus-header-actions">
+        <span class="save-state" data-save-state role="status" aria-live="polite">
+          <span class="material-symbols-outlined" aria-hidden="true">cloud_done</span>
+          <span data-save-label>Carregando rascunho...</span>
+        </span>
+        <button class="icon-action is-hidden" type="button" data-retry-save aria-label="Tentar salvar novamente">
+          <span class="material-symbols-outlined" aria-hidden="true">sync</span>
+        </button>
+        <a class="exit-focus" href="../index.html" data-exit-focus>
+          <span class="material-symbols-outlined" aria-hidden="true">close_fullscreen</span>
+          <span>Sair do modo foco</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="focus-shell" data-writing-app aria-busy="true">
+      <section class="theme-strip" aria-labelledby="theme-title">
+        <div class="theme-icon material-symbols-outlined" aria-hidden="true">topic</div>
+        <div>
+          <p>PROPOSTA EM DESENVOLVIMENTO</p>
+          <h1 id="theme-title" data-theme-title>Carregando tema...</h1>
+        </div>
+        <button class="theme-command-button" type="button" data-open-reference="support">
+          <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+          Ver textos de apoio
+        </button>
+      </section>
+
+      <div class="focus-layout">
+        <aside class="reference-panel" data-reference-panel aria-label="Apoio para a redação">
+          <header class="reference-header">
+            <div>
+              <span class="material-symbols-outlined" aria-hidden="true">library_books</span>
+              <strong>Base para escrever</strong>
+            </div>
+            <button class="icon-action reference-toggle" type="button" data-reference-toggle aria-label="Minimizar painel de apoio" aria-expanded="true">
+              <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+            </button>
+          </header>
+          <nav class="reference-tabs" aria-label="Conteúdo de apoio">
+            <button class="is-active" type="button" data-reference-tab="support" aria-selected="true">
+              Textos de apoio
+            </button>
+            <button type="button" data-reference-tab="planning" aria-selected="false">
+              Meu planejamento
+            </button>
+          </nav>
+          <div class="reference-focus-toolbar is-hidden" data-reference-focus-toolbar>
+            <button type="button" data-reference-show-all>
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+              Mostrar todos
+            </button>
+            <strong data-reference-focus-title></strong>
+          </div>
+          <p class="reference-hint" data-reference-hint>
+            <span class="material-symbols-outlined" aria-hidden="true">touch_app</span>
+            Toque em um conteúdo para ampliar e consultar sem distrações.
+          </p>
+          <div class="reference-scroll">
+            <section data-reference-content="support" aria-live="polite"></section>
+            <section class="is-hidden" data-reference-content="planning" aria-live="polite"></section>
+          </div>
+        </aside>
+
+        <article class="writing-paper" id="editor">
+          <header class="paper-header">
+            <div>
+              <p>SEU TEXTO</p>
+              <strong>Escreva no seu ritmo. O salvamento é automático.</strong>
+            </div>
+            <button class="save-now" type="button" data-save-now>
+              <span class="material-symbols-outlined" aria-hidden="true">cloud_upload</span>
+              Salvar agora
+            </button>
+          </header>
+          <div class="paper-body">
+            <label for="focus-title">Título</label>
+            <input
+              id="focus-title"
+              data-title
+              type="text"
+              maxlength="160"
+              autocomplete="off"
+              placeholder="Dê um título ao seu texto"
+            />
+            <div class="editor-label-row">
+              <label for="focus-text">Redação</label>
+              <div>
+                <span class="line-budget"><strong data-line-count>1</strong> de 30 linhas</span>
+                <span class="shortcut-hint"><kbd>Tab</kbd> no início ou <kbd>Shift</kbd> + <kbd>Enter</kbd> cria um parágrafo</span>
+              </div>
+            </div>
+            <div class="notebook-editor" data-notebook-editor>
+              <div class="line-numbers" data-line-numbers aria-hidden="true"></div>
+              <textarea
+                id="focus-text"
+                data-text
+                spellcheck="true"
+                placeholder="Comece sua introdução aqui..."
+                aria-describedby="line-limit-help"
+              ></textarea>
+              <div class="line-measure" data-line-measure aria-hidden="true"></div>
+            </div>
+            <p class="line-limit-help" id="line-limit-help" data-line-feedback aria-live="polite">
+              Sua redação pode ocupar até 30 linhas.
+            </p>
+          </div>
+          <footer class="paper-footer">
+            <div class="writing-stats" aria-label="Estatísticas do texto">
+              <span><strong data-word-count>0</strong> palavras</span>
+              <span><strong data-paragraph-count>0</strong> parágrafos</span>
+              <span><strong data-character-count>0</strong> caracteres</span>
+              <span><strong data-footer-line-count>1</strong>/30 linhas</span>
+            </div>
+            <span class="autosave-note">
+              <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+              Cada palavra concluída é sincronizada
+            </span>
+          </footer>
+        </article>
+      </div>
+
+      <footer class="focus-actions">
+        <a class="back-planning" href="../index.html" data-back-planning>
+          <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+          Rever planejamento
+        </a>
+        <p data-writing-feedback role="alert" aria-live="assertive"></p>
+        <button class="review-button" type="button" data-review>
+          Revisar antes de enviar
+          <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+        </button>
+      </footer>
+    </main>
+
+    <nav class="mobile-writing-dock" aria-label="Ferramentas de escrita">
+      <button type="button" data-open-reference="support">
+        <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+        Apoio
+      </button>
+      <button type="button" data-open-reference="planning">
+        <span class="material-symbols-outlined" aria-hidden="true">sticky_note_2</span>
+        Planejamento
+      </button>
+      <button class="mobile-review" type="button" data-review>
+        <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+        Revisar
+      </button>
+    </nav>
+    <button class="panel-backdrop" type="button" data-close-reference aria-label="Fechar painel de apoio"></button>
+    <section class="loading-screen" data-loading aria-live="polite">
+      <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+      <strong>Preparando sua sala de escrita...</strong>
+      <small>Recuperando tema, planejamento e rascunho.</small>
+    </section>
+    <div class="backend-status" data-backend-status hidden></div>
+  </body>
+</html>

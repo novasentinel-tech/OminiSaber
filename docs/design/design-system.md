@@ -2,11 +2,15 @@
 
 ## Objetivo
 
-Centralizar princípios visuais observados no OmniSaber.
+Centralizar princípios visuais observados no OminiSaber.
 
 ## Funcionamento
 
 Cada papel possui identidade própria, mas os componentes devem manter hierarquia clara, tipografia legível, estados de foco, responsividade, contraste e feedback de ação.
+
+## Componentes compartilhados
+
+- [Seletores das áreas de aluno e professor](seletores-aluno-professor.md): anatomia, comportamento, acessibilidade, responsividade e integração técnica do OminiSelect.
 
 ## Fontes
 

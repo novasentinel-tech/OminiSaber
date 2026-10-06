@@ -2,6 +2,44 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
@@ -14,23 +52,24 @@
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=20260902-1" />
+    <link rel="stylesheet" href="style.css?v=20260920-3" />
     <script src="../../../backend/ominisaber-supabase-config.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../../../backend/ominisaber-supabase-client.js"></script>
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
     <script defer src="script.js?v=20260902-1"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260924-5"></script>
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="../dashboard_principal/index.html"
-        ><span class="brand-mark"
-          ><span class="material-symbols-outlined">school</span></span
-        >OminiSaber</a
-      >
-      <nav class="header-nav" aria-label="Navegação do aluno">
-        <a href="../dashboard_principal/index.html">Dashboard</a
-        ><a href="../modulo_de_trilhas/index.html">Trilhas</a
-        ><a class="active" href="index.html" aria-current="page">Biblioteca</a>
+      <div class="library-header-copy">
+        <strong>Biblioteca digital</strong>
+        <span>Livros e materiais verificados para seus estudos</span>
+      </div>
+      <nav class="header-nav" aria-label="Atalhos da biblioteca">
+        <a href="../dashboard_principal/index.html">Início</a>
+        <a href="../modulo_de_trilhas/index.html">Trilhas</a>
       </nav>
       <a
         class="avatar"
@@ -43,7 +82,7 @@
     <main class="page-shell">
       <section class="hero">
         <div>
-          <p class="eyebrow">BIBLIOTECA OMINISABER</p>
+          <p class="eyebrow">SEU ACERVO</p>
           <h1>Escolha como você quer aprender.</h1>
           <p>
             Solicite livros físicos para retirada ou baixe materiais em PDF

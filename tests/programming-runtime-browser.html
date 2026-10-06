@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verificação dos runtimes Python e C++</title>
+<style>body{font:16px/1.5 system-ui;max-width:1000px;margin:24px auto;padding:0 20px}button{font:inherit;padding:12px}pre{white-space:pre-wrap;padding:16px;background:#f1f5f9;border-radius:12px}output{display:block;white-space:pre-wrap}#status{margin:16px 0}</style>
+<h1>Verificação real do laboratório</h1><p>Os programas executam no navegador, em uma origem isolada. Código e entrada não são enviados a um servidor.</p>
+<button id="run">Verificar Python e C++</button><button id="stop">Interromper</button><p id="status" role="status">Aguardando.</p><output id="results"></output>
+<script type="module">
+import { createProgrammingRunner, normalizeProgramOutput } from '../frontend/shared/programming-lab/runtime.js';
+const runner = createProgrammingRunner();
+const results = document.querySelector('#results');
+const status = document.querySelector('#status');
+const cases = [
+ { label: 'Python: entrada, função, lista, laço e dicionário', language: 'python', code: 'def total(valores):\n    return sum(valores)\nvalores = [int(x) for x in input().split()]\nresultado = {"soma": total(valores)}\nfor chave, valor in resultado.items():\n    print(chave, valor)\n', stdin: '2 3 5\n', expected: 'soma 10' },
+ { label: 'Python: erro de sintaxe real', language: 'python', code: 'if True\n    print(1)', expectedStatus: 'runtime_error', errorIncludes: 'SyntaxError' },
+ { label: 'Python: laço infinito interrompido', language: 'python', code: 'while True:\n    pass', timeoutMs: 500, expectedStatus: 'timeout' },
+ { label: 'Python: limite de saída', language: 'python', code: 'print("x" * 40000)', expectedStatus: 'runtime_error' },
+ { label: 'Python: sem armazenamento do aplicativo', language: 'python', code: 'import js\nprint(hasattr(js, "localStorage"))\nprint(hasattr(js, "document"))', expected: 'False\nFalse' },
+ { label: 'Python: CSP bloqueia conexão com o aplicativo', language: 'python', code: 'import js\ntry:\n    await js.fetch("http://127.0.0.1:4173/index.html")\n    print("vazou")\nexcept Exception:\n    print("bloqueado")', expected: 'bloqueado' },
+ { label: 'Python: cancelar interrompe a execução', language: 'python', code: 'while True:\n    pass', cancel: true, expectedStatus: 'cancelled' },
+ { label: 'C++20: entrada, função, vector, string e laço', language: 'cpp', code: '#include <iostream>\n#include <vector>\n#include <string>\nint dobro(int x) { return x * 2; }\nint main() { int n; std::cin >> n; std::vector<int> v{n, 3, 5}; int soma=0; for(int x : v) soma += x; std::string s="soma"; std::cout << s << " " << dobro(soma) << "\\n"; }', stdin: '2\n', expected: 'soma 20' },
+ { label: 'C++20: mesmo programa com outra entrada e memória nova', language: 'cpp', code: '#include <iostream>\n#include <vector>\n#include <string>\nint dobro(int x) { return x * 2; }\nint main() { int n; std::cin >> n; std::vector<int> v{n, 3, 5}; int soma=0; for(int x : v) soma += x; std::string s="soma"; std::cout << s << " " << dobro(soma) << "\\n"; }', stdin: '7\n', expected: 'soma 30', cached: true },
+ { label: 'C++20: erro de compilação real', language: 'cpp', code: '#include <iostream>\nint main() { std::cout << "oi" }', expectedStatus: 'compile_error', stderrIncludes: 'error:' },
+ { label: 'C++20: laço infinito interrompido', language: 'cpp', code: 'int main() { while(true) {} }', timeoutMs: 500, expectedStatus: 'timeout' },
+];
+document.querySelector('#stop').onclick = () => runner.stop();
+document.querySelector('#run').onclick = async event => {
+ event.target.disabled = true; results.textContent = ''; let passed=0;
+ for(const item of cases) {
+   status.textContent = item.label;
+   const controller = new AbortController();
+   const result = await runner.run({ ...item, signal: controller.signal, onStatus: detail => { status.textContent = item.label + ' — ' + detail.message; if(item.cancel && detail.phase==='running') controller.abort(); } });
+   const ok = item.expectedStatus ? result.status === item.expectedStatus && (!item.errorIncludes || result.error?.includes(item.errorIncludes)) && (!item.stderrIncludes || result.stderr.includes(item.stderrIncludes)) : result.status === 'success' && result.exitCode === 0 && normalizeProgramOutput(result.stdout) === item.expected && (!item.cached || result.compileMs === 0);
+   passed += Number(ok);
+   const record = document.createElement('pre'); record.textContent = `${ok ? 'OK' : 'FALHOU'} · ${item.label}\n${JSON.stringify({...result,stdout:result.stdout.length>3000?result.stdout.slice(0,120)+'… ['+result.stdout.length+' caracteres limitados]':result.stdout}, null, 2)}`; results.append(record);
+ }
+ status.textContent = `${passed}/${cases.length} verificações passaram.`; event.target.disabled = false;
+};
+</script></html>

@@ -1,55 +1,96 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
-const backendRoot = path.resolve(scriptDirectory, '..');
-const outputPath = path.join(backendRoot, 'ominisaber-schema-completo.sql');
+const backendRoot = path.resolve(scriptDirectory, "..");
+const outputPath = path.join(backendRoot, "ominisaber-schema-completo.sql");
 const sources = [
-  'schema/core.sql',
-  'migrations/20260831_acesso_materias_aluno.sql',
-  'schema/configuracoes.sql',
-  'schema/biblioteca.sql',
-  'schema/estoque-etapa1.sql',
-  'schema/estoque-etapa2.sql',
-  'schema/conquistas.sql',
-  'schema/espacos-docentes.sql',
-  'migrations/20260831_trilhas_estudos_completos.sql',
-  'migrations/20260831_redacao_jornada_completa.sql',
-  'migrations/20260831_agenda_notificacoes.sql',
-  'migrations/20260902_biblioteca_acervo_unificado.sql',
-  'migrations/20260903_portal_gestor.sql',
-  'migrations/20260903_importacao_curricular.sql',
-  'migrations/20260903_importacao_curricular_fase1.sql',
-  'migrations/20260903_importacao_curricular_fase2.sql',
-  'migrations/20260903_importacao_curricular_fase3.sql',
-  'migrations/20260903_importacao_curricular_fase3_1.sql',
-  'migrations/20260903_redacoes_avaliacoes_portugues.sql',
-  'migrations/20260904_importacao_curricular_fase3_2.sql',
-  'migrations/20260904_importacao_curricular_correcao_policy.sql',
-  'migrations/20260904_importacao_curricular_fase3_3.sql',
-  'migrations/20260904_importacao_curricular_fase3_4.sql',
-  'migrations/20260904_importacao_curricular_fase3_5.sql',
-  'migrations/20260905_integracao_curricular_fase4.sql',
-  'migrations/20260905_integracao_curricular_fase4_1.sql',
-  'migrations/20260905_descritores_manual_fase2.sql'
+  "schema/core.sql",
+  "migrations/20260831_acesso_materias_aluno.sql",
+  "schema/configuracoes.sql",
+  "schema/biblioteca.sql",
+  "schema/estoque-etapa1.sql",
+  "schema/estoque-etapa2.sql",
+  "schema/conquistas.sql",
+  "schema/espacos-docentes.sql",
+  "migrations/20260831_trilhas_estudos_completos.sql",
+  "migrations/20260831_redacao_jornada_completa.sql",
+  "migrations/20260831_agenda_notificacoes.sql",
+  "migrations/20260902_biblioteca_acervo_unificado.sql",
+  "migrations/20260903_portal_gestor.sql",
+  "migrations/20260903_perfis_gestor_rls.sql",
+  "migrations/20260903_importacao_curricular.sql",
+  "migrations/20260903_importacao_curricular_fase1.sql",
+  "migrations/20260903_importacao_curricular_fase2.sql",
+  "migrations/20260903_importacao_curricular_fase3.sql",
+  "migrations/20260903_importacao_curricular_fase3_1.sql",
+  "migrations/20260903_redacoes_avaliacoes_portugues.sql",
+  "migrations/20260904_importacao_curricular_fase3_2.sql",
+  "migrations/20260904_importacao_curricular_correcao_policy.sql",
+  "migrations/20260904_importacao_curricular_fase3_3.sql",
+  "migrations/20260904_importacao_curricular_fase3_4.sql",
+  "migrations/20260904_importacao_curricular_fase3_5.sql",
+  "migrations/20260905_integracao_curricular_fase4.sql",
+  "migrations/20260905_integracao_curricular_fase4_1.sql",
+  "migrations/20260905_descritores_manual_fase2.sql",
+  "migrations/20260907_base_comum_enum.sql",
+  "migrations/20260907_catalogo_curricular_base_comum.sql",
+  "migrations/20260908_engine_atividades_fase2_1.sql",
+  "migrations/20260908_engine_atividades_fase2_1_ajustes.sql",
+  "migrations/20260908_construtor_atividades_fase2_2.sql",
+  "migrations/20260908_execucao_correcao_atividades_fase2_3.sql",
+  "migrations/20260908_execucao_correcao_atividades_fase2_3_ajustes.sql",
+  "migrations/20260908_execucao_correcao_atividades_fase2_3_compatibilidade.sql",
+  "migrations/20260908_correcao_docente_resultados_fase2_3.sql",
+  "migrations/20260908_correcao_docente_resultados_fase2_3_ajustes.sql",
+  "migrations/20260908_vinculos_docentes_compatibilidade_fase2_3.sql",
+  "migrations/20260908_resultados_recuperacao_fase2_4.sql",
+  "migrations/20260908_resultados_recuperacao_fase2_4_ajustes.sql",
+  "migrations/20260908_resultados_recuperacao_fase2_4_indices.sql",
+  "migrations/20260909_corrigir_execucao_criar_atividade_docente.sql",
+  "migrations/20260909_atividade_docente_privilegios_minimos.sql",
+  "migrations/20260909122618_atividades_aluno_dashboard_notificacoes.sql",
+  "migrations/20260910_corrigir_codigos_curriculares_matematica.sql",
+  "migrations/20260910_integridade_formatos_atividade.sql",
+  "migrations/20260910_integridade_formatos_atividade_ajustes.sql",
+  "migrations/20260910_laboratorio_medidas_geometricas.sql",
+  "migrations/20260910_proteger_gabarito_geometria.sql",
+  "migrations/20260916_proteger_respostas_construtor_atividades.sql",
+  "migrations/20260916_corrigir_visibilidade_habilidades_atividades.sql",
+  "migrations/20260917_endurecer_execucao_atividades_aluno.sql",
+  "migrations/20260917_endurecer_execucao_atividades_aluno_ajuste_associacao.sql",
+  "migrations/20260917_endurecer_execucao_atividades_aluno_ajuste_permissoes.sql",
+  "migrations/20260909_copiloto_docente_fase3_0.sql",
+  "migrations/20260909081800_fase3_advisors_ajustes.sql",
+  "migrations/20260909194704_corrigir_integridade_redacoes.sql",
+  "migrations/20260925090000_organizacao_governanca_banco.sql",
+  "migrations/20260926120000_oministudio_persistencia_rls.sql",
+  "migrations/20260927043000_corrigir_persistencia_redacoes.sql",
+  "migrations/20260927193604_push_dispositivos_agenda.sql",
+  "migrations/20260928_corrigir_recuperacao_ajuste_nota.sql",
+  "migrations/20261003_omnistudio_fluxo_integrado.sql",
+  "migrations/20261003_omnistudio_matematica.sql",
+  "migrations/20261003_copiloto_ideias_trilhas.sql",
 ];
 
 const removeTransactionWrapper = (sql, source) => {
   const begins = sql.match(/^\s*begin;\s*$/gim) || [];
   const commits = sql.match(/^\s*commit;\s*$/gim) || [];
   if (begins.length !== 1 || commits.length !== 1) {
-    throw new Error(`${source} precisa conter exatamente um BEGIN e um COMMIT.`);
+    throw new Error(
+      `${source} precisa conter exatamente um BEGIN e um COMMIT.`,
+    );
   }
   return sql
-    .replace(/^\s*begin;\s*$/im, '')
-    .replace(/^\s*commit;\s*$/im, '')
+    .replace(/^\s*begin;\s*$/im, "")
+    .replace(/^\s*commit;\s*$/im, "")
     .trim();
 };
 
 const sections = sources.map((source, index) => {
   const absolutePath = path.join(backendRoot, source);
-  const sql = fs.readFileSync(absolutePath, 'utf8');
+  const sql = fs.readFileSync(absolutePath, "utf8");
   const body = removeTransactionWrapper(sql, source);
   return `-- ============================================================================\n-- ETAPA ${index + 1}/${sources.length}: ${source}\n-- ============================================================================\n\n${body}`;
 });
@@ -66,5 +107,9 @@ const footer = `commit;
 -- Fim do schema completo do OminiSaber.
 `;
 
-fs.writeFileSync(outputPath, `${header}\n\n${sections.join('\n\n')}\n\n${footer}`, 'utf8');
+fs.writeFileSync(
+  outputPath,
+  `${header}\n\n${sections.join("\n\n")}\n\n${footer}`,
+  "utf8",
+);
 console.log(`Schema completo gerado: ${outputPath}`);

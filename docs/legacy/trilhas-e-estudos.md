@@ -4,16 +4,16 @@ O módulo de estudos do aluno é um fluxo único, responsivo e orientado a dados
 
 ## Páginas
 
-| Página | Rota | Fonte principal |
-| --- | --- | --- |
-| Catálogo | `frontend/aluno/modulo_de_trilhas/index.html` | `trilhas`, `atividades`, `progresso_atividades` |
-| Detalhe | `frontend/aluno/modulo_de_trilhas/trilha/index.html?id=UUID` | `trilhas`, `trilhas_prerequisitos`, `atividades` |
-| Aula | `frontend/aluno/modulo_de_trilhas/aula/index.html?id=UUID` | `atividades`, `materiais_aula`, `anotacoes_aula` |
-| Atividade | `frontend/aluno/modulo_de_trilhas/atividade/index.html?id=UUID` | `questoes_atividades`, `tentativas_atividades`, `respostas_questoes` |
-| Resultado | `frontend/aluno/modulo_de_trilhas/resultado/index.html?id=UUID` | tentativas e respostas avaliadas pelo banco |
-| Salvos | `frontend/aluno/modulo_de_trilhas/salvos/index.html` | `conteudos_salvos` |
-| Histórico | `frontend/aluno/modulo_de_trilhas/historico/index.html` | `historico_estudos`, `xp_movimentos` |
-| Mapa de dificuldades | `frontend/aluno/mapa_dificuldades/index.html?materia=CODIGO` | `trilhas`, `atividades`, `progresso_atividades` |
+| Página               | Rota                                                            | Fonte principal                                                      |
+| -------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Catálogo             | `frontend/aluno/modulo_de_trilhas/index.html`                   | `trilhas`, `atividades`, `progresso_atividades`                      |
+| Detalhe              | `frontend/aluno/modulo_de_trilhas/trilha/index.html?id=UUID`    | `trilhas`, `trilhas_prerequisitos`, `atividades`                     |
+| Aula                 | `frontend/aluno/modulo_de_trilhas/aula/index.html?id=UUID`      | `atividades`, `materiais_aula`, `anotacoes_aula`                     |
+| Atividade            | `frontend/aluno/modulo_de_trilhas/atividade/index.html?id=UUID` | `questoes_atividades`, `tentativas_atividades`, `respostas_questoes` |
+| Resultado            | `frontend/aluno/modulo_de_trilhas/resultado/index.html?id=UUID` | tentativas e respostas avaliadas pelo banco                          |
+| Salvos               | `frontend/aluno/modulo_de_trilhas/salvos/index.html`            | `conteudos_salvos`                                                   |
+| Histórico            | `frontend/aluno/modulo_de_trilhas/historico/index.html`         | `historico_estudos`, `xp_movimentos`                                 |
+| Mapa de dificuldades | `frontend/aluno/mapa_dificuldades/index.html?materia=CODIGO`    | `trilhas`, `atividades`, `progresso_atividades`                      |
 
 O mapa é aberto pelo clique duplo, toque duplo ou tecla Enter nas bolhas de matéria do painel. O nó central “Geral” usa uma proporção ponderada (`etapas concluídas / etapas publicadas`) e cada descritor mantém acesso direto à trilha correspondente. Sem etapas publicadas, a interface informa “sem evidência” em vez de assumir zero como desempenho medido.
 
@@ -32,9 +32,17 @@ O campo `atividades.conteudo` aceita um objeto JSON com a propriedade `blocos`. 
     { "tipo": "paragrafo", "texto": "Conteúdo da aula." },
     { "tipo": "lista", "itens": ["Primeiro ponto", "Segundo ponto"] },
     { "tipo": "citacao", "texto": "Trecho para análise." },
-    { "tipo": "destaque", "titulo": "Observe", "texto": "Uma orientação importante." },
+    {
+      "tipo": "destaque",
+      "titulo": "Observe",
+      "texto": "Uma orientação importante."
+    },
     { "tipo": "imagem", "url": "https://...", "alt": "Descrição acessível" },
-    { "tipo": "codigo", "linguagem": "javascript", "texto": "const exemplo = true;" }
+    {
+      "tipo": "codigo",
+      "linguagem": "javascript",
+      "texto": "const exemplo = true;"
+    }
   ]
 }
 ```

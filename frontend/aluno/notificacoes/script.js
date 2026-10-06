@@ -2,6 +2,10 @@
   const state = { items: [], filter: "all", search: "", unsubscribe: null };
   const list = document.querySelector("[data-list]");
   const loading = document.querySelector("[data-loading]");
+  const pushToggle = document.querySelector("[data-push-toggle]");
+  const pushStatus = document.querySelector("[data-push-status]");
+  const pushDescription = document.querySelector("[data-push-description]");
+  let pushEnabled = false;
   const escapeHtml = (value = "") =>
     String(value).replace(
       /[&<>'"]/g,
@@ -76,6 +80,76 @@
       loading.hidden = true;
     }
   };
+  const renderPushStatus = (status) => {
+    pushEnabled = Boolean(status.subscribed);
+    const action = pushToggle.querySelector("[data-push-action]");
+    const iconNode = pushStatus.querySelector(".material-symbols-outlined");
+    const label = pushStatus.querySelector("strong");
+    pushToggle.disabled = false;
+    if (!status.supported) {
+      pushStatus.dataset.state = "unsupported";
+      iconNode.textContent = "notifications_off";
+      label.textContent = "Não disponível";
+      pushToggle.disabled = true;
+      action.textContent = "Indisponível neste navegador";
+      pushDescription.textContent =
+        "No iPhone ou iPad, adicione o OminiSaber à tela inicial e abra por esse atalho. Em outros dispositivos, use um navegador atualizado com HTTPS.";
+      return;
+    }
+    if (status.permission === "denied") {
+      pushStatus.dataset.state = "blocked";
+      iconNode.textContent = "notifications_paused";
+      label.textContent = "Bloqueadas";
+      pushToggle.disabled = true;
+      action.textContent = "Permissão bloqueada";
+      pushDescription.textContent =
+        "Libere as notificações nas configurações do navegador e recarregue esta página.";
+      return;
+    }
+    pushStatus.dataset.state = pushEnabled ? "active" : "inactive";
+    iconNode.textContent = pushEnabled
+      ? "notifications_active"
+      : "notifications_none";
+    label.textContent = pushEnabled ? "Ativas neste dispositivo" : "Desativadas";
+    action.textContent = pushEnabled
+      ? "Desativar neste dispositivo"
+      : "Ativar neste dispositivo";
+  };
+  const refreshPushStatus = async () => {
+    try {
+      renderPushStatus(await window.OminiSaber.getDevicePushStatus());
+    } catch (error) {
+      renderPushStatus({
+        ...window.OminiSaber.getPushCapability(),
+        subscribed: false,
+      });
+      console.warn(
+        "[OminiSaber][push] Não foi possível consultar o dispositivo.",
+        error,
+      );
+    }
+  };
+  pushToggle.addEventListener("click", async () => {
+    pushToggle.disabled = true;
+    try {
+      const status = pushEnabled
+        ? await window.OminiSaber.disableDevicePushNotifications()
+        : await window.OminiSaber.enableDevicePushNotifications();
+      renderPushStatus(status);
+      window.StudentShell?.notify(
+        status.subscribed
+          ? "Notificações ativadas neste dispositivo."
+          : "Notificações desativadas neste dispositivo.",
+        "success",
+      );
+    } catch (error) {
+      window.StudentShell?.notify(
+        error.message || "Não foi possível alterar as notificações.",
+        "error",
+      );
+      await refreshPushStatus();
+    }
+  });
   list.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-toggle-read]");
     if (!button) return;
@@ -132,6 +206,7 @@
     "ominisaber:ready",
     () => {
       load();
+      refreshPushStatus();
       if (window.OminiSaber?.configured)
         state.unsubscribe = window.OminiSaber.subscribeToAgenda(() => load());
     },

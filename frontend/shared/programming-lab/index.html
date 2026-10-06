@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Aprenda Python e C++ com desafios, execução real de programas e mini projetos no OminiSaber.">
+  <title>Laboratório de programação | OminiSaber</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Material+Symbols+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="programming-lab.css">
+  <style>body{margin:0;background:#f5f7fc;} .pl-startup-error{padding:40px;font:16px Inter,system-ui;color:#152c4d;} .pl-startup-error a{color:#1558e8;}</style>
+</head>
+<body>
+  <header class="pl-public-header"><strong>OminiSaber</strong><span>Laboratório aberto · prática com progresso local</span><a href="../../aluno/modulo_de_trilhas/ide/index.html">Entrar no ambiente do aluno</a></header>
+  <div data-programming-lab><p class="pl-startup-error">Preparando sua trilha de programação…</p></div>
+  <script type="module">
+    import { mountProgrammingLab } from './programming-lab.js';
+    const root = document.querySelector('[data-programming-lab]');
+    try { mountProgrammingLab(root, { mode: 'practice' }); }
+    catch { root.innerHTML = '<p class="pl-startup-error">Não foi possível abrir o laboratório. <a href="">Recarregar</a></p>'; }
+  </script>
+</body>
+</html>

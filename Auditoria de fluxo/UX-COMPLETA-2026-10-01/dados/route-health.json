@@ -1,0 +1,590 @@
+{
+  "generatedAt": "2026-10-01T11:00:25.862Z",
+  "total": 97,
+  "ok": 97,
+  "failures": [],
+  "results": [
+    {
+      "relative": "frontend/aluno/agenda/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/agenda/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/ajuda-suporte/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/ajuda-suporte/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/atividades/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/atividades/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/biblioteca_digital/code.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/biblioteca_digital/code.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/biblioteca_digital/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/biblioteca_digital/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/dashboard_principal/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/dashboard_principal/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/laboratorio_de_redacao/corrigida/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/laboratorio_de_redacao/corrigida/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/laboratorio_de_redacao/escrita/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/laboratorio_de_redacao/escrita/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/laboratorio_de_redacao/historico/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/laboratorio_de_redacao/historico/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/laboratorio_de_redacao/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/laboratorio_de_redacao/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/laboratorio_de_redacao/revisao/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/laboratorio_de_redacao/revisao/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/mapa_dificuldades/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/mapa_dificuldades/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/minha_evolucao/code.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/minha_evolucao/code.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/minha_evolucao/conquistas.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/minha_evolucao/conquistas.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/minha_evolucao/desempenho.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/minha_evolucao/desempenho.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/minha_evolucao/historico.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/minha_evolucao/historico.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/minha_evolucao/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/minha_evolucao/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/minha_evolucao/medalhas/explorador-trilhas.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/minha_evolucao/medalhas/explorador-trilhas.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/minha_evolucao/medalhas/foco-total.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/minha_evolucao/medalhas/foco-total.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/minha_evolucao/medalhas/leitor-assiduo.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/minha_evolucao/medalhas/leitor-assiduo.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/minha_evolucao/medalhas/primeira-redacao.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/minha_evolucao/medalhas/primeira-redacao.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/minha_evolucao/medalhas.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/minha_evolucao/medalhas.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/algebra/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/algebra/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/artes/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/artes/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/atividade/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/atividade/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/aula/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/aula/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/biologia/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/biologia/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/code.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/code.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/educacao-fisica/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/educacao-fisica/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/filosofia/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/filosofia/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/fisica/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/fisica/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/geografia/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/geografia/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/geometria/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/geometria/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/historia/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/historia/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/historico/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/historico/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/ide/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/ide/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/ingles-espanhol/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/ingles-espanhol/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/literatura/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/literatura/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/matematica/estudio-de-areas/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/matematica/estudio-de-areas/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/matematica/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/matematica/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/matematica/maquina-de-padroes/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/matematica/maquina-de-padroes/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/matematica/reta-em-movimento/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/matematica/reta-em-movimento/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/portugues/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/portugues/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/portugues/interpretacao-visual/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/portugues/interpretacao-visual/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/portugues/investigacao-argumentativa/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/portugues/investigacao-argumentativa/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/portugues/mapa-da-lingua/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/portugues/mapa-da-lingua/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/quimica/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/quimica/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/redacao/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/redacao/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/resultado/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/resultado/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/salvos/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/salvos/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/sociologia/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/sociologia/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/modulo_de_trilhas/trilha/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/modulo_de_trilhas/trilha/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/notificacoes/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/notificacoes/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/aluno/perfil/index.html",
+      "url": "http://127.0.0.1:4173/frontend/aluno/perfil/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/bibliotecaria/configuracoes/index.html",
+      "url": "http://127.0.0.1:4173/frontend/bibliotecaria/configuracoes/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/bibliotecaria/dashboard/index.html",
+      "url": "http://127.0.0.1:4173/frontend/bibliotecaria/dashboard/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/bibliotecaria/estoque/etapa1/etapa1.html",
+      "url": "http://127.0.0.1:4173/frontend/bibliotecaria/estoque/etapa1/etapa1.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/bibliotecaria/estoque/etapa2/etapa2.html",
+      "url": "http://127.0.0.1:4173/frontend/bibliotecaria/estoque/etapa2/etapa2.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/bibliotecaria/estoque/etapa3/etapa3.html",
+      "url": "http://127.0.0.1:4173/frontend/bibliotecaria/estoque/etapa3/etapa3.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/bibliotecaria/estoque/index.html",
+      "url": "http://127.0.0.1:4173/frontend/bibliotecaria/estoque/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/bibliotecaria/gestao_emprestimos/index.html",
+      "url": "http://127.0.0.1:4173/frontend/bibliotecaria/gestao_emprestimos/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/cadastro/code.html",
+      "url": "http://127.0.0.1:4173/frontend/cadastro/code.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/cadastro/index.html",
+      "url": "http://127.0.0.1:4173/frontend/cadastro/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/erro/code.html",
+      "url": "http://127.0.0.1:4173/frontend/erro/code.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/erro/index.html",
+      "url": "http://127.0.0.1:4173/frontend/erro/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/gestor/acessos/index.html",
+      "url": "http://127.0.0.1:4173/frontend/gestor/acessos/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/gestor/alunos/index.html",
+      "url": "http://127.0.0.1:4173/frontend/gestor/alunos/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/gestor/auditoria/index.html",
+      "url": "http://127.0.0.1:4173/frontend/gestor/auditoria/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/gestor/conteudos-publicados/index.html",
+      "url": "http://127.0.0.1:4173/frontend/gestor/conteudos-publicados/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/gestor/dashboard/code.html",
+      "url": "http://127.0.0.1:4173/frontend/gestor/dashboard/code.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/gestor/dashboard/index.html",
+      "url": "http://127.0.0.1:4173/frontend/gestor/dashboard/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/gestor/descritores/index.html",
+      "url": "http://127.0.0.1:4173/frontend/gestor/descritores/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/gestor/perfil/index.html",
+      "url": "http://127.0.0.1:4173/frontend/gestor/perfil/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/gestor/professores/index.html",
+      "url": "http://127.0.0.1:4173/frontend/gestor/professores/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/gestor/turmas/index.html",
+      "url": "http://127.0.0.1:4173/frontend/gestor/turmas/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/gestor/vinculos/index.html",
+      "url": "http://127.0.0.1:4173/frontend/gestor/vinculos/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/login/index.html",
+      "url": "http://127.0.0.1:4173/frontend/login/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/Parties/index.html",
+      "url": "http://127.0.0.1:4173/frontend/Parties/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/agenda/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/agenda/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/dashboard/code.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/dashboard/code.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/dashboard/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/dashboard/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_matematica/avaliacoes/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_matematica/avaliacoes/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_matematica/dashboard/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_matematica/dashboard/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_matematica/laboratorio/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_matematica/laboratorio/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_portugues/avaliacoes/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_portugues/avaliacoes/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_portugues/dashboard/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_portugues/dashboard/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_portugues/laboratorio/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_portugues/laboratorio/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_portugues/redacoes/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_portugues/redacoes/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_tecnico_administracao/avaliacoes/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_tecnico_administracao/avaliacoes/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_tecnico_administracao/dashboard/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_tecnico_administracao/dashboard/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_tecnico_administracao/laboratorio/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_tecnico_administracao/laboratorio/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_tecnico_informatica/avaliacoes/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_tecnico_informatica/avaliacoes/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_tecnico_informatica/dashboard/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_tecnico_informatica/dashboard/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/professor_tecnico_informatica/laboratorio/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/professor_tecnico_informatica/laboratorio/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/professor/redacoes/index.html",
+      "url": "http://127.0.0.1:4173/frontend/professor/redacoes/index.html",
+      "status": 200,
+      "location": null
+    },
+    {
+      "relative": "frontend/redefinir-senha/index.html",
+      "url": "http://127.0.0.1:4173/frontend/redefinir-senha/index.html",
+      "status": 200,
+      "location": null
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QA visual · Mapa da Redação</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 28px; color: #111c2d; background: #eef2f8; font: 14px Inter, Arial, sans-serif; }
+      h1 { margin: 0 0 22px; font-size: 24px; }
+      main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+      figure { margin: 0; overflow: hidden; background: #fff; border: 1px solid #dce3ee; border-radius: 16px; box-shadow: 0 12px 30px rgba(15, 35, 70, .08); }
+      figcaption { padding: 14px 18px; color: #174c9a; border-bottom: 1px solid #e5eaf2; font-weight: 700; }
+      img { display: block; width: 100%; height: auto; }
+      @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <h1>Comparação visual · opção 2</h1>
+    <main>
+      <figure><figcaption>Problema informado · desktop com espaço desperdiçado</figcaption><img src="redacao-map-responsive-before.png" alt="Página antes da correção responsiva" /></figure>
+      <figure><figcaption>Desktop corrigido · sidebar recolhida</figcaption><img src="redacao-map-responsive-desktop.png" alt="Mapa da Redação responsivo no desktop" /></figure>
+      <figure><figcaption>Tablet · 768 px</figcaption><img src="redacao-map-responsive-tablet-768.png" alt="Mapa da Redação responsivo no tablet" /></figure>
+      <figure><figcaption>Celular · 390 px</figcaption><img src="redacao-map-responsive-mobile-390.png" alt="Mapa da Redação responsivo no celular" /></figure>
+    </main>
+  </body>
+</html>

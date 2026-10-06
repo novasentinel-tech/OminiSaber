@@ -45,7 +45,7 @@
       year: "numeric",
     }).format(new Date());
   const title = {
-    dashboard: "Mapa institucional",
+    dashboard: "Visão geral",
     turmas: "Turmas",
     alunos: "Alunos",
     professores: "Professores",
@@ -57,7 +57,7 @@
     perfil: "Meu perfil",
   }[page];
   const shell = () => {
-    root.innerHTML = `<div class="manager-shell"><div class="sidebar-scrim"></div><aside class="manager-sidebar"><div class="brand">${icon("school")}<span>Omini<span style="color:var(--yellow)">Saber</span></span></div><nav class="manager-nav">${nav.map(([key, ic, label]) => `<a href="${route(key)}" class="${page === key ? "active" : ""}">${icon(ic)}<span>${label}</span></a>`).join("")}</nav><div class="sidebar-footer"><select class="school-select" aria-label="Unidade escolar"><option>Colégio OminiSaber</option></select><div class="year-label">Ano letivo <b>2026</b></div></div></aside><main class="manager-main"><header class="manager-header"><div style="display:flex;gap:12px;align-items:center"><button class="menu-btn" aria-label="Abrir menu">${icon("menu")}</button><div class="title-wrap"><h1>${title}</h1><p>${page === "dashboard" ? dates() : "Gestão institucional OminiSaber"}</p></div></div><div class="header-actions"><select class="field" aria-label="Ano letivo"><option>2026</option></select><button class="icon-btn" aria-label="Notificações">${icon("notifications")}</button><button class="profile-chip" data-go-profile><span class="avatar">GS</span><span data-profile-name>Gestor</span>${icon("expand_more")}</button></div></header><section class="manager-content"><div class="loading">Carregando dados reais...</div></section></main></div>`;
+    root.innerHTML = `<div class="manager-shell"><div class="sidebar-scrim"></div><aside class="manager-sidebar"><div class="brand">${icon("school")}<span>Omini<span style="color:var(--blue)">Saber</span></span></div><nav class="manager-nav">${nav.map(([key, ic, label]) => `<a href="${route(key)}" class="${page === key ? "active" : ""}">${icon(ic)}<span>${label}</span></a>`).join("")}</nav><div class="sidebar-footer"><select class="school-select" aria-label="Unidade escolar"><option>Colégio OminiSaber</option></select><div class="year-label">Ano letivo <b>2026</b></div></div></aside><main class="manager-main"><header class="manager-header"><div class="manager-header-title"><button class="menu-btn" aria-label="Abrir menu">${icon("menu")}</button><div class="title-wrap"><h1>${title}</h1><p>${page === "dashboard" ? dates() : "Gestão institucional OminiSaber"}</p></div></div><div class="header-actions"><label class="manager-global-search">${icon("search")}<input type="search" placeholder="Buscar nesta página" aria-label="Buscar nesta página"></label><select class="field" aria-label="Ano letivo"><option>2026</option></select><button class="icon-btn" aria-label="Notificações">${icon("notifications")}</button><button class="profile-chip" data-go-profile><span class="avatar">GS</span><span data-profile-name>Gestor</span>${icon("expand_more")}</button></div></header><section class="manager-content"><div class="loading">Carregando dados reais...</div></section></main></div>`;
     const sidebar = root.querySelector(".manager-sidebar"),
       scrim = root.querySelector(".sidebar-scrim");
     root.querySelector(".menu-btn").onclick = () => {
@@ -70,6 +70,19 @@
     };
     root.querySelector("[data-go-profile]").onclick = () =>
       (location.href = route("perfil"));
+    const globalSearch = root.querySelector(".manager-global-search input");
+    globalSearch.addEventListener("input", () => {
+      const localSearch = root.querySelector("#q");
+      if (localSearch) {
+        localSearch.value = globalSearch.value;
+        localSearch.dispatchEvent(new Event("input", { bubbles: true }));
+        return;
+      }
+      const term = globalSearch.value.trim().toLowerCase();
+      root.querySelectorAll(".data-table tbody tr, .entity-card").forEach((item) => {
+        item.hidden = Boolean(term) && !item.textContent.toLowerCase().includes(term);
+      });
+    });
   };
   const content = () => root.querySelector(".manager-content");
   const empty = (label) =>
@@ -96,6 +109,20 @@
     });
   const status = (on, labelOn = "Ativo", labelOff = "Inativo") =>
     `<span class="badge ${on ? "" : "off"}">${on ? labelOn : labelOff}</span>`;
+  const enhanceTables = (scope = document) => {
+    scope.querySelectorAll(".data-table").forEach((table) => {
+      const labels = [...table.querySelectorAll("thead th")].map((cell) =>
+        cell.textContent.trim(),
+      );
+      table.querySelectorAll("tbody tr").forEach((row) => {
+        [...row.children].forEach((cell, index) => {
+          if (!cell.hasAttribute("colspan"))
+            cell.dataset.label = labels[index] || "Informação";
+        });
+      });
+    });
+  };
+  window.OminiSaberEnhanceManagerTables = enhanceTables;
   const reviewStatusLabel = { ok: "OK", revisar: "Revisar", aprovado: "Aprovado", rejeitado: "Rejeitado" };
   const dashboard = async () => {
     if (window.renderManagerExecutiveDashboard)
@@ -384,10 +411,17 @@
     );
   };
   const descriptorsPage = async () => {
+    if (window.OminiDescriptorStudio) return window.OminiDescriptorStudio.mount(content(), api());
     const rows = await api().listManagerDescriptors();
-    content().innerHTML = `<div class="page-head"><div><h2>Descritores curriculares</h2><p>Referência institucional para trilhas e avaliações.</p></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="import-curriculum" disabled title="Importação automática em manutenção">${icon("upload_file")} Importação automática em manutenção</button><button class="btn btn-primary" id="new">${icon("add")} Novo descritor</button></div></div><div class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Código</th><th>Título</th><th>Matéria</th><th>Série / Trimestre</th><th>Status</th><th></th></tr></thead><tbody>${rows.map((x) => `<tr><td><b>${esc(x.codigo)}</b></td><td>${esc(x.titulo)}</td><td>${esc(x.materia_codigo)}</td><td>${x.serie ? `${x.serie}º` : "—"} · ${x.trimestre ? `${x.trimestre}º tri` : "—"}</td><td>${status(x.status === "ativo", x.status, x.status)}</td><td><button class="btn edit" data-id="${x.id}">Editar</button></td></tr>`).join("")}</tbody></table>${rows.length ? "" : empty("Cadastre os descritores oficiais.")}</div></div>`;
+    const subjectLabel = { portugues: "Português e Literatura", matematica: "Matemática", fisica: "Física", quimica: "Química", biologia: "Biologia", redacao: "Redação", tecnico_administracao: "Administração", tecnico_informatica: "Informática" };
+    const periodsLabel = (item) => {
+      const periods = (item.descritor_curriculo_periodos || []).map((link) => link.curriculo_periodos).filter(Boolean);
+      if (!periods.length) return item.serie ? `${item.serie}ª série · ${item.trimestre}º tri` : "Sem período vinculado";
+      return [...new Set(periods.map((period) => `${period.serie}ª/${period.trimestre}º`))].sort().join(", ");
+    };
+    content().innerHTML = `<div class="page-head"><div><h2>Descritores curriculares</h2><p>Catálogo institucional rastreável para o motor de atividades.</p></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="import-curriculum" disabled title="Importação automática em manutenção">${icon("upload_file")} Importação automática em manutenção</button><button class="btn btn-primary" id="new">${icon("add")} Novo descritor</button></div></div><div class="metrics">${["portugues", "matematica", "fisica", "quimica", "biologia"].map((subject) => `<div class="metric"><small>${subjectLabel[subject]}</small><strong>${rows.filter((item) => item.materia_codigo === subject).length}</strong><span>descritores catalogados</span></div>`).join("")}</div><div class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Código</th><th>Descrição</th><th>Matéria</th><th>Períodos</th><th>Status</th><th></th></tr></thead><tbody>${rows.map((x) => `<tr><td><b>${esc(x.codigo)}</b></td><td>${esc(x.descricao || x.titulo)}</td><td>${esc(subjectLabel[x.materia_codigo] || x.materia_codigo)}</td><td>${esc(periodsLabel(x))}</td><td>${status(x.status === "ativo", x.status, x.status)}</td><td><button class="btn edit" data-id="${x.id}">Editar</button></td></tr>`).join("")}</tbody></table>${rows.length ? "" : empty("Cadastre os descritores oficiais.")}</div></div>`;
     const wizardState = { step: 1, quantity: 1, descriptors: [] };
-    const materiaOptions = `<option value="">Selecione</option><option value="portugues">Português</option><option value="matematica">Matemática</option><option value="fisica">Física</option><option value="redacao">Redação</option><option value="tecnico_administracao">Administração</option><option value="tecnico_informatica">Informática</option>`;
+    const materiaOptions = `<option value="">Selecione</option><option value="portugues">Português e Literatura</option><option value="matematica">Matemática</option><option value="fisica">Física</option><option value="quimica">Química</option><option value="biologia">Biologia</option><option value="redacao">Redação</option><option value="tecnico_administracao">Administração</option><option value="tecnico_informatica">Informática</option>`;
     const wizard = document.createElement("div");
     wizard.className = "modal-backdrop";
     wizard.innerHTML = `<form class="modal descriptor-wizard" style="max-width:900px"><div class="modal-head"><h2>Cadastro manual de descritores</h2><button type="button" class="icon-btn" data-wizard-close>${icon("close")}</button></div><div data-wizard-body></div><div class="modal-actions"><span data-wizard-error class="error-text"></span><button type="button" class="btn" data-wizard-prev>Anterior</button><button type="button" class="btn" data-wizard-cancel>Cancelar</button><button type="submit" class="btn btn-primary" data-wizard-submit>Continuar</button></div></form>`;
@@ -487,7 +521,7 @@
       render();
     };
     document.querySelector("#import-curriculum").onclick = async () => {
-      const data = await modal("Importar currículo", `<div class="form-grid"><label class="wide">PDF oficial<input class="field" type="file" name="file" accept="application/pdf" required></label><label>Origem<input class="field" name="origem" value="SEDU-ES"></label><label>Ano letivo<input class="field" type="number" name="ano" value="2026" min="2000" max="2100" required></label><label>Componente curricular<select class="field" name="materia"><option value="">Detectar automaticamente</option><option value="portugues">Língua Portuguesa</option><option value="matematica">Matemática</option><option value="fisica">Física</option><option value="redacao">Redação</option><option value="tecnico_administracao">Administração</option><option value="tecnico_informatica">Informática</option></select></label><label>Trimestre<select class="field" name="trimestre"><option value="">Detectar automaticamente</option><option value="1">1º trimestre</option><option value="2">2º trimestre</option><option value="3">3º trimestre</option></select></label></div><p class="manager-notice">O documento será analisado e ficará em revisão. Nenhum dado pedagógico é publicado sem aprovação.</p>`, "Analisar currículo");
+        const data = await modal("Importar currículo", `<div class="form-grid"><label class="wide">PDF oficial<input class="field" type="file" name="file" accept="application/pdf" required></label><label>Origem<input class="field" name="origem" value="SEDU-ES"></label><label>Ano letivo<input class="field" type="number" name="ano" value="2026" min="2000" max="2100" required></label><label>Componente curricular<select class="field" name="materia"><option value="">Detectar automaticamente</option><option value="portugues">Língua Portuguesa</option><option value="matematica">Matemática</option><option value="fisica">Física</option><option value="quimica">Química</option><option value="biologia">Biologia</option><option value="redacao">Redação</option><option value="tecnico_administracao">Administração</option><option value="tecnico_informatica">Informática</option></select></label><label>Trimestre<select class="field" name="trimestre"><option value="">Detectar automaticamente</option><option value="1">1º trimestre</option><option value="2">2º trimestre</option><option value="3">3º trimestre</option></select></label></div><p class="manager-notice">O documento será analisado e ficará em revisão. Nenhum dado pedagógico é publicado sem aprovação.</p>`, "Analisar currículo");
       if (!data?.file) return;
       content().innerHTML = `<div class="panel"><h2>Analisando currículo...</h2><p id="import-progress">Documento recebido</p></div>`;
       try {
@@ -505,7 +539,7 @@
     const open = async (x) => {
       const d = await modal(
         x ? "Editar descritor" : "Novo descritor",
-        `<div class="form-grid"><label>Código<input class="field" name="codigo" value="${esc(x?.codigo)}" required></label><label>Matéria<select class="field" name="materia_codigo"><option value="portugues" ${x?.materia_codigo === "portugues" ? "selected" : ""}>Português</option><option value="matematica" ${x?.materia_codigo === "matematica" ? "selected" : ""}>Matemática</option><option value="fisica" ${x?.materia_codigo === "fisica" ? "selected" : ""}>Física</option><option value="redacao" ${x?.materia_codigo === "redacao" ? "selected" : ""}>Redação</option><option value="tecnico_administracao" ${x?.materia_codigo === "tecnico_administracao" ? "selected" : ""}>Administração</option><option value="tecnico_informatica" ${x?.materia_codigo === "tecnico_informatica" ? "selected" : ""}>Informática</option></select></label><label class="wide">Título<input class="field" name="titulo" value="${esc(x?.titulo)}" required></label><label>Série<select class="field" name="serie"><option>1</option><option>2</option><option>3</option></select></label><label>Trimestre<select class="field" name="trimestre"><option>1</option><option>2</option><option>3</option></select></label><label class="wide">Status<select class="field" name="status"><option value="ativo">Ativo</option><option value="revisao">Em revisão</option><option value="arquivado">Arquivado</option></select></label></div>`,
+        `<div class="form-grid"><label>Código<input class="field" name="codigo" value="${esc(x?.codigo)}" required></label><label>Matéria<select class="field" name="materia_codigo"><option value="portugues" ${x?.materia_codigo === "portugues" ? "selected" : ""}>Português e Literatura</option><option value="matematica" ${x?.materia_codigo === "matematica" ? "selected" : ""}>Matemática</option><option value="fisica" ${x?.materia_codigo === "fisica" ? "selected" : ""}>Física</option><option value="quimica" ${x?.materia_codigo === "quimica" ? "selected" : ""}>Química</option><option value="biologia" ${x?.materia_codigo === "biologia" ? "selected" : ""}>Biologia</option><option value="redacao" ${x?.materia_codigo === "redacao" ? "selected" : ""}>Redação</option><option value="tecnico_administracao" ${x?.materia_codigo === "tecnico_administracao" ? "selected" : ""}>Administração</option><option value="tecnico_informatica" ${x?.materia_codigo === "tecnico_informatica" ? "selected" : ""}>Informática</option></select></label><label class="wide">Título<input class="field" name="titulo" value="${esc(x?.titulo)}" required></label><label>Série<select class="field" name="serie"><option>1</option><option>2</option><option>3</option></select></label><label>Trimestre<select class="field" name="trimestre"><option>1</option><option>2</option><option>3</option></select></label><label class="wide">Status<select class="field" name="status"><option value="ativo">Ativo</option><option value="revisao">Em revisão</option><option value="arquivado">Arquivado</option></select></label></div>`,
       );
       if (d) {
         await api().updateManagerDescriptor(x.id, d);
@@ -601,6 +635,7 @@
   document.addEventListener("ominisaber:ready", async () => {
     try {
       page === "dashboard" ? await dashboard() : await standardPage();
+      enhanceTables(root);
     } catch (error) {
       content().innerHTML = `<div class="empty">${icon("error")}<h3>Não foi possível carregar</h3><p>${esc(error.message)}</p><button class="btn" onclick="location.reload()">Tentar novamente</button></div>`;
     }

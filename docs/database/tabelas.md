@@ -2,20 +2,49 @@
 
 ## Identidade e vínculos
 
-`perfis` liga o usuário ao Auth e guarda papel, turma e especialidade. `turmas` representa grupos letivos. `professor_turmas` é a tabela de vínculo professor-turma e guarda a matéria do vínculo.
+- `perfis`: extensão de `auth.users`, com papel, matrícula, turma, curso e
+  especialidade.
+- `turmas`: grupos letivos.
+- `professor_turma_materias`: vínculo canônico entre professor, turma e matéria.
+- `professor_turmas`: compatibilidade com módulos antigos.
 
-## Conteúdo e aprendizagem
+## Catálogo curricular
 
-`trilhas` contém percursos; `atividades` contém etapas; tabelas de progresso, notas, histórico, XP e conteúdos salvos registram a jornada do aluno.
+- `curriculos` e `curriculo_periodos`;
+- `habilidades_curriculares` e `habilidade_curriculo_periodos`;
+- `descritores_curriculares` e `descritor_curriculo_periodos`;
+- `habilidade_descritores`, `objetos_conhecimento`, `habilidade_objetos` e
+  `expectativas_aprendizagem`;
+- `documentos_curriculares`, `importacoes_curriculo` e itens de importação.
 
-## Redação
+## Motor de atividades
 
-`propostas_redacao` pertence ao professor e pode apontar para uma turma. `redacoes` pertence ao aluno e pode apontar para uma proposta. Correções ficam em `avaliacoes_competencias_redacao`, `comentarios_redacao` e no próprio registro da redação.
+- `avaliacoes_docentes`: cabeçalho canônico de atividades e avaliações;
+- `questoes_avaliacao`: enunciado, formato, configuração e pontos;
+- `gabaritos_avaliacao`: resposta esperada, protegida do aluno;
+- `questoes_avaliacao_habilidades`: evidência curricular por questão;
+- `avaliacoes_versoes`: snapshot entregue;
+- `tentativas_avaliacao` e `respostas_avaliacao`: execução do aluno;
+- `avaliacoes_auditoria` e `ajustes_notas_avaliacao`: rastreabilidade.
 
-## Docência e agenda
+## Jornada do aluno
 
-`laboratorios_docentes` e `avaliacoes_docentes` pertencem ao professor e podem apontar para turma. `eventos_agenda` aponta para turma e professor; notificações apontam para turma, evento e criador.
+`trilhas`, etapas, conteúdos, tentativas interativas, favoritos, anotações,
+progresso, histórico, XP e conquistas sustentam a experiência de estudo. O painel
+de dificuldade do motor usa evidências corrigidas, não percentuais locais.
 
-## Pontos de atenção
+## Redação, agenda e biblioteca
 
-Consulte o schema para tipos, checks, índices e colunas completas antes de criar consultas.
+- redação: propostas, redações, versões, planejamentos, repertórios, comentários,
+  competências e rascunhos de correção;
+- agenda: `eventos_agenda`, `notificacoes` e `notificacoes_lidas`;
+- biblioteca: materiais digitais, livros físicos, exemplares, solicitações,
+  empréstimos, seções e operações de estoque.
+
+## Copiloto
+
+- `feature_flags` e `feature_flag_usuarios`;
+- `copiloto_sessoes`, `copiloto_execucoes` e `copiloto_feedback`.
+
+Essas tabelas registram contexto e operação; não concedem ao modelo permissão para
+publicar atividade ou alterar nota.

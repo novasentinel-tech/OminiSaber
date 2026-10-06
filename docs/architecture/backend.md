@@ -1,24 +1,44 @@
-# Backend
+# Backend Supabase
 
-## Objetivo
+## Componentes
 
-Descrever a camada backend baseada em Supabase.
+- `backend/schema/`: estruturas por domínio usadas como fonte humana.
+- `backend/migrations/`: mudanças incrementais e versionadas.
+- `backend/ominisaber-schema-completo.sql`: instalação limpa gerada.
+- `backend/ominisaber-supabase-client.js`: gateway consumido pelas páginas.
+- `backend/supabase/functions/`: lógica de servidor e integrações privadas.
+- `backend/scripts/`: geração, seeds controlados e verificações.
 
-## Estrutura
+## Responsabilidades do PostgreSQL
 
-- PostgreSQL público com schema e migrations SQL.
-- Cliente JavaScript compartilhado para o navegador.
-- Edge Function `backend/supabase/functions/gestor-contas/`.
-- Scripts de verificação em `backend/scripts/`.
+- relacionar Auth, perfil, turma, curso e especialidade;
+- validar vínculos professor–turma–matéria;
+- proteger linhas e operações com RLS e grants mínimos;
+- executar transações compostas em RPCs;
+- versionar atividades publicadas sem expor gabaritos;
+- corrigir respostas determinísticas;
+- registrar revisão, ajuste de nota e auditoria;
+- calcular resultados e evolução diretamente das evidências.
 
-## Funcionamento
+## Edge Functions
 
-O cliente resolve sessão, perfil, consultas e mutações. Operações sensíveis usam policies RLS e, quando necessário, funções PostgreSQL.
+| Função               | Responsabilidade                                         |
+| -------------------- | -------------------------------------------------------- |
+| `gestor-contas`      | Operações administrativas que exigem credencial elevada  |
+| `curriculo-upload`   | Entrada controlada para documentos curriculares          |
+| `professor-copiloto` | Mediação autenticada e limitada entre professor e OpenAI |
 
-## Banco de dados
+Chaves secretas existem somente no ambiente dessas funções ou em scripts locais
+administrativos. Elas nunca são copiadas para o frontend.
 
-A fonte consolidada é `backend/ominisaber-schema-completo.sql`; schemas por domínio ficam em `backend/schema/`, enquanto migrations documentam evolução e atualização incremental.
+## Fonte do schema
 
-## Pontos de atenção
+O arquivo completo é produzido por `npm run schema:build`. Altere os arquivos de
+origem, regenere o consolidado e rode `npm run sql:check`. Não edite o consolidado
+manualmente.
 
-O backend não deve confiar em filtros visuais do frontend como mecanismo de segurança; a autorização deve permanecer no banco.
+## Erros e observabilidade
+
+RPCs devem falhar com mensagens compreensíveis, sem vazar gabaritos ou dados de
+outros usuários. Eventos pedagógicos sensíveis são registrados nas tabelas de
+auditoria; segredos, tokens e conteúdo pessoal desnecessário não devem ser logados.

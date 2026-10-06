@@ -14,4 +14,6 @@ As ações usam propostas, redações, competências, comentários, rascunhos e 
 
 ## Pontos de atenção
 
-Uma conta precisa ter `role = professor`, `tipo_professor = portugues` e vínculos em `professor_turmas`.
+Uma conta precisa ter `role = professor`, `tipo_professor = portugues` e vínculos
+ativos em `professor_turma_materias`. O vínculo legado em `professor_turmas` não é
+suficiente, isoladamente, para autorizar uma nova atividade.

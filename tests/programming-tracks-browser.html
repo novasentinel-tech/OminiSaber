@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Validação real das trilhas de programação</title>
+<style>body{font:16px/1.5 system-ui;max-width:1100px;margin:24px auto;padding:0 20px}button{font:inherit;padding:12px;margin:4px}pre{white-space:pre-wrap;padding:16px;background:#f1f5f9;border-radius:12px}output{display:block;white-space:pre-wrap}#status{margin:16px 0}</style>
+<h1>Validação das soluções das trilhas</h1><p>Cada solução principal e cada variação executa todos os casos com o interpretador ou compilador WASM real.</p>
+<button data-language="python">Verificar toda a trilha Python</button><button data-language="cpp">Verificar toda a trilha C++</button><button id="stop">Interromper validação</button>
+<p id="status" role="status">Aguardando.</p><output id="results"></output>
+<script type="module">
+import { createProgrammingRunner, normalizeProgramOutput } from '../frontend/shared/programming-lab/runtime.js';
+import { getTrack } from '../frontend/shared/programming-lab/learning-tracks.js';
+const runner = createProgrammingRunner();
+const results = document.querySelector('#results');
+const status = document.querySelector('#status');
+let interrupted = false;
+document.querySelector('#stop').onclick = () => { interrupted = true; runner.stop(); };
+for (const button of document.querySelectorAll('[data-language]')) button.onclick = async () => {
+ const language = button.dataset.language;
+ const track = getTrack(language);
+ interrupted = false; results.textContent = '';
+ document.querySelectorAll('[data-language]').forEach(element => element.disabled = true);
+ let passed=0, total=0, programs=0;
+ for (const lesson of track.lessons) {
+  for (const [kind, item] of [['Principal',lesson],['Variação',lesson.transfer]]) {
+   if(interrupted) break;
+   programs++;
+   const detail = document.createElement('pre'); results.append(detail);
+   const entries = [];
+   for(const itemCase of item.cases) {
+    if(interrupted) break;
+    const label = `${lesson.order}. ${lesson.title} · ${kind} · ${itemCase.label}`;
+    status.textContent = label;
+    const report = await runner.run({ language, code: item.solutionCode, stdin: itemCase.input, onStatus: value => { status.textContent=label+' — '+value.message; } });
+    const ok = report.status === 'success' && report.exitCode === 0 && normalizeProgramOutput(report.stdout) === normalizeProgramOutput(itemCase.expectedOutput);
+    total++; passed += Number(ok);
+    entries.push({ label:itemCase.label, passed:ok, actual:report.stdout, expected:itemCase.expectedOutput, status:report.status, compileMs:report.compileMs??0, ...(report.error?{error:report.error,stderr:report.stderr}:{} ) });
+    detail.textContent = `${lesson.order}. ${lesson.title} · ${kind}\n${JSON.stringify(entries,null,2)}`;
+   }
+  }
+  if(interrupted) break;
+ }
+ status.textContent = `${language}: ${passed}/${total} casos passaram, ${programs} programas executados${interrupted?' (interrompido)':''}.`;
+ document.querySelectorAll('[data-language]').forEach(element => element.disabled = false);
+};
+</script></html>

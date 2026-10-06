@@ -1,8 +1,16 @@
-(() => {
-  const config = window.OMINI_TEACHER_PORTAL;
+(async () => {
+  const requiredTeacherType = document.body.dataset.requiredTeacherType
+    ?.split(",")[0]
+    ?.trim();
+  const config =
+    window.OMINI_TEACHER_PORTAL ||
+    window.OMINI_TEACHER_CONFIGS?.[requiredTeacherType];
   const root = document.querySelector("[data-teacher-portal]");
   if (!config || !root) return;
+  const { teacherSidebarMarkup } = await import("./teacher-navigation.js?v=20261004-8");
   const api = () => window.OminiSaber;
+  let programmingLab = null;
+  let programmingActivity = null;
   const page = document.body.dataset.page || "dashboard";
   const escapeHtml = (value = "") =>
     String(value).replace(
@@ -39,6 +47,50 @@
     clearTimeout(node.timer);
     node.timer = setTimeout(() => node.classList.remove("visible"), 3600);
   };
+  const debounce = (callback, delay = 220) => {
+    let timer = 0;
+    return (...args) => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => callback(...args), delay);
+    };
+  };
+  const loadAsset = (tag, attributes) =>
+    new Promise((resolve, reject) => {
+      const selector = attributes["data-portal-asset"]
+        ? `[data-portal-asset="${attributes["data-portal-asset"]}"]`
+        : null;
+      const current = selector && document.querySelector(selector);
+      if (current) {
+        if (current.dataset.loaded === "true" || tag === "link") resolve(current);
+        else {
+          current.addEventListener("load", () => resolve(current), { once: true });
+          current.addEventListener("error", reject, { once: true });
+        }
+        return;
+      }
+      const node = document.createElement(tag);
+      Object.entries(attributes).forEach(([name, value]) => node.setAttribute(name, value));
+      node.addEventListener("load", () => {
+        node.dataset.loaded = "true";
+        resolve(node);
+      }, { once: true });
+      node.addEventListener("error", reject, { once: true });
+      document.head.appendChild(node);
+      if (tag === "link") resolve(node);
+    });
+  const loadWritingWorkspace = async () => {
+    await Promise.all([
+      loadAsset("link", {
+        rel: "stylesheet",
+        href: "../redacoes/style.css?v=20260929-2",
+        "data-portal-asset": "writing-style",
+      }),
+      loadAsset("script", {
+        src: "../redacoes/script.js?v=20260929-2",
+        "data-portal-asset": "writing-script",
+      }),
+    ]);
+  };
   const curriculumPickerMarkup = (id, classes = []) => `<section class="curriculum-picker" data-curriculum-picker="${id}"><div class="picker-heading"><div><p class="eyebrow">Currículo publicado</p><strong>Habilidades opcionais</strong></div><small>Busque por código, descrição ou descritor.</small></div><div class="picker-filters"><select class="field" data-curriculum-class><option value="">Todas as turmas</option>${classes.map((item) => `<option value="${item.id}">${escapeHtml(item.nome)}${item.serie ? ` · ${escapeHtml(item.serie)}` : ""}</option>`).join("")}</select><select class="field" data-curriculum-trimestre><option value="">Todos os trimestres</option><option value="1">1º trimestre</option><option value="2">2º trimestre</option><option value="3">3º trimestre</option></select><input class="field" type="search" data-curriculum-search placeholder="Ex.: EM13LP01 ou D023_P"></div><div class="curriculum-results" data-curriculum-results><small>Pesquise para carregar habilidades.</small></div></section>`;
   const bindCurriculumPicker = (root, classes = []) => {
     const picker = root.querySelector("[data-curriculum-picker]");
@@ -58,30 +110,27 @@
       } catch (error) { result.innerHTML = `<small class="error-text">${escapeHtml(error.message)}</small>`; }
     };
     [classField, trimesterField].forEach((field) => field.addEventListener("change", load));
-    searchField.addEventListener("input", load);
+    searchField.addEventListener("input", debounce(load, 260));
     return { selected: () => [...selected], clear: () => { selected.clear(); result.innerHTML = "<small>Pesquise para carregar habilidades.</small>"; } };
   };
   window.OminiCurriculumPicker = { markup: curriculumPickerMarkup, bind: bindCurriculumPicker };
   const route = (name) => `../${name}/index.html`;
+  const studioRoute = () => {
+    const params = new URLSearchParams({
+      teacherType: config.type,
+      returnTo: window.location.pathname,
+    });
+    const studio = new URL("/oministudio/", window.location.origin);
+    studio.search = params.toString();
+    studio.hash = "choose";
+    return studio.href;
+  };
   const shell = () => {
-    const writingLink =
-      config.type === "portugues"
-        ? `<a class="${page === "redacoes" ? "active" : ""}" href="${route("redacoes")}"><span class="material-symbols-outlined">edit_note</span>Redações</a>`
-        : "";
-    const topActions =
-      page === "redacoes"
-        ? `<a class="button secondary" href="${route("avaliacoes")}"><span class="material-symbols-outlined">fact_check</span>Avaliações</a><button class="button primary" type="button" data-new-prompt-global><span class="material-symbols-outlined">add</span>Nova proposta</button>`
-        : `<a class="button secondary" href="${route("laboratorio")}"><span class="material-symbols-outlined">${config.labIcon}</span>Novo laboratório</a><a class="button primary" href="${route("avaliacoes")}"><span class="material-symbols-outlined">add_task</span>Nova avaliação</a>`;
-    root.innerHTML = `<aside class="portal-sidebar" aria-label="Navegação docente"><a class="portal-brand" href="${route("dashboard")}"><span class="material-symbols-outlined">${config.icon}</span><span>OminiSaber<small>${escapeHtml(config.short)}</small></span></a><nav class="portal-nav"><a class="${page === "dashboard" ? "active" : ""}" href="${route("dashboard")}"><span class="material-symbols-outlined">space_dashboard</span>Visão geral</a><a class="${page === "laboratorio" ? "active" : ""}" href="${route("laboratorio")}"><span class="material-symbols-outlined">${config.labIcon}</span>${escapeHtml(config.labLabel)}</a><a class="${page === "avaliacoes" ? "active" : ""}" href="${route("avaliacoes")}"><span class="material-symbols-outlined">fact_check</span>Avaliações</a>${writingLink}</nav><div class="portal-profile"><span class="portal-avatar material-symbols-outlined">person</span><div><strong data-portal-profile>Professor</strong><small>${escapeHtml(config.title)}</small></div></div><button class="portal-signout" type="button" data-portal-signout><span class="material-symbols-outlined">logout</span>Sair</button></aside><main class="portal-main"><header class="portal-topbar"><button class="icon-button menu-button" type="button" data-portal-menu aria-label="Abrir navegação" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button><div><p class="eyebrow">${escapeHtml(config.kicker)}</p><h1>${escapeHtml(config.pages[page].title)}</h1><p>${escapeHtml(config.pages[page].subtitle)}</p></div><div class="portal-actions">${topActions}</div></header><div class="portal-content" data-portal-content><section class="loading-state" aria-live="polite"><span class="material-symbols-outlined">progress_activity</span><p>Carregando dados do Supabase...</p></section></div></main>`;
-    document
-      .querySelector("[data-portal-menu]")
-      ?.addEventListener("click", (event) => {
-        document.body.classList.toggle("menu-open");
-        event.currentTarget.setAttribute(
-          "aria-expanded",
-          String(document.body.classList.contains("menu-open")),
-        );
-      });
+    if (page === "dashboard") {
+      root.innerHTML = '<main id="conteudo-principal" data-portal-content><section class="loading-state" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">progress_activity</span><p>Preparando o acompanhamento das suas turmas...</p></section></main>';
+      return;
+    }
+    root.innerHTML = `${teacherSidebarMarkup({config, page, studioRoute: studioRoute(), escapeHtml})}<main class="portal-main"><header class="portal-topbar teacher-navigation-bar"><button type="button" class="icon-button" data-teacher-sidebar-toggle aria-label="Abrir menu do professor" aria-controls="teacher-sidebar" aria-expanded="false"><span class="material-symbols-outlined" aria-hidden="true">menu</span></button><a class="teacher-toolbar-brand" href="${route('dashboard')}">OminiSaber</a><span class="teacher-toolbar-context">${escapeHtml(config.short)}</span></header><div class="portal-content" data-portal-content><section class="loading-state" aria-live="polite"><span class="material-symbols-outlined" aria-hidden="true">progress_activity</span><p>Carregando seu espaço...</p></section></div></main>`;
     document
       .querySelector("[data-portal-signout]")
       ?.addEventListener("click", () => api()?.signOut());
@@ -126,27 +175,8 @@
     return `<div class="content-list">${listRows(data.labs, "lab")}</div>`;
   };
   const renderDashboard = async (data) => {
-    const content = document.querySelector("[data-portal-content]");
-    let essays = [];
-    if (config.type === "portugues") essays = await api().listTeacherEssays();
-    const publishedLabs = data.labs.filter(
-      (item) => item.status === "publicado",
-    ).length;
-    const draftEvaluations = data.evaluations.filter(
-      (item) => item.status === "rascunho",
-    ).length;
-    const pending =
-      config.type === "portugues"
-        ? essays.filter((item) => item.status === "enviada").length
-        : data.labs.reduce(
-            (sum, item) =>
-              sum +
-              (item.entregas_laboratorio || []).filter(
-                (entry) => entry.status === "enviada",
-              ).length,
-            0,
-          );
-    content.innerHTML = `<section class="hero"><div><p class="eyebrow">Espaço da especialidade</p><h2>${escapeHtml(config.hero)}</h2><p>${escapeHtml(config.description)}</p></div><span class="hero-symbol"><span class="material-symbols-outlined">${config.icon}</span></span></section><section class="metrics" aria-label="Resumo real do espaço"><article class="metric"><span>Turmas vinculadas</span><strong>${data.classes.length}</strong></article><article class="metric"><span>Alunos vinculados</span><strong>${data.studentCount}</strong></article><article class="metric"><span>Laboratórios publicados</span><strong>${publishedLabs}</strong></article><article class="metric"><span>${config.type === "portugues" ? "Redações pendentes" : "Entregas pendentes"}</span><strong>${pending}</strong></article></section><div class="workspace-grid"><section class="panel"><div class="panel-heading"><div><p class="eyebrow">${escapeHtml(config.boardKicker)}</p><h2>${escapeHtml(config.boardTitle)}</h2></div><a class="button secondary" href="${route("laboratorio")}">Gerenciar</a></div>${specialtyBoard(data)}</section><aside class="panel"><div class="panel-heading"><div><p class="eyebrow">Produção</p><h2>Próximas ações</h2></div></div><div class="quick-grid"><a href="${route("laboratorio")}"><span class="material-symbols-outlined">${config.labIcon}</span>Criar ${escapeHtml(config.labSingular)}</a><a href="${route("avaliacoes")}"><span class="material-symbols-outlined">quiz</span>Preparar avaliação</a>${config.type === "portugues" ? `<a href="${route("redacoes")}"><span class="material-symbols-outlined">rate_review</span>Corrigir redações</a>` : ""}<a href="${route("avaliacoes")}"><span class="material-symbols-outlined">draft</span>${draftEvaluations} avaliações em rascunho</a></div></aside></div><section class="panel" style="margin-top:17px"><div class="panel-heading"><div><p class="eyebrow">Avaliações</p><h2>Preparação e aplicação</h2></div><a href="${route("avaliacoes")}">Ver todas</a></div><div class="content-list">${listRows(data.evaluations, "evaluation")}</div></section>`;
+    const { renderTeacherDashboard } = await import("./teacher-dashboard.js?v=20261004-8");
+    return renderTeacherDashboard({ root, data, config, api: api(), escapeHtml, studioRoute: studioRoute(), reload: load });
   };
   const classOptions = (classes) =>
     `<option value="">Modelo sem turma</option>${classes.map((item) => `<option value="${item.id}">${escapeHtml(item.nome)}${item.serie ? ` · ${escapeHtml(item.serie)}` : ""}</option>`).join("")}`;
@@ -154,6 +184,32 @@
     const content = document.querySelector("[data-portal-content]");
     content.innerHTML = `<div class="form-layout"><section class="form-card"><p class="eyebrow">Criação guiada</p><h2>${escapeHtml(config.labCreateTitle)}</h2><form data-lab-form><div class="form-grid"><label class="wide">Título<input name="title" required minlength="3" maxlength="140" placeholder="${escapeHtml(config.labTitlePlaceholder)}"></label><label>Turma<select name="classId">${classOptions(data.classes)}</select></label><label>Formato<select name="format">${config.labFormats.map((item) => `<option value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</option>`).join("")}</select></label><label class="wide">Objetivo e orientação<textarea name="description" required rows="4" placeholder="Explique o que o aluno deve investigar, produzir ou demonstrar."></textarea></label><label>${escapeHtml(config.configLabel)}<input name="configValue" required placeholder="${escapeHtml(config.configPlaceholder)}"></label><label>Prazo<input name="deadline" type="datetime-local"></label></div>${curriculumPickerMarkup("lab-curriculum-picker", data.classes)}<div class="form-actions"><button class="button secondary" name="intent" value="draft">Salvar rascunho</button><button class="button primary" name="intent" value="publish">Publicar para turma</button></div></form></section><aside class="form-card builder-sidebar"><p class="eyebrow">Conteúdo real</p><h2>Seus laboratórios</h2><div class="content-list" data-lab-list>${listRows(data.labs, "lab")}</div></aside></div>`;
     const form = document.querySelector("[data-lab-form]");
+    if (config.type === "tecnico_informatica") {
+      programmingLab?.dispose();
+      programmingActivity = null;
+      const existing = content.querySelector(".form-layout");
+      const publisher = document.createElement("details");
+      publisher.className = "pl-teacher-publish";
+      publisher.innerHTML = '<summary>Orientar uma turma ou criar outro laboratório</summary>';
+      publisher.append(existing);
+      const labRoot = document.createElement("div");
+      labRoot.dataset.programmingLab = "";
+      labRoot.innerHTML = '<p class="notice">Preparando o laboratório de programação…</p>';
+      content.replaceChildren(labRoot, publisher);
+      import("../../shared/programming-lab/programming-lab.js").then(({ mountProgrammingLab }) => {
+        if (!labRoot.isConnected) return;
+        programmingLab = mountProgrammingLab(labRoot, { mode: "teacher", userId: data.profile?.id || "professor", onAssign: ({ language, lesson, url }) => {
+          programmingActivity = { language, lessonId: lesson.id };
+          form.elements.title.value = lesson.title + " · " + (language === "python" ? "Python" : "C++");
+          form.elements.format.value = "desafio_codigo";
+          form.elements.description.value = lesson.task + "\n\nAbra a prática: " + url + "\n\nPreveja a saída, valide todos os cenários e resolva a variação. Explique à turma como você chegou à solução.";
+          form.elements.configValue.value = language === "python" ? "Python no navegador" : "C++20 no navegador";
+          publisher.open = true;
+          publisher.scrollIntoView({ block: "start" });
+          form.elements.classId.focus();
+        } });
+      }).catch(() => { labRoot.innerHTML = '<p class="notice">Não foi possível abrir a prática. Recarregue a página para tentar novamente.</p>'; });
+    }
     const curriculumPicker = bindCurriculumPicker(form, data.classes);
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -170,6 +226,7 @@
           deadline: values.get("deadline") || null,
           configuration: {
             [config.configKey]: values.get("configValue").trim(),
+            ...(programmingActivity && values.get("format") === "desafio_codigo" ? { programming_language: programmingActivity.language, programming_lesson: programmingActivity.lessonId } : {}),
           },
           skillIds: curriculumPicker.selected(),
           publish: submitter.value === "publish",
@@ -323,14 +380,13 @@
       '<section class="loading-state" aria-live="polite"><span class="material-symbols-outlined">progress_activity</span><p>Carregando dados do Supabase...</p></section>';
     try {
       const data = await api().getTeacherWorkspace(config.type);
-      document.querySelector("[data-portal-profile]").textContent =
-        data.profile?.nome || "Professor";
+      const profileName = document.querySelector("[data-portal-profile]");
+      if (profileName) profileName.textContent = data.profile?.nome || "Professor";
       if (page === "dashboard") await renderDashboard(data);
       else if (page === "laboratorio") renderLabs(data);
-      else if (
-        page === "redacoes" &&
-        typeof window.renderPortugueseEssays === "function"
-      )
+      else if (page === "redacoes") {
+        if (typeof window.renderPortugueseEssays !== "function")
+          await loadWritingWorkspace();
         await window.renderPortugueseEssays({
           content,
           data,
@@ -340,6 +396,20 @@
           toast,
           reload: load,
         });
+      }
+      else if (page === "avaliacoes") {
+        await import("../../Parties/teacher-evaluations.js?v=20261004-8");
+        await window.renderTeacherEvaluations({
+          content,
+          data,
+          api: api(),
+          config,
+          escapeHtml,
+          formatDate,
+          toast,
+          reload: load,
+        });
+      }
       else renderEvaluations(data);
     } catch (error) {
       console.error(
@@ -351,36 +421,11 @@
     }
   };
   shell();
-  const agendaLink = document.createElement("a");
-  agendaLink.href = "../../agenda/index.html";
-  agendaLink.innerHTML =
-    '<span class="material-symbols-outlined">calendar_month</span>Agenda das turmas';
-  document.querySelector(".portal-nav")?.appendChild(agendaLink);
   const agendaAction = document.createElement("a");
   agendaAction.className = "button secondary";
   agendaAction.href = "../../agenda/index.html";
   agendaAction.innerHTML =
     '<span class="material-symbols-outlined">event_upcoming</span>Agenda';
   document.querySelector(".portal-actions")?.prepend(agendaAction);
-  document.addEventListener("click", (event) => {
-    if (!document.body.classList.contains("menu-open")) return;
-    const sidebar = document.querySelector(".portal-sidebar");
-    if (
-      !sidebar?.contains(event.target) &&
-      !event.target.closest("[data-portal-menu]")
-    ) {
-      document.body.classList.remove("menu-open");
-      document
-        .querySelector("[data-portal-menu]")
-        ?.setAttribute("aria-expanded", "false");
-    }
-  });
-  document
-    .querySelectorAll(".portal-nav a")
-    .forEach((link) =>
-      link.addEventListener("click", () =>
-        document.body.classList.remove("menu-open"),
-      ),
-    );
   document.addEventListener("ominisaber:ready", load, { once: true });
 })();

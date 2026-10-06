@@ -1,0 +1,318 @@
+{
+  "generatedAt": "2026-10-01T10:58:32.661Z",
+  "scannedFiles": 617,
+  "over250KiB": [
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/portugues/assets/brasil-em-contraste.png",
+      "bytes": 3263956
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/portugues/assets/brasil-em-contraste.png",
+      "bytes": 3263956
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/portugues/assets/mapa-linguistico-brasil.png",
+      "bytes": 3216833
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/portugues/assets/mapa-linguistico-brasil.png",
+      "bytes": 3216833
+    },
+    {
+      "path": "frontend/assets/avatar-marina.png",
+      "bytes": 2143803
+    },
+    {
+      "path": "netlify-dist/frontend/assets/avatar-marina.png",
+      "bytes": 2143803
+    },
+    {
+      "path": "frontend/login/assets/jornada-ominisaber-3d.png",
+      "bytes": 1312167
+    },
+    {
+      "path": "netlify-dist/frontend/login/assets/jornada-ominisaber-3d.png",
+      "bytes": 1312167
+    },
+    {
+      "path": "engine/dist/client/assets/mapa-reference.png",
+      "bytes": 1290163
+    },
+    {
+      "path": "netlify-dist/engine/dist/client/assets/mapa-reference.png",
+      "bytes": 1290163
+    },
+    {
+      "path": "netlify-dist/oministudio/assets/mapa-reference.png",
+      "bytes": 1290163
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/matematica/assets/03-3o-ano-reta-em-movimento.png",
+      "bytes": 1281373
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/matematica/assets/03-3o-ano-reta-em-movimento.png",
+      "bytes": 1281373
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/matematica/assets/01-1o-ano-maquina-de-padroes.png",
+      "bytes": 1265436
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/matematica/assets/01-1o-ano-maquina-de-padroes.png",
+      "bytes": 1265436
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/matematica/assets/02-2o-ano-estudio-de-areas.png",
+      "bytes": 1236932
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/matematica/assets/02-2o-ano-estudio-de-areas.png",
+      "bytes": 1236932
+    },
+    {
+      "path": "engine/dist/client/assets/mesa-reference.png",
+      "bytes": 1175100
+    },
+    {
+      "path": "netlify-dist/engine/dist/client/assets/mesa-reference.png",
+      "bytes": 1175100
+    },
+    {
+      "path": "netlify-dist/oministudio/assets/mesa-reference.png",
+      "bytes": 1175100
+    },
+    {
+      "path": "frontend/Parties/assets/student-onboarding.png",
+      "bytes": 932410
+    },
+    {
+      "path": "netlify-dist/frontend/Parties/assets/student-onboarding.png",
+      "bytes": 932410
+    },
+    {
+      "path": "engine/dist/client/assets/index-ClLr1lYu.js",
+      "bytes": 355908
+    },
+    {
+      "path": "netlify-dist/engine/dist/client/assets/index-ClLr1lYu.js",
+      "bytes": 355908
+    },
+    {
+      "path": "netlify-dist/oministudio/assets/index-ClLr1lYu.js",
+      "bytes": 355908
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/portugues/assets/brasil-em-contraste.jpg",
+      "bytes": 349437
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/portugues/assets/brasil-em-contraste.jpg",
+      "bytes": 349437
+    }
+  ],
+  "over1MiB": [
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/portugues/assets/brasil-em-contraste.png",
+      "bytes": 3263956
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/portugues/assets/brasil-em-contraste.png",
+      "bytes": 3263956
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/portugues/assets/mapa-linguistico-brasil.png",
+      "bytes": 3216833
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/portugues/assets/mapa-linguistico-brasil.png",
+      "bytes": 3216833
+    },
+    {
+      "path": "frontend/assets/avatar-marina.png",
+      "bytes": 2143803
+    },
+    {
+      "path": "netlify-dist/frontend/assets/avatar-marina.png",
+      "bytes": 2143803
+    },
+    {
+      "path": "frontend/login/assets/jornada-ominisaber-3d.png",
+      "bytes": 1312167
+    },
+    {
+      "path": "netlify-dist/frontend/login/assets/jornada-ominisaber-3d.png",
+      "bytes": 1312167
+    },
+    {
+      "path": "engine/dist/client/assets/mapa-reference.png",
+      "bytes": 1290163
+    },
+    {
+      "path": "netlify-dist/engine/dist/client/assets/mapa-reference.png",
+      "bytes": 1290163
+    },
+    {
+      "path": "netlify-dist/oministudio/assets/mapa-reference.png",
+      "bytes": 1290163
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/matematica/assets/03-3o-ano-reta-em-movimento.png",
+      "bytes": 1281373
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/matematica/assets/03-3o-ano-reta-em-movimento.png",
+      "bytes": 1281373
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/matematica/assets/01-1o-ano-maquina-de-padroes.png",
+      "bytes": 1265436
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/matematica/assets/01-1o-ano-maquina-de-padroes.png",
+      "bytes": 1265436
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/matematica/assets/02-2o-ano-estudio-de-areas.png",
+      "bytes": 1236932
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/matematica/assets/02-2o-ano-estudio-de-areas.png",
+      "bytes": 1236932
+    },
+    {
+      "path": "engine/dist/client/assets/mesa-reference.png",
+      "bytes": 1175100
+    },
+    {
+      "path": "netlify-dist/engine/dist/client/assets/mesa-reference.png",
+      "bytes": 1175100
+    },
+    {
+      "path": "netlify-dist/oministudio/assets/mesa-reference.png",
+      "bytes": 1175100
+    }
+  ],
+  "largest": [
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/portugues/assets/brasil-em-contraste.png",
+      "bytes": 3263956
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/portugues/assets/brasil-em-contraste.png",
+      "bytes": 3263956
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/portugues/assets/mapa-linguistico-brasil.png",
+      "bytes": 3216833
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/portugues/assets/mapa-linguistico-brasil.png",
+      "bytes": 3216833
+    },
+    {
+      "path": "frontend/assets/avatar-marina.png",
+      "bytes": 2143803
+    },
+    {
+      "path": "netlify-dist/frontend/assets/avatar-marina.png",
+      "bytes": 2143803
+    },
+    {
+      "path": "frontend/login/assets/jornada-ominisaber-3d.png",
+      "bytes": 1312167
+    },
+    {
+      "path": "netlify-dist/frontend/login/assets/jornada-ominisaber-3d.png",
+      "bytes": 1312167
+    },
+    {
+      "path": "engine/dist/client/assets/mapa-reference.png",
+      "bytes": 1290163
+    },
+    {
+      "path": "netlify-dist/engine/dist/client/assets/mapa-reference.png",
+      "bytes": 1290163
+    },
+    {
+      "path": "netlify-dist/oministudio/assets/mapa-reference.png",
+      "bytes": 1290163
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/matematica/assets/03-3o-ano-reta-em-movimento.png",
+      "bytes": 1281373
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/matematica/assets/03-3o-ano-reta-em-movimento.png",
+      "bytes": 1281373
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/matematica/assets/01-1o-ano-maquina-de-padroes.png",
+      "bytes": 1265436
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/matematica/assets/01-1o-ano-maquina-de-padroes.png",
+      "bytes": 1265436
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/matematica/assets/02-2o-ano-estudio-de-areas.png",
+      "bytes": 1236932
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/matematica/assets/02-2o-ano-estudio-de-areas.png",
+      "bytes": 1236932
+    },
+    {
+      "path": "engine/dist/client/assets/mesa-reference.png",
+      "bytes": 1175100
+    },
+    {
+      "path": "netlify-dist/engine/dist/client/assets/mesa-reference.png",
+      "bytes": 1175100
+    },
+    {
+      "path": "netlify-dist/oministudio/assets/mesa-reference.png",
+      "bytes": 1175100
+    },
+    {
+      "path": "frontend/Parties/assets/student-onboarding.png",
+      "bytes": 932410
+    },
+    {
+      "path": "netlify-dist/frontend/Parties/assets/student-onboarding.png",
+      "bytes": 932410
+    },
+    {
+      "path": "engine/dist/client/assets/index-ClLr1lYu.js",
+      "bytes": 355908
+    },
+    {
+      "path": "netlify-dist/engine/dist/client/assets/index-ClLr1lYu.js",
+      "bytes": 355908
+    },
+    {
+      "path": "netlify-dist/oministudio/assets/index-ClLr1lYu.js",
+      "bytes": 355908
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/portugues/assets/brasil-em-contraste.jpg",
+      "bytes": 349437
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/portugues/assets/brasil-em-contraste.jpg",
+      "bytes": 349437
+    },
+    {
+      "path": "frontend/aluno/modulo_de_trilhas/portugues/assets/mapa-linguistico-brasil.jpg",
+      "bytes": 238173
+    },
+    {
+      "path": "netlify-dist/frontend/aluno/modulo_de_trilhas/portugues/assets/mapa-linguistico-brasil.jpg",
+      "bytes": 238173
+    },
+    {
+      "path": "netlify-dist/backend/vendor/supabase-2.112.3.js",
+      "bytes": 211907
+    }
+  ]
+}

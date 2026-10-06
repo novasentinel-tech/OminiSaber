@@ -13,6 +13,9 @@
     repertoireFilter: "todos",
     savingPlan: false,
     savingDraft: false,
+    writingMode: "guided",
+    mapBlock: "thesis",
+    mapReady: false,
   };
   const $ = (selector) => document.querySelector(selector);
   const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -39,6 +42,10 @@
     feedback: $("[data-feedback]"),
     dialog: $("[data-theme-dialog]"),
     dialogContent: $("[data-theme-dialog-content]"),
+    modeDialog: $("[data-writing-mode-dialog]"),
+    mapMount: $("[data-essay-map]"),
+    mapProgressLabel: $("[data-map-progress-label]"),
+    mapProgressBar: $("[data-map-progress-bar]"),
   };
   const escapeHTML = (value = "") =>
     String(value).replace(
@@ -185,6 +192,132 @@
     }</section><div class="dialog-actions"><button class="button button-primary" type="button" data-select-theme="${escapeHTML(theme.id)}">Usar esta proposta<span class="material-symbols-outlined">arrow_forward</span></button></div></div>`;
     el.dialog.showModal();
   };
+  const mapDefinitions = [
+    { id: "theme", number: 1, icon: "topic", label: "Tema", helper: "Entenda o problema" },
+    { id: "thesis", number: 2, icon: "lightbulb", label: "Tese", helper: "Sua posição" },
+    { id: "argument-1", number: 3, icon: "forum", label: "Argumento 1", helper: "Primeiro ponto" },
+    { id: "repertoire", number: 4, icon: "menu_book", label: "Repertório", helper: "Dados e referências" },
+    { id: "argument-2", number: 5, icon: "forum", label: "Argumento 2", helper: "Segundo ponto" },
+    { id: "intervention", number: 6, icon: "construction", label: "Intervenção", helper: "Solução proposta" },
+  ];
+  const mapCompletion = () => ({
+    theme: Boolean(state.selected),
+    thesis: Boolean(el.thesis.value.trim()),
+    "argument-1": Boolean(el.arguments[0]?.value.trim()),
+    repertoire: state.selectedRepertoires.size > 0,
+    "argument-2": Boolean(el.arguments[1]?.value.trim()),
+    intervention: el.interventions.filter((field) => field.value.trim()).length >= 4,
+  });
+  const selectMapBlock = (id, { focus = false } = {}) => {
+    if (!mapDefinitions.some((item) => item.id === id)) return;
+    state.mapBlock = id;
+    $$('[data-writing-block]').forEach((node) => {
+      const active = node.dataset.writingBlock === id;
+      node.classList.toggle("is-active", active);
+      node.setAttribute("aria-selected", String(active));
+      node.tabIndex = active ? 0 : -1;
+      if (active && focus) node.focus();
+    });
+    $$('[data-map-panel]').forEach((panel) => {
+      panel.classList.toggle("is-active", panel.dataset.mapPanel === id);
+    });
+  };
+  const renderMapProgress = () => {
+    if (!state.mapReady) return;
+    const completed = mapCompletion();
+    const count = Object.values(completed).filter(Boolean).length;
+    if (el.mapProgressLabel) el.mapProgressLabel.textContent = `${count} de 6`;
+    if (el.mapProgressBar) el.mapProgressBar.style.width = `${(count / 6) * 100}%`;
+    $$('[data-writing-block]').forEach((node) => {
+      const done = completed[node.dataset.writingBlock];
+      node.classList.toggle("is-complete", done);
+      const badge = node.querySelector(".map-node-number");
+      if (badge) badge.textContent = done ? "check" : node.dataset.mapNumber;
+      badge?.classList.toggle("material-symbols-outlined", done);
+    });
+  };
+  const panelHeader = (number, icon, title, description) => `
+    <header class="map-editor-head"><span class="map-editor-icon material-symbols-outlined" aria-hidden="true">${icon}</span><div><small>ETAPA ${number} DE 6</small><h3>${title}</h3><p>${description}</p></div></header>`;
+  const nextButton = (target, label = "Salvar e seguir") => {
+    const button = document.createElement("button");
+    button.className = "button button-primary map-next";
+    button.type = "button";
+    button.dataset.mapNext = target;
+    button.innerHTML = `${label}<span class="material-symbols-outlined" aria-hidden="true">${target === "writing" ? "edit_document" : "arrow_forward"}</span>`;
+    return button;
+  };
+  const createMapPanel = (id, html) => {
+    const panel = document.createElement("article");
+    panel.className = `map-editor-panel${id === state.mapBlock ? " is-active" : ""}`;
+    panel.dataset.mapPanel = id;
+    panel.innerHTML = html;
+    return panel;
+  };
+  const buildMapExperience = () => {
+    if (state.mapReady || !el.mapMount) return;
+    const nodes = mapDefinitions.map((item, index) => `${index ? '<span class="map-connector material-symbols-outlined" aria-hidden="true">arrow_forward</span>' : ""}<button class="essay-map-node${item.id === state.mapBlock ? " is-active" : ""}" type="button" role="tab" aria-selected="${item.id === state.mapBlock}" tabindex="${item.id === state.mapBlock ? 0 : -1}" data-writing-block="${item.id}" data-map-number="${item.number}"><span class="map-node-number">${item.number}</span><i class="material-symbols-outlined" aria-hidden="true">${item.icon}</i><strong>${item.label}</strong><small>${item.helper}</small></button>`).join("");
+    el.mapMount.innerHTML = `<div class="essay-map-workspace"><section class="essay-map-canvas"><div class="essay-map-track" role="tablist" aria-label="Etapas do mapa da redação" data-map-track>${nodes}</div><aside class="map-tip"><span class="material-symbols-outlined" aria-hidden="true">keyboard</span><p><strong>Navegue também pelo teclado.</strong> Use as setas para avançar entre os blocos e Enter para editar.</p></aside></section><section class="map-editor" data-map-editor aria-live="polite"></section></div>`;
+    const editor = $("[data-map-editor]");
+
+    const themePanel = createMapPanel("theme", `${panelHeader(1, "topic", "Compreensão do tema", "Registre ideias, dúvidas e conexões antes de definir sua posição.")}<div class="map-question"><strong>O que você entendeu do problema?</strong><p>Anote causas, consequências, conceitos importantes e perguntas.</p></div><label class="map-field-label" for="planning-notes">Suas anotações</label>`);
+    themePanel.append(el.notes);
+    const notesFooter = document.createElement("div");
+    notesFooter.className = "planning-footer";
+    notesFooter.innerHTML = '<span data-planning-count-map>0 caracteres</span><span>Salvo na sua conta</span>';
+    themePanel.append(notesFooter, nextButton("thesis"));
+
+    const thesisPanel = createMapPanel("thesis", `${panelHeader(2, "lightbulb", "Tese", "Defina, em uma frase, a posição que será defendida.")}<div class="map-question"><strong>Qual é a sua posição sobre o tema?</strong><p>Responda diretamente ao problema apresentado pela proposta.</p></div><label class="map-field-label" for="planning-thesis">Sua resposta</label>`);
+    thesisPanel.append(el.thesis);
+    thesisPanel.insertAdjacentHTML("beforeend", '<details class="map-example"><summary><span class="material-symbols-outlined" aria-hidden="true">menu_book</span>Exemplo opcional</summary><p>Uma tese clara apresenta uma posição e antecipa os dois aspectos que serão desenvolvidos.</p></details>');
+    thesisPanel.append(nextButton("argument-1"));
+
+    const argumentOne = createMapPanel("argument-1", `${panelHeader(3, "forum", "Argumento 1", "Apresente a primeira razão que sustenta sua tese.")}<div class="map-question"><strong>Qual causa ou aspecto deve ser analisado primeiro?</strong><p>Acrescente uma explicação verificável; não repita apenas a tese.</p></div><label class="map-field-label">Primeiro argumento</label>`);
+    argumentOne.append(el.arguments[0], nextButton("repertoire"));
+
+    const repertoire = createMapPanel("repertoire", `${panelHeader(4, "menu_book", "Repertório produtivo", "Escolha uma referência que realmente ajude a explicar seu argumento.")}`);
+    repertoire.classList.add("map-editor-panel-wide");
+    repertoire.append($(".repertoire-lab"), nextButton("argument-2"));
+
+    const argumentTwo = createMapPanel("argument-2", `${panelHeader(5, "forum", "Argumento 2", "Aprofunde a discussão com outro aspecto relevante.")}<div class="map-question"><strong>Que consequência, contraponto ou nova perspectiva completa sua análise?</strong></div><label class="map-field-label">Segundo argumento</label>`);
+    argumentTwo.append(el.arguments[1], nextButton("intervention"));
+
+    const intervention = createMapPanel("intervention", `${panelHeader(6, "construction", "Proposta de intervenção", "Construa uma solução concreta, detalhada e respeitosa.")}`);
+    intervention.append($(".intervention-builder"), nextButton("writing", "Montar meu texto"));
+
+    editor.append(themePanel, thesisPanel, argumentOne, repertoire, argumentTwo, intervention);
+    $("[data-step='2']")?.classList.add("map-ready");
+    state.mapReady = true;
+    selectMapBlock(state.mapBlock);
+    renderMapProgress();
+  };
+  const openModeChoice = () => {
+    if (!el.modeDialog?.showModal) return;
+    el.modeDialog.showModal();
+  };
+  const setupParallaxCards = () => {
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    $$('[data-parallax-card]').forEach((card) => {
+      let frame = 0;
+      let next = { x: 0, y: 0 };
+      const paint = () => {
+        frame = 0;
+        card.style.setProperty("--tilt-x", `${next.y * -6}deg`);
+        card.style.setProperty("--tilt-y", `${next.x * 6}deg`);
+        card.style.setProperty("--light-x", `${50 + next.x * 28}%`);
+        card.style.setProperty("--light-y", `${50 + next.y * 28}%`);
+      };
+      card.addEventListener("pointermove", (event) => {
+        if (reduceMotion.matches || event.pointerType === "touch") return;
+        const rect = card.getBoundingClientRect();
+        next = { x: Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width - .5) * 2)), y: Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height - .5) * 2)) };
+        if (!frame) frame = requestAnimationFrame(paint);
+      });
+      card.addEventListener("pointerleave", () => {
+        next = { x: 0, y: 0 };
+        if (!frame) frame = requestAnimationFrame(paint);
+      });
+    });
+  };
   const currentPlanningPayload = () => ({
     themeCode: state.selected.id,
     proposalId: state.selected.proposalId || null,
@@ -246,6 +379,7 @@
           .join("")
       : '<p class="empty-inline"><span class="material-symbols-outlined">category</span>Nenhum repertório contextualizado nesta categoria.</p>';
     el.repertoireCount.textContent = `${state.selectedRepertoires.size} selecionado${state.selectedRepertoires.size === 1 ? "" : "s"}`;
+    renderMapProgress();
   };
   const loadPlanning = async () => {
     let planning = null;
@@ -285,20 +419,26 @@
     });
     $("[data-planning-count]").textContent =
       `${el.notes.value.length} caracteres`;
+    const mapCount = $("[data-planning-count-map]");
+    if (mapCount) mapCount.textContent = `${el.notes.value.length} caracteres`;
     renderRepertoires();
     setPill(
       el.planStatus,
       planning ? "Planejamento recuperado" : "Pronto para planejar",
     );
   };
-  const chooseTheme = async (id) => {
+  const chooseTheme = async (id, { promptMode = true } = {}) => {
     const theme = state.themes.find((item) => item.id === id);
     if (!theme) return;
     state.selected = theme;
     el.dialog.open && el.dialog.close();
     el.selected.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">topic</span><span><small>${escapeHTML(theme.categoryLabel)} · ${escapeHTML(theme.axis)}</small>Tema selecionado: <strong>${escapeHTML(theme.title)}</strong></span>`;
-    await loadPlanning().catch((error) => notify(error.message, "error"));
-    setStep(2);
+    await setStep(2);
+    renderMapProgress();
+    if (promptMode) openModeChoice();
+    loadPlanning()
+      .then(renderMapProgress)
+      .catch((error) => notify(error.message, "error"));
   };
   const renderNotesDrawer = () => {
     const selectedItems = state.repertoires.filter((item) =>
@@ -383,17 +523,33 @@
     el.writingTheme.textContent = state.selected.title;
     await loadDraft();
   };
+  const openWritingRoom = async () => {
+    await savePlanning({ quiet: true });
+    let draft = null;
+    if (state.essayId) draft = await api().getStudentEssay(state.essayId);
+    else draft = await api().getEssayDraft(state.selected.id);
+    if (draft?.id) state.essayId = draft.id;
+    const query = new URLSearchParams({ tema: state.selected.id });
+    if (state.essayId) query.set("redacao", state.essayId);
+    location.href = `escrita/index.html?${query}`;
+  };
   const setStep = async (step) => {
     if (step > 1 && !state.selected)
       return notify("Escolha uma proposta antes de continuar.", "error");
     if (step === 3) {
       try {
-        await prepareWriting();
-      } catch {
+        await openWritingRoom();
+        return;
+      } catch (error) {
+        notify(
+          error.message || "Não foi possível abrir a sala de escrita.",
+          "error",
+        );
         return;
       }
     }
     state.step = step;
+    document.body.classList.toggle("redacao-map-mode", step === 2);
     el.panels.forEach((panel) =>
       panel.classList.toggle("is-hidden", Number(panel.dataset.step) !== step),
     );
@@ -464,6 +620,24 @@
         renderRepertoires();
         debouncePlanning();
       }
+      const block = event.target.closest("[data-writing-block]");
+      if (block) selectMapBlock(block.dataset.writingBlock);
+      const next = event.target.closest("[data-map-next]");
+      if (next) {
+        if (next.dataset.mapNext === "writing") setStep(3);
+        else selectMapBlock(next.dataset.mapNext, { focus: true });
+      }
+      const mode = event.target.closest("[data-writing-mode]");
+      if (mode) {
+        state.writingMode = mode.dataset.writingMode;
+        el.modeDialog?.close();
+        mode.dataset.writingMode === "free" ? setStep(3) : setStep(2);
+      }
+      const switchMode = event.target.closest("[data-switch-mode]");
+      if (switchMode) {
+        state.writingMode = switchMode.dataset.switchMode;
+        state.writingMode === "free" ? setStep(3) : setStep(2);
+      }
     });
     $("[data-close-dialog]").addEventListener("click", () => el.dialog.close());
     el.dialog.addEventListener("click", (event) => {
@@ -485,6 +659,9 @@
         field.addEventListener("input", () => {
           $("[data-planning-count]").textContent =
             `${el.notes.value.length} caracteres`;
+          const mapCount = $("[data-planning-count-map]");
+          if (mapCount) mapCount.textContent = `${el.notes.value.length} caracteres`;
+          renderMapProgress();
           debouncePlanning();
         }),
     );
@@ -520,6 +697,14 @@
     );
     el.text.addEventListener("keydown", handleParagraphShortcut);
     $("[data-open-review]").addEventListener("click", openReview);
+    $("[data-map-track]")?.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+      event.preventDefault();
+      const index = mapDefinitions.findIndex((item) => item.id === state.mapBlock);
+      const nextIndex = event.key === "ArrowRight" ? Math.min(mapDefinitions.length - 1, index + 1) : Math.max(0, index - 1);
+      selectMapBlock(mapDefinitions[nextIndex].id, { focus: true });
+    });
+    el.modeDialog?.addEventListener("cancel", (event) => event.preventDefault());
   };
   const restoreFromEssay = async () => {
     if (!state.essayId || !api()?.configured) return false;
@@ -535,11 +720,13 @@
     state.planning = essay.planejamentos_redacao;
     el.title.value = essay.titulo;
     el.text.value = essay.texto;
-    await chooseTheme(theme.id);
+    await chooseTheme(theme.id, { promptMode: false });
     await setStep(Number(params.get("step") || 3));
     return true;
   };
   const init = async () => {
+    buildMapExperience();
+    setupParallaxCards();
     bindEvents();
     renderThemes();
     renderPinned();

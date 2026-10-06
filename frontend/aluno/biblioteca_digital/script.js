@@ -1,11 +1,21 @@
 (() => {
   const api = () => window.OminiSaber;
+  const pageParams = new URLSearchParams(location.search);
+  const subjectLabels = {
+    matematica: "Matemática",
+    portugues: "Português",
+    fisica: "Física",
+    redacao: "Redação",
+    tecnico_administracao: "Administração",
+    tecnico_informatica: "Informática",
+  };
+  const requestedSubject = subjectLabels[pageParams.get("materia")] || "todos";
   const state = {
     physical: [],
     digital: [],
     requests: [],
-    mode: "fisico",
-    filter: "todos",
+    mode: pageParams.get("mode") === "digital" ? "digital" : "fisico",
+    filter: requestedSubject,
     search: "",
     selected: null,
     busy: false,
@@ -337,6 +347,12 @@
         .forEach((item) => item.classList.toggle("is-active", item === button));
       render();
     }),
+  );
+  document.querySelectorAll("[data-mode]").forEach((button) =>
+    button.classList.toggle("is-active", button.dataset.mode === state.mode),
+  );
+  document.querySelectorAll("[data-filter]").forEach((button) =>
+    button.classList.toggle("is-active", button.dataset.filter === state.filter),
   );
   $("[data-close-dialog]").addEventListener("click", () =>
     $("[data-dialog]").close(),

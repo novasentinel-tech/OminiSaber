@@ -8,6 +8,13 @@ window.renderPortugueseEssays = async ({
   toast,
   reload,
 }) => {
+  const debounce = (callback, delay = 180) => {
+    let timer = 0;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => callback(...args), delay);
+    };
+  };
   const [essays, prompts, drafts] = await Promise.all([
     api.listTeacherEssays(),
     api.listTeacherWritingPrompts(),
@@ -181,7 +188,7 @@ window.renderPortugueseEssays = async ({
     };
     panel
       .querySelector("[data-essay-search]")
-      ?.addEventListener("input", filter);
+      ?.addEventListener("input", debounce(filter));
     panel
       .querySelector("[data-essay-status]")
       ?.addEventListener("change", filter);

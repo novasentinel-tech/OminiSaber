@@ -1,6 +1,6 @@
 # Estrutura atual
 
-~~~text
+```text
 OminiSaber/
 ├── backend/
 │   ├── config/
@@ -31,7 +31,7 @@ OminiSaber/
 │   └── erro/
 ├── index.html
 └── README.md
-~~~
+```
 
 ## Convenção de página
 

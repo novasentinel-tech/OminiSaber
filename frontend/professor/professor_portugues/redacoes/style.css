@@ -330,3 +330,11 @@
     justify-self: start;
   }
 }
+
+.submission-card,
+.prompt-card,
+.evolution-card,
+.essay-sheet {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 180px;
+}

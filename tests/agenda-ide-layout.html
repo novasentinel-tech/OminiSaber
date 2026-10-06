@@ -1,0 +1,21 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Regressão agenda e IDE</title><h1>Teste isolado sem banco</h1><output style="display:block;white-space:pre-wrap">Executando…</output><script>
+(async()=>{
+ const results=[];
+ for(const width of [320,390,768]){
+ const frame=document.createElement('iframe');frame.width=width;frame.height=600;document.body.append(frame);
+ const loaded=new Promise(r=>frame.onload=r);
+ frame.srcdoc=`<!doctype html><html><head><link rel="stylesheet" href="/frontend/professor/specialty/portal.css"><link rel="stylesheet" href="/frontend/professor/agenda/style.css"><link rel="stylesheet" href="/frontend/aluno/modulo_de_trilhas/ide/ide.css?v=20260924-4"><link rel="stylesheet" href="/frontend/Parties/parties.css?v=agenda-fix"></head><body class="os-parties-ready" data-party-role="teacher" data-study-page="ide"><main><h2>Agenda</h2><p>Fim da lista</p></main><aside class="panel event-form-panel"><h2>Novo compromisso</h2><label>Título<input></label></aside><div class="ide-code-wrap"><div class="ide-line-numbers"><span>1</span><span>2</span></div><textarea>INICIO\nFIM</textarea></div></body></html>`;
+ await loaded;const d=frame.contentDocument,w=frame.contentWindow,p=d.querySelector('.event-form-panel');
+ const check=(ok,label)=>results.push(`${ok?'OK':'FALHOU'} · ${width}px · ${label}`);
+ check(w.getComputedStyle(p).position==='fixed','formulário fora do fluxo');
+ check(w.getComputedStyle(p).visibility==='hidden','formulário fechado invisível');
+ d.body.classList.add('form-open');
+ await new Promise(resolve=>setTimeout(resolve,300));
+ check(w.getComputedStyle(p).visibility==='visible','formulário aberto visível');
+ d.body.classList.remove('form-open');
+ const editor=w.getComputedStyle(d.querySelector('textarea')), gutter=w.getComputedStyle(d.querySelector('.ide-line-numbers'));
+ check(editor.lineHeight===gutter.lineHeight && editor.fontSize===gutter.fontSize && editor.paddingTop===gutter.paddingTop,'IDE com linhas alinhadas');
+ check(editor.whiteSpace==='pre','linhas do código sem quebra visual');
+ }
+ document.querySelector('output').textContent=results.join('\n');
+})();</script></html>

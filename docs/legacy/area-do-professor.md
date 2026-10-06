@@ -6,12 +6,12 @@ A área do professor concentra planejamento, acompanhamento de turmas, prioridad
 
 ## Perfis e experiências
 
-| Perfil (`tipo_professor`) | Identidade | Área de trabalho | Permissões específicas |
-| --- | --- | --- | --- |
-| `matematica` | Azul | Diagnóstico por habilidade, conceitos e exercícios | Conteúdos, trilhas e avaliações de Matemática |
-| `portugues` | Roxo | Linguagem, competências e produção textual | Conteúdos de Português, propostas e correção de redações |
-| `tecnico_administracao` | Laranja | Projetos, processos, equipes e entregas | Conteúdos e avaliações do eixo de Administração |
-| `tecnico_informatica` | Verde-azulado | Laboratórios, projetos técnicos e ambientes | Conteúdos e avaliações do eixo de Informática |
+| Perfil (`tipo_professor`) | Identidade    | Área de trabalho                                   | Permissões específicas                                   |
+| ------------------------- | ------------- | -------------------------------------------------- | -------------------------------------------------------- |
+| `matematica`              | Azul          | Diagnóstico por habilidade, conceitos e exercícios | Conteúdos, trilhas e avaliações de Matemática            |
+| `portugues`               | Roxo          | Linguagem, competências e produção textual         | Conteúdos de Português, propostas e correção de redações |
+| `tecnico_administracao`   | Laranja       | Projetos, processos, equipes e entregas            | Conteúdos e avaliações do eixo de Administração          |
+| `tecnico_informatica`     | Verde-azulado | Laboratórios, projetos técnicos e ambientes        | Conteúdos e avaliações do eixo de Informática            |
 
 O perfil vem de `perfis.tipo_professor`. A interface não concede permissão: ela apresenta apenas as ferramentas autorizadas pelas policies do banco. As novas rotas não possuem dados fictícios e dependem de uma sessão autenticada compatível.
 

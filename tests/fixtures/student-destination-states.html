@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QA — destinos do aluno</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="../../frontend/aluno/dashboard_principal/style.css" />
+    <style>
+      body { padding: 32px; background: #f5f7fb; }
+      main { width: min(1180px, 100%); margin: 0 auto; }
+      h1 { margin: 0 0 8px; }
+      .qa-intro { margin: 0 0 24px; color: #68738c; }
+      @media (max-width: 760px) { body { padding: 18px 12px; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Seu espaço de aprendizagem</h1>
+      <p class="qa-intro">As cores mostram rapidamente o que precisa da sua atenção.</p>
+      <div class="destination-grid">
+        <a class="destination-card priority state-danger tone-coral" href="#" data-learning-state="danger"><span class="destination-icon material-symbols-outlined">assignment_turned_in</span><span class="destination-copy"><strong>Avaliações</strong><small>Veja suas provas, simulados e resultados.</small></span><span class="destination-badge">1 fora do prazo</span><span class="destination-arrow material-symbols-outlined">arrow_forward</span></a>
+        <a class="destination-card priority state-warning tone-amber" href="#" data-learning-state="warning"><span class="destination-icon material-symbols-outlined">route</span><span class="destination-copy"><strong>Trilhas de aprendizagem</strong><small>Siga rotas personalizadas para aprender no seu ritmo.</small></span><span class="destination-badge">2 em andamento</span><span class="destination-arrow material-symbols-outlined">arrow_forward</span></a>
+        <a class="destination-card priority state-success tone-green" href="#" data-learning-state="success"><span class="destination-icon material-symbols-outlined">school</span><span class="destination-copy"><strong>Matérias</strong><small>Explore os conteúdos das suas disciplinas.</small></span><span class="destination-badge">Tudo em dia</span><span class="destination-arrow material-symbols-outlined">arrow_forward</span></a>
+        <a class="destination-card tone-blue" href="#"><span class="destination-icon material-symbols-outlined">calculate</span><span class="destination-copy"><strong>Exercícios</strong><small>Pratique com listas e atividades.</small></span><span class="destination-arrow material-symbols-outlined">arrow_forward</span></a>
+        <a class="destination-card tone-violet" href="#"><span class="destination-icon material-symbols-outlined">menu_book</span><span class="destination-copy"><strong>Biblioteca</strong><small>Acesse livros, artigos e materiais de apoio.</small></span><span class="destination-arrow material-symbols-outlined">arrow_forward</span></a>
+        <a class="destination-card tone-green" href="#"><span class="destination-icon material-symbols-outlined">calendar_month</span><span class="destination-copy"><strong>Agenda</strong><small>Veja seus compromissos e não perca prazos.</small></span><span class="destination-arrow material-symbols-outlined">arrow_forward</span></a>
+      </div>
+    </main>
+  </body>
+</html>

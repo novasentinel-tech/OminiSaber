@@ -12,10 +12,28 @@
     "curriculum:security:check": "node scripts/check-curriculum-security.js",
     "library:check": "node scripts/check-library-flow.js",
     "library:prepare": "node scripts/prepare-library-data.js",
-    "teacher:portuguese:check": "node scripts/check-portuguese-teacher-flow.js"
+    "teacher:portuguese:check": "node scripts/check-portuguese-teacher-flow.js",
+    "activity:builder:check": "node scripts/check-activity-builder-flow.js",
+    "studio:supabase:check": "node scripts/check-oministudio-supabase.js",
+    "test:studio:flow": "node --test tests/studio-integrated-flow.test.mjs",
+    "activity:student:check": "node scripts/check-student-evaluation-flow.js",
+    "activity:teacher-review:check": "node scripts/check-teacher-review-flow.js",
+    "activity:results:check": "node scripts/check-results-recovery-flow.js",
+    "student:onboarding:check": "node scripts/check-student-onboarding.js",
+    "system:audit": "node scripts/audit-system.js",
+    "system:audit:remote": "node scripts/audit-remote-state.js",
+    "database:governance:check": "node scripts/check-database-governance.js",
+    "teacher:demo:seed": "node scripts/seed-portuguese-teacher-demo.js",
+    "teacher:all-roles-math:seed": "node scripts/seed-all-roles-math-demo.js",
+    "copilot:check": "node scripts/check-copilot-phase3.js",
+    "test:copilot": "node --test scripts/test-copilot-contract.mjs tests/copilot-pedagogy.test.mjs tests/copilot-handler.test.mjs tests/copilot-migration.test.mjs tests/copilot-client-errors.test.mjs",
+    "docs:check": "node scripts/check-docs.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.57.0",
+    "@supabase/supabase-js": "2.112.3",
     "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8"
   }
 }

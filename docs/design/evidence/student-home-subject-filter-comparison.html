@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QA visual — início do aluno</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #e9eef7; color: #0f1e3a; font: 600 14px Inter, Arial, sans-serif; }
+      header { height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: #fff; border-bottom: 1px solid #cdd8ea; }
+      main { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; height: calc(100vh - 54px); }
+      section { min-width: 0; display: grid; grid-template-rows: 38px 1fr; overflow: hidden; border: 1px solid #cdd8ea; border-radius: 14px; background: #fff; }
+      h2 { margin: 0; padding: 10px 14px; color: #466080; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; border-bottom: 1px solid #dce4f1; }
+      .stage { position: relative; overflow: hidden; background: #f3f6fb; }
+      .scaled { position: absolute; inset: 0 auto auto 0; width: 1487px; height: 1058px; transform: scale(.4); transform-origin: left top; }
+      img { width: 1487px; height: 1058px; display: block; object-fit: cover; }
+      iframe { width: 1487px; height: 1058px; border: 0; background: #fff; }
+    </style>
+  </head>
+  <body>
+    <header><strong>Comparação de fidelidade</strong><span>Filtro ativo: Matemática</span></header>
+    <main>
+      <section>
+        <h2>Referência aprovada</h2>
+        <div class="stage"><div class="scaled"><img src="student-home-subject-filter-reference.png" alt="Mockup aprovado da página inicial do aluno" /></div></div>
+      </section>
+      <section>
+        <h2>Implementação real</h2>
+        <div class="stage"><div class="scaled"><iframe src="../../../frontend/aluno/dashboard_principal/index.html?materia=matematica" title="Página inicial implementada"></iframe></div></div>
+      </section>
+    </main>
+  </body>
+</html>

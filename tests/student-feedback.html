@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Teste local da devolutiva do aluno</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@700;800&family=Material+Symbols+Outlined:FILL@0..1" rel="stylesheet" />
+    <link rel="stylesheet" href="../frontend/aluno/shared/account-shell.css" />
+    <link rel="stylesheet" href="../frontend/aluno/atividades/style.css?v=20260929-2" />
+    <style>
+      body { margin: 0; background: #f4f7fc; }
+      .fixture-shell { width: min(100% - 32px, 1100px); margin: 0 auto; padding: 28px 0 48px; }
+      .fixture-label { margin: 0 0 14px; color: #68758f; font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+    </style>
+  </head>
+  <body>
+    <main class="fixture-shell activity-page">
+      <p class="fixture-label">TESTE LOCAL · DADOS FICTÍCIOS · SEM CONEXÃO COM O BANCO</p>
+      <section class="result-panel result-summary">
+        <div>
+          <p class="eyebrow">DEVOLUTIVA DISPONÍVEL</p>
+          <h1>Correção concluída</h1>
+          <p>Você alcançou 80% da pontuação desta atividade.</p>
+          <div class="result-timeline" aria-label="Andamento da atividade">
+            <span class="done"><i class="material-symbols-outlined">task_alt</i><b>Entregue</b></span>
+            <span class="done"><i class="material-symbols-outlined">rate_review</i><b>Em revisão</b></span>
+            <span class="done"><i class="material-symbols-outlined">workspace_premium</i><b>Corrigida</b></span>
+          </div>
+        </div>
+        <aside>
+          <div class="result-score" style="--score:80%"><strong>8</strong><small>de 10</small></div>
+          <p class="result-attempts">Tentativa 1 de 2 · 1 restante</p>
+        </aside>
+      </section>
+      <section class="feedback-center">
+        <header>
+          <div><p class="eyebrow">SUA DEVOLUTIVA</p><h2>Entenda seu resultado</h2><p>Você compreendeu o tema. Reforce a justificativa com uma evidência mais específica.</p></div>
+          <span class="feedback-count"><strong>2</strong> comentário(s)</span>
+        </header>
+        <div class="student-feedback-list">
+          <article class="student-feedback-item correct">
+            <header><span>Questão 1</span><em><span class="material-symbols-outlined">auto_awesome</span>Correção automática</em><strong>4 / 4</strong></header>
+            <h3>Qual alternativa resume corretamente o texto?</h3>
+            <div class="student-feedback-answer"><small>Sua resposta</small><p>Responsabilidade coletiva no uso das informações digitais.</p></div>
+            <div class="teacher-feedback"><span class="material-symbols-outlined">chat</span><div><small>Devolutiva</small><p>Resposta correta. Você identificou a ideia central.</p></div></div>
+          </article>
+          <article class="student-feedback-item needs-work">
+            <header><span>Questão 2</span><em><span class="material-symbols-outlined">person_edit</span>Revisada pelo professor</em><strong>4 / 6</strong></header>
+            <h3>Explique como o texto defende o combate à desinformação.</h3>
+            <div class="student-feedback-answer"><small>Sua resposta</small><p>O texto diz que todos precisam tomar cuidado com o que compartilham.</p></div>
+            <div class="teacher-feedback"><span class="material-symbols-outlined">chat</span><div><small>Devolutiva</small><p>Boa compreensão geral. Na próxima tentativa, cite a verificação das fontes como evidência do seu argumento.</p></div></div>
+          </article>
+        </div>
+      </section>
+      <div class="result-actions"><a class="button secondary" href="#">Voltar às atividades</a><button class="button" type="button">Fazer nova tentativa</button></div>
+    </main>
+  </body>
+</html>

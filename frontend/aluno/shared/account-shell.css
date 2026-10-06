@@ -110,6 +110,22 @@ a {
   color: #fff;
   box-shadow: 0 9px 22px rgba(94, 79, 209, 0.32);
 }
+.nav-badge {
+  margin-left: auto;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 99px;
+  background: #ffbd12;
+  color: #17203a;
+  display: inline-grid;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 800;
+}
+.nav-badge[hidden] {
+  display: none;
+}
 .sidebar-person {
   margin-top: auto;
   border-top: 1px solid rgba(255, 255, 255, 0.1);

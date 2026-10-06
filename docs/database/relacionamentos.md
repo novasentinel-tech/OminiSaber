@@ -1,22 +1,36 @@
-# Relacionamentos
+# Relacionamentos críticos
 
-## Objetivo
+## Identidade
 
-Registrar relações que afetam consultas e autorização.
+- `perfis.id -> auth.users.id`;
+- `perfis.turma_id -> turmas.id` para a turma principal do aluno;
+- `professor_turma_materias.professor_id -> perfis.id`;
+- `professor_turma_materias.turma_id -> turmas.id`.
 
-## Relações críticas
+## Currículo e atividades
 
-- `perfis.turma_id -> turmas.id`: turma principal do perfil, especialmente aluno.
-- `professor_turmas.professor_id -> perfis.id` e `professor_turmas.turma_id -> turmas.id`: atribuição docente.
-- `propostas_redacao.professor_id -> perfis.id` e `propostas_redacao.turma_id -> turmas.id`.
-- `redacoes.aluno_id -> perfis.id`, `redacoes.proposta_id -> propostas_redacao.id` e `redacoes.corrigida_por -> perfis.id`.
-- `avaliacoes_docentes.professor_id -> perfis.id` e `avaliacoes_docentes.turma_id -> turmas.id`.
-- `eventos_agenda.professor_id -> perfis.id` e `eventos_agenda.turma_id -> turmas.id`.
+- períodos pertencem a currículos;
+- habilidades e descritores se relacionam por `habilidade_descritores`;
+- questões se ligam a habilidades por `questoes_avaliacao_habilidades`;
+- avaliações pertencem ao professor e apontam para turma e matéria;
+- versões, questões e tentativas pertencem a uma avaliação;
+- respostas pertencem simultaneamente à tentativa, questão e aluno.
 
-## PostgREST
+## Resultados
 
-Quando a tabela possui mais de uma FK para o mesmo destino, o select deve nomear a constraint, por exemplo `turmas!professor_turmas_turma_id_fkey(...)` ou `perfis!eventos_agenda_professor_id_fkey(...)`. Os nomes devem ser conferidos no banco antes de alterar uma query.
+`ajustes_notas_avaliacao` referencia tentativa, avaliação, aluno e responsável pelo
+ajuste. A recuperação guarda a avaliação de origem na configuração e copia somente
+questões vinculadas às habilidades selecionadas.
 
-## Pontos de atenção
+## PostgREST e FKs ambíguas
 
-Não confundir a turma do perfil do aluno com o vínculo docente em `professor_turmas`.
+`perfis`, `turmas` e outras tabelas aparecem em mais de um papel na mesma entidade.
+Quando houver múltiplas FKs para o mesmo destino, use o nome exato da constraint no
+select, por exemplo `perfis!eventos_agenda_professor_id_fkey(...)`. Não dependa da
+inferência automática do cache do schema.
+
+## Regra de autorização
+
+Não confunda `perfis.turma_id` do aluno, `professor_turmas` legado e
+`professor_turma_materias` canônico. Para atividades novas, o último define a
+combinação autorizada de docente, turma e disciplina.

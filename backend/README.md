@@ -1,55 +1,86 @@
-# Backend Supabase | OminiSaber
+# Backend Supabase do OminiSaber
 
-O backend usa Supabase Auth, PostgreSQL e RLS. O navegador usa somente a chave pública publishable/`anon`; a `service_role` é exclusiva de scripts administrativos locais.
+O backend reúne schema PostgreSQL, migrations, cliente compartilhado, Edge
+Functions e verificadores. Autenticação e persistência usam Supabase; autorização
+permanece no banco por RLS e funções validadas.
 
-## Configuração do ambiente
+Use Node.js 22 ou superior para os scripts deste diretório.
 
-Preencha o arquivo `.env` da raiz e gere a configuração pública do navegador:
+## Configuração
 
-```bash
-npm --prefix backend run env:sync
+Preencha `.env` na raiz e gere a configuração pública:
+
+```powershell
+npm run env:sync
 ```
 
-O comando copia somente `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY` — ou a chave `anon` legada — para `ominisaber-supabase-config.js`. `SUPABASE_SECRET_KEY` e `SUPABASE_SERVICE_ROLE_KEY` nunca são copiadas para o frontend.
+O script copia somente `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY` ou a chave
+`anon` legada. `SUPABASE_SECRET_KEY`, `SUPABASE_SERVICE_ROLE_KEY` e
+`OPENAI_API_KEY` nunca são copiadas para o navegador.
 
-## Cadastro público
+Consulte [ambientes e deploy](../docs/development/ambientes-e-deploy.md) antes de
+alternar entre beta e Fase 3.
 
-A tela `frontend/cadastro/index.html` cria contas usando `auth.signUp`. O trigger do schema cria o perfil com role `aluno`. O usuário não escolhe professor, bibliotecária ou gestor no formulário.
+## Instalação do banco
 
-## Usuários de teste
+Para um banco novo, execute apenas `ominisaber-schema-completo.sql`. Para um banco
+existente, aplique somente migrations ausentes em ordem cronológica. Instruções
+detalhadas estão em [README-SQL.md](README-SQL.md).
 
-Preencha `SUPABASE_SECRET_KEY` — ou `SUPABASE_SERVICE_ROLE_KEY` em projetos legados — no `.env` da raiz e execute:
+## Cadastro e perfis
 
-```bash
-cd backend
-npm install
-npm run seed:test-users
+O cadastro público usa `auth.signUp` e cria somente `role = aluno`. Contas de
+professor, gestor e bibliotecária são administrativas. O login aceita matrícula ou
+e-mail; o perfil define a rota e as policies definem o acesso real.
+
+## Dados de teste
+
+O seed docente de Português é opcional, idempotente e grava dados no projeto
+selecionado pelo `.env`:
+
+```powershell
+npm run teacher:demo:seed
 ```
 
-| Role | Usuário | Senha |
-| --- | --- | --- |
-| aluno | `useraluno` | `senha123aluno` |
-| professor de Matemática | `profmatematica` | `senha123matematica` |
-| professor de Português | `profportugues` | `senha123portugues` |
-| professor técnico em Administração | `profadministracao` | `senha123administracao` |
-| professor técnico em Informática | `profinformatica` | `senha123informatica` |
-| bibliotecária | `userbibliotecaria` | `senha123bibliotecaria` |
-| gestor | `usergestor` | `senha123gestor` |
+Ele exige secret/service role key e deve ser usado somente em ambiente de teste.
+Nunca execute seeds em produção ou em um projeto cujo destino não tenha sido
+confirmado.
 
-O login aceita o nome informado como matrícula. Essas contas são apenas para testes.
+## Verificações
 
-## Segurança
-
-Nunca coloque `SUPABASE_SERVICE_ROLE_KEY` em `ominisaber-supabase-config.js`, HTML, JavaScript público ou Git. Para uma instalação nova, execute somente `ominisaber-schema-completo.sql` no SQL Editor antes de usar o seed.
-
-## Instalação e verificação atuais
-
-Para uma instalação limpa, execute apenas `ominisaber-schema-completo.sql` no SQL Editor. Em um banco que já contém o schema anterior, a atualização da correção de redações está em `migrations/20260903_redacoes_avaliacoes_portugues.sql`.
-
-Depois de criar a conta de teste de Português, o fluxo de leitura pode ser verificado sem gravar conteúdo:
-
-```bash
+```powershell
+npm run schema:build
+npm run sql:check
+npm run docs:check
+npm run auth:check
+npm run manager:check
+npm run curriculum:check
+npm run curriculum:security:check
+npm run library:check
 npm run teacher:portuguese:check
+npm run activity:builder:check
+npm run activity:student:check
+npm run activity:teacher-review:check
+npm run activity:results:check
+npm run copilot:check
+npm run system:audit
+npm run system:audit:remote
 ```
 
-O comando confere login, especialidade, turmas, redações, propostas, avaliações e rascunhos de correção usando a conexão definida no `.env`.
+Cada verificador cobre um contrato específico. Aprovação local não substitui teste
+integrado com usuários e RLS no projeto Supabase de destino.
+
+`system:audit` valida arquivos locais. `system:audit:remote` é somente leitura e
+confere integridade do projeto selecionado pelo `.env`; sempre confira o host
+impresso. O teste integrado da biblioteca aceita `TEST_STUDENT_PASSWORD` e
+`TEST_LIBRARIAN_PASSWORD` no ambiente para não gravar credenciais no código.
+
+## Documentação relacionada
+
+- [Arquitetura do backend](../docs/architecture/backend.md)
+- [Motor de atividades](../docs/modules/motor-atividades/README.md)
+- [Copiloto docente](../docs/modules/copiloto-docente/README.md)
+- [Permissões e RLS](../docs/architecture/permissoes-rls.md)
+- [Fluxogramas](../docs/architecture/fluxogramas.md)
+- [Auditoria geral](../docs/development/auditoria-sistema-2026-09-09.md)
+- [Controle documental](../docs/governance/controle-de-formularios.md)

@@ -6,7 +6,16 @@
     transform 0.22s ease;
 }
 .manager-sidebar {
-  overflow: visible;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.manager-sidebar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 .manager-sidebar-toggle,
 .manager-sidebar-reopen {
@@ -20,9 +29,9 @@
   z-index: 60;
 }
 .manager-sidebar-toggle {
-  position: absolute;
-  right: -18px;
-  top: 62px;
+  position: fixed;
+  left: 214px;
+  top: 58px;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -54,43 +63,17 @@
   font-size: 20px;
 }
 .manager-sidebar-collapsed .manager-sidebar {
-  width: 82px;
-  padding-inline: 10px;
+  transform: translateX(-105%);
 }
 .manager-sidebar-collapsed .manager-main {
-  margin-left: 82px;
-}
-.manager-sidebar-collapsed .brand {
-  justify-content: center;
-  padding-inline: 0;
-}
-.manager-sidebar-collapsed .brand > span,
-.manager-sidebar-collapsed .manager-nav-title,
-.manager-sidebar-collapsed .manager-nav a > span:not(.material-symbols-rounded),
-.manager-sidebar-collapsed .sidebar-footer {
-  display: none;
-}
-.manager-sidebar-collapsed .manager-nav-group {
-  margin-bottom: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-.manager-sidebar-collapsed .manager-nav-group:last-child {
-  border-bottom: 0;
-}
-.manager-sidebar-collapsed .manager-nav a {
-  justify-content: center;
-  padding: 12px 8px;
-}
-.manager-sidebar-collapsed .manager-nav a:hover {
-  transform: none;
+  margin-left: 0;
 }
 .manager-sidebar-collapsed .manager-sidebar-toggle {
   opacity: 0;
   pointer-events: none;
 }
 .manager-sidebar-collapsed .manager-sidebar-reopen {
-  opacity: 0.32;
+  opacity: 1;
   pointer-events: auto;
   transform: none;
 }
@@ -104,7 +87,7 @@
 .manager-sidebar-toggle .material-symbols-rounded {
   font-size: 21px;
 }
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .manager-sidebar-collapsed .manager-sidebar {
     width: min(285px, 86vw);
     padding: 18px 16px;
@@ -138,10 +121,18 @@
     padding: 11px 13px;
   }
   .manager-sidebar-toggle {
-    right: 12px;
-    top: 16px;
+    position: fixed;
+    left: calc(min(300px, 88vw) - 19px);
+    right: auto;
+    top: 58px;
     width: 38px;
     height: 38px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  body.mobile-sidebar-open .manager-sidebar-toggle {
+    opacity: 1;
+    pointer-events: auto;
   }
   .manager-sidebar-reopen {
     display: none;

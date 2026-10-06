@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Orientar o uso das áreas de aprendizagem do OmniSaber.
+Orientar o uso das áreas de aprendizagem do OminiSaber.
 
 ## Estrutura
 

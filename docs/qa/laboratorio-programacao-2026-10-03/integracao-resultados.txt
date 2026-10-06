@@ -1,0 +1,40 @@
+38 verificações passaram.
+
+OK · Asset disponível: /frontend/shared/programming-lab/programming-lab.js
+OK · Asset disponível: /frontend/shared/programming-lab/programming-lab.css
+OK · Asset disponível: /frontend/shared/programming-lab/learning-tracks.js
+OK · Asset disponível: /frontend/shared/programming-lab/learning-progress.js
+OK · Asset disponível: /frontend/shared/programming-lab/runtime.js
+OK · Professor abre a linguagem do link
+OK · Professor abre a etapa do link
+OK · Abrir o laboratório não grava nem publica
+OK · Preparar atividade abre a orientação da turma
+OK · Título deriva da etapa escolhida
+OK · Formato é desafio de código
+OK · Ambiente é C++ real
+OK · Orientação aponta à mesma linguagem e etapa no aluno
+OK · Preparar atividade preenche o formulário sem publicar
+OK · Salvar rascunho preserva a turma e publish=false
+OK · Payload do laboratório preserva linguagem, etapa e stack
+OK · Payload usa especialidade e formato corretos
+OK · Fluxo docente sem exceções de integração
+OK · Outro formato salva rascunho com seu próprio ambiente
+OK · Trocar para redes remove a associação à linguagem e etapa de programação
+OK · Aluno recebe C++ pelo link preparado
+OK · Aluno recebe a mesma etapa do professor
+OK · Editor tem nome acessível da linguagem
+OK · Aluno não recebe ação de publicação docente
+OK · Aluno hidrata o perfil fictício antes de montar a prática
+OK · IDE padrão usa o ambiente de programação
+OK · Fluxo de IDE do aluno sem exceções de integração
+OK · Aluno abre Python e uma etapa específica
+OK · Catálogo catalog-empty oferece Python e C++
+OK · Catálogo catalog-empty preserva o estado real dos conteúdos publicados
+OK · Catálogo catalog-empty sem exceções
+OK · Catálogo catalog-full oferece Python e C++
+OK · Catálogo catalog-full preserva o estado real dos conteúdos publicados
+OK · Catálogo catalog-full sem exceções
+OK · Catálogo de outra matéria não recebe lançamento de Informática
+OK · mode=pseudo preserva o editor anterior
+OK · Pseudocódigo mantém o material da aula de origem
+OK · Pseudocódigo sem exceções de integração

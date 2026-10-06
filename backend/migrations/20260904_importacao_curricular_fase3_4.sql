@@ -26,14 +26,14 @@ begin
     where importacao_id = imp.id
       and tipo = 'habilidade'
       and status in ('ok', 'aprovado')
-      and upper(payload ->> 'codigo') ~ '^EM\d{2}[A-Z]{2}\d{2}$'
+      and upper(payload ->> 'codigo') ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'
   ) then raise exception 'Nenhuma habilidade aprovada para publicação'; end if;
   if exists (
     select 1 from public.importacoes_curriculo_itens
     where importacao_id = imp.id
       and tipo = 'habilidade'
       and status = 'revisar'
-      and upper(payload ->> 'codigo') ~ '^EM\d{2}[A-Z]{2}\d{2}$'
+      and upper(payload ->> 'codigo') ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'
   ) then raise exception 'Existem habilidades pendentes'; end if;
 
   perform pg_advisory_xact_lock(hashtext(coalesce(imp.origem, '') || ':' || imp.ano_letivo || ':' || imp.materia_codigo::text));
@@ -80,7 +80,7 @@ begin
     where importacao_id = imp.id
       and tipo = 'habilidade'
       and status in ('ok', 'aprovado')
-      and upper(payload ->> 'codigo') ~ '^EM\d{2}[A-Z]{2}\d{2}$'
+      and upper(payload ->> 'codigo') ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'
   loop
     serie_num := nullif((item ->> 'serie')::smallint, 0);
     tri_num := coalesce(nullif((item ->> 'trimestre')::smallint, 0), imp.trimestre);
@@ -134,3 +134,5 @@ revoke all on function public.aprovar_importacao_curriculo(uuid) from public, an
 grant execute on function public.aprovar_importacao_curriculo(uuid) to authenticated;
 
 commit;
+
+

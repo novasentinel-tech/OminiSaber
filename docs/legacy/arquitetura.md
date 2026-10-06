@@ -4,7 +4,7 @@
 
 O OminiSaber é uma aplicação web estática integrada ao Supabase. O navegador entrega experiências por papel; o gateway JavaScript organiza operações; Auth identifica o usuário; PostgreSQL persiste dados e RLS decide o acesso.
 
-~~~text
+```text
 Navegador
   ├─ Login e cadastro
   ├─ Área do aluno
@@ -20,7 +20,7 @@ Supabase Auth + PostgREST + RPC
         │
         ▼
 PostgreSQL + RLS + triggers
-~~~
+```
 
 ## Camadas
 

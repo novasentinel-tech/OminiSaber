@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>QA responsivo · OminiSaber</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 24px; font: 14px system-ui, sans-serif; color: #14233c; background: #e9eef6; }
+      h1 { margin: 0 0 6px; }
+      p { margin: 0 0 22px; color: #61718a; }
+      main { display: flex; align-items: flex-start; gap: 24px; min-width: max-content; margin-bottom: 28px; }
+      section { display: grid; gap: 10px; }
+      strong { font-size: 12px; }
+      iframe { height: 820px; border: 1px solid #cbd6e6; border-radius: 18px; background: white; box-shadow: 0 18px 55px #23395c20; }
+      .mobile { width: 390px; }
+      .tablet { width: 820px; }
+    </style>
+  </head>
+  <body>
+    <h1>Validação responsiva</h1>
+    <p>As molduras abaixo ativam os breakpoints reais de cada página.</p>
+    <main>
+      <section>
+        <strong>Mobile · 390 px</strong>
+        <iframe class="mobile" title="OmniStudio em celular" src="../../engine/dist/client/index.html?teacherType=portugues#choose"></iframe>
+      </section>
+      <section>
+        <strong>Tablet · 820 px</strong>
+        <iframe class="tablet" title="Portal docente em tablet" src="../../frontend/professor/professor_portugues/laboratorio/index.html?qa=responsive"></iframe>
+      </section>
+    </main>
+    <main>
+      <section>
+        <strong>Tablet · OmniStudio · 820 px</strong>
+        <iframe class="tablet" title="OmniStudio em tablet" src="../../engine/dist/client/index.html?teacherType=portugues#choose"></iframe>
+      </section>
+    </main>
+  </body>
+</html>

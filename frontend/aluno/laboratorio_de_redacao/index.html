@@ -2,6 +2,44 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
@@ -18,38 +56,38 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=20260926-6" />
     <script src="../../../backend/ominisaber-supabase-config.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../../../backend/ominisaber-supabase-client.js"></script>
-    <script defer src="script.js"></script>
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="script.js?v=20260927-2"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260924-5"></script>
   </head>
   <body data-required-role="aluno">
-    <header class="site-header">
-      <a class="brand" href="../dashboard_principal/index.html"
-        ><span class="brand-mark"
-          ><span class="material-symbols-outlined" aria-hidden="true"
-            >draw</span
-          ></span
-        ><span>OminiSaber<small>Ateliê de escrita</small></span></a
+    <header class="site-header app-topbar">
+      <button
+        class="icon-button menu-button"
+        type="button"
+        data-menu-toggle
+        aria-label="Abrir menu principal"
+        aria-expanded="false"
       >
-      <nav class="header-nav" aria-label="Navegação do laboratório">
-        <a class="active" href="index.html" aria-current="page">Laboratório</a
-        ><a href="historico/index.html">Minhas redações</a
-        ><a href="../minha_evolucao/index.html">Evolução</a>
-      </nav>
-      <a class="history-shortcut" href="historico/index.html"
-        ><span class="material-symbols-outlined" aria-hidden="true"
-          >history</span
-        ><span>Histórico</span></a
-      >
-      <a
-        class="avatar"
-        href="../perfil/index.html"
-        aria-label="Abrir perfil"
-        data-initials
-        >AL</a
-      >
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+      <div class="topbar-title">
+        <strong>Laboratório de redação</strong>
+        <span>Da ideia ao texto, uma etapa por vez</span>
+      </div>
+      <div class="topbar-actions">
+        <a class="icon-button" href="historico/index.html" aria-label="Abrir histórico de redações">
+          <span class="material-symbols-outlined" aria-hidden="true">history</span>
+        </a>
+        <a class="icon-button" href="../perfil/index.html" aria-label="Abrir perfil">
+          <span class="material-symbols-outlined" aria-hidden="true">person</span>
+        </a>
+      </div>
     </header>
 
     <main class="page-shell">
@@ -194,22 +232,22 @@
         data-step="2"
         aria-labelledby="step-two-title"
       >
-        <div class="section-heading">
+        <div class="section-heading map-heading">
           <div>
-            <p class="eyebrow">ETAPA 2 · PLANEJAMENTO</p>
-            <h2 id="step-two-title">Construa a espinha dorsal do texto.</h2>
+            <p class="eyebrow">LABORATÓRIO DE REDAÇÃO</p>
+            <h2 id="step-two-title">Mapa da Redação</h2>
             <p>
-              Registre suas ideias e escolha apenas repertórios que tenham
-              relação comprovável com o tema.
+              Construa seu texto passo a passo, com orientação em cada etapa.
             </p>
           </div>
-          <span class="save-pill" data-planning-status
-            ><span class="material-symbols-outlined" aria-hidden="true"
-              >cloud</span
-            >Aguardando edição</span
-          >
+          <div class="map-heading-tools">
+            <div class="map-progress" aria-live="polite"><span><strong data-map-progress-label>1 de 6</strong> etapas concluídas</span><div aria-hidden="true"><i data-map-progress-bar></i></div></div>
+            <span class="save-pill" data-planning-status><span class="material-symbols-outlined" aria-hidden="true">cloud</span>Aguardando edição</span>
+            <button class="button button-secondary map-free-mode" type="button" data-switch-mode="free"><span class="material-symbols-outlined" aria-hidden="true">edit_document</span>Texto livre</button>
+          </div>
         </div>
         <div class="selected-theme" data-selected-theme></div>
+        <div class="essay-map-mount" data-essay-map></div>
         <aside class="shortcut-explainer">
           <span class="material-symbols-outlined" aria-hidden="true"
             >keyboard</span
@@ -395,7 +433,7 @@
             type="button"
             data-next-step="3"
           >
-            Salvar planejamento e escrever<span
+            Montar meu texto<span
               class="material-symbols-outlined"
               aria-hidden="true"
               >arrow_forward</span
@@ -420,6 +458,7 @@
               >cloud_done</span
             >Pronto para escrever</span
           >
+          <button class="button button-secondary" type="button" data-switch-mode="guided"><span class="material-symbols-outlined" aria-hidden="true">account_tree</span>Voltar ao mapa</button>
         </div>
         <div class="writing-workspace" data-writing-workspace>
           <aside class="notes-drawer" data-notes-drawer>
@@ -513,6 +552,32 @@
         <span class="material-symbols-outlined" aria-hidden="true">close</span>
       </button>
       <div data-theme-dialog-content></div>
+    </dialog>
+    <dialog class="writing-mode-dialog" data-writing-mode-dialog aria-labelledby="writing-mode-title">
+      <div class="mode-dialog-head">
+        <p class="eyebrow">ANTES DE COMEÇAR</p>
+        <h2 id="writing-mode-title">Como você quer escrever hoje?</h2>
+        <p>Você poderá trocar de modo depois sem perder seu conteúdo.</p>
+      </div>
+      <div class="mode-choice-grid">
+        <article class="mode-card mode-card-guided" data-parallax-card>
+          <div class="mode-card-glare" aria-hidden="true"></div>
+          <div class="mode-card-content">
+            <span class="mode-card-icon material-symbols-outlined" aria-hidden="true">account_tree</span><span class="mode-recommended">RECOMENDADO</span>
+            <h3>Montar por blocos</h3><p>Organize cada parte e acompanhe a estrutura da redação enquanto escreve.</p>
+            <ol><li><span>1</span>Cada bloco tem uma função</li><li><span>2</span>Avance no seu ritmo</li><li><span>3</span>Transforme tudo em texto</li></ol>
+            <button class="button button-primary" type="button" data-writing-mode="guided">Usar o mapa da redação<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button>
+          </div>
+        </article>
+        <article class="mode-card" data-parallax-card>
+          <div class="mode-card-glare" aria-hidden="true"></div>
+          <div class="mode-card-content">
+            <span class="mode-card-icon material-symbols-outlined" aria-hidden="true">edit_document</span>
+            <h3>Escrever livremente</h3><p>Abra a folha e escreva a redação completa do seu jeito, com o planejamento disponível ao lado.</p>
+            <button class="button button-secondary" type="button" data-writing-mode="free">Abrir texto livre<span class="material-symbols-outlined" aria-hidden="true">edit</span></button>
+          </div>
+        </article>
+      </div>
     </dialog>
     <footer class="site-footer">
       <span class="material-symbols-outlined" aria-hidden="true">lock</span>

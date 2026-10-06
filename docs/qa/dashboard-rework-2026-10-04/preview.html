@@ -1,0 +1,16 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><base href="/frontend/professor/professor_portugues/dashboard/"><title>Dashboard — demonstração para QA</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:FILL@0..1"><link rel="stylesheet" href="../../specialty/portal.css?v=20261002-3"><link rel="stylesheet" href="/frontend/Parties/parties.css?v=20261004-2">
+<script>
+const classes=[{id:'qa-class-a',nome:'1º ano A',serie:'1º ano'},{id:'qa-class-b',nome:'1º ano B',serie:'1º ano'},{id:'qa-class-c',nome:'3º EM',serie:'3º ano'}];
+const results={};
+const activities=classes.map((turma,index)=>{
+ const id='qa-evaluation-'+index;
+ const activity={id,titulo:['Leitura crítica','Argumentação','Leitura e interpretação'][index],turma_id:turma.id,turmas:turma,status:'publicado',valor:10,abre_em:new Date(Date.now()-6*7*86400000).toISOString(),encerra_em:new Date(Date.now()+(index+3)*86400000).toISOString(),publicado_em:new Date(Date.now()-45*86400000).toISOString(),tentativas_avaliacao:[]};
+ results[id]=Array.from({length:6},(_,week)=>Array.from({length:3},(_,student)=>{
+   const date=new Date(Date.now()-(5-week)*7*86400000-86400000); const value=[42,61,75][index]+week*3+student*2;
+   const item={tentativa_id:'qa-attempt-'+index+'-'+week+'-'+student,aluno_id:'qa-student-'+index+'-'+week+'-'+student,aluno_nome:'Aluno de demonstração '+(index*18+week*3+student+1),status:'corrigida',numero_tentativa:1,requer_revisao:false,nota:Math.min(9.8,value/10),corrigida_em:date.toISOString(),enviada_em:date.toISOString()}; activity.tentativas_avaliacao.push({id:item.tentativa_id,status:'corrigida'});return item;
+ })).flat(); return activity;
+});
+const data={profile:{nome:'Prof. Fernanda',id:'qa-teacher'},classes,studentCount:86,labs:[],evaluations:activities};
+window.OminiSaber={getTeacherWorkspace:async()=>data,listTeacherEssays:async()=>[],listTeacherReviewQueue:async()=>Array.from({length:12},(_,i)=>({id:'qa-review-'+i,avaliacao_id:activities[i%activities.length].id,status:'enviada',requer_revisao:true,avaliacoes_docentes:{id:activities[i%activities.length].id,turma_id:activities[i%activities.length].turma_id}})),getTeacherEvaluationResults:async id=>results[id]||[],listNotifications:async()=>[{id:'qa-notice',titulo:'Próximas entregas',mensagem:'Acompanhe os prazos das atividades na agenda das turmas.',created_at:new Date().toISOString(),readAt:null}],signOut:async()=>alert('Demonstração: nenhuma sessão real é alterada.')};
+document.addEventListener('DOMContentLoaded',()=>document.dispatchEvent(new CustomEvent('ominisaber:ready')),{once:true});
+</script><script defer src="../../specialty/configs.js"></script><script defer src="script.js"></script><script defer src="../../specialty/portal.js?v=20261004-5"></script><script defer src="/frontend/Parties/parties.js?v=20261002-6"></script></head><body data-required-teacher-type="portugues" data-page="dashboard"><div data-teacher-portal></div><p style="position:fixed;bottom:0;right:12px;background:#fff;color:#6a7790;font:10px Inter,sans-serif;padding:3px 8px;z-index:101">DADOS DEMONSTRATIVOS · QA · nenhuma gravação</p></body></html>

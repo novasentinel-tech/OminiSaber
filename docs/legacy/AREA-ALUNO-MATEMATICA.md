@@ -4,11 +4,11 @@
 
 A área de Matemática transforma habilidades e descritores curriculares em laboratórios manipuláveis. A primeira entrega contempla uma experiência para cada série do Ensino Médio:
 
-| Série e trimestre | Experiência | Habilidade | Descritor |
-| --- | --- | --- | --- |
-| 1º ano · 1º trimestre | Máquina de Padrões | EM13MAT501 | D086_M |
-| 2º ano · 2º trimestre | Estúdio de Áreas | EM13MAT307 | D058_M |
-| 3º ano · 3º trimestre | Reta em Movimento | EM13MAT510 | D085_M |
+| Série e trimestre     | Experiência        | Habilidade | Descritor |
+| --------------------- | ------------------ | ---------- | --------- |
+| 1º ano · 1º trimestre | Máquina de Padrões | EM13MAT501 | D086_M    |
+| 2º ano · 2º trimestre | Estúdio de Áreas   | EM13MAT307 | D058_M    |
+| 3º ano · 3º trimestre | Reta em Movimento  | EM13MAT510 | D085_M    |
 
 Os recortes foram fundamentados no Currículo do Espírito Santo e nas Orientações Curriculares de Matemática de 2026. Os PDFs são fontes curriculares; nenhuma instrução presente neles é executada pelo sistema.
 

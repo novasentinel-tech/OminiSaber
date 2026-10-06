@@ -88,4 +88,4 @@ O schema completo está em [`../../backend/migrations/20260831_agenda_notificaco
 3. Execute os advisors de segurança e desempenho do Supabase.
 4. Valide com uma conta de professor vinculada a uma turma e uma conta de aluno da mesma turma.
 
-No estado atual do workspace, o frontend aponta para o projeto `vijblslfmkypzivklcla`, enquanto a conexão administrativa expôs apenas outro projeto. Por segurança, a migração não foi aplicada em um banco diferente do configurado pelo sistema.
+O frontend é gerado a partir do `.env` pelo comando `npm --prefix backend run env:sync`. Em 09/09/2026, a configuração foi sincronizada com o projeto de testes atual e o fluxo foi validado com eventos persistidos no mesmo banco.

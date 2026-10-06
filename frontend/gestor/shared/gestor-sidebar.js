@@ -2,7 +2,7 @@
   const sidebar = document.querySelector(".manager-sidebar");
   if (!sidebar || sidebar.querySelector(".manager-sidebar-toggle")) return;
   const scrim = document.querySelector(".sidebar-scrim");
-  const mobile = () => window.matchMedia("(max-width:760px)").matches;
+  const mobile = () => window.matchMedia("(max-width:900px)").matches;
   const button = document.createElement("button");
   button.type = "button";
   button.className = "manager-sidebar-toggle";
@@ -15,7 +15,7 @@
   reopen.title = "Expandir menu";
   const icon = (name) =>
     `<span class="material-symbols-rounded" aria-hidden="true">${name}</span>`;
-  sidebar.append(button);
+  document.body.append(button);
   document.body.append(reopen);
   document.querySelectorAll(".manager-nav a").forEach((link) => {
     const label = link.textContent.trim();

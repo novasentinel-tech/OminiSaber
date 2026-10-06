@@ -1,25 +1,53 @@
-# Administração
+# Módulo do gestor
 
 ## Objetivo
 
-Oferecer ao gestor visão institucional, contas, turmas, vínculos, descritores, conteúdos e auditoria.
+Administrar identidade, organização acadêmica, currículo e segurança sem exigir
+alterações manuais no banco para operações cotidianas.
 
-## Estrutura
+## Páginas
 
-Implementação em `frontend/gestor/` e Edge Function em `backend/supabase/functions/gestor-contas/`.
+- Dashboard;
+- Turmas;
+- Alunos;
+- Professores;
+- Vínculos;
+- Descritores;
+- Conteúdos publicados;
+- Acessos e senhas;
+- Auditoria;
+- Perfil.
 
-## Funcionamento
+## Responsabilidades
 
-O gestor consulta indicadores, administra usuários e turmas, vincula professores, acompanha cobertura curricular e acessos.
+- criar e acompanhar contas institucionais;
+- atribuir turma e curso aos alunos;
+- definir especialidade do professor;
+- relacionar professor, turma e matéria;
+- manter catálogo de habilidades e descritores;
+- acompanhar cobertura curricular e conteúdos publicados;
+- redefinir acessos pelo fluxo administrativo protegido;
+- consultar eventos de auditoria.
 
-## Banco de dados
+## Vínculos
 
-Usa `perfis`, `turmas`, `professor_turmas`, descritores, conteúdos publicados, solicitações de acesso e auditoria.
+`professor_turma_materias` é o vínculo canônico. Alterar a turma ou o curso de um
+aluno deve atualizar o perfil persistido e a leitura subsequente, não apenas o texto
+da tabela na interface.
 
-## Permissões
+## Operações sensíveis
 
-Operações administrativas exigem `role = gestor` e permanecem protegidas por RLS.
+Criação de contas e redefinição administrativa usam a Edge Function
+`gestor-contas`, com sessão e papel validados no servidor. Secret keys não chegam ao
+browser. Operações comuns de dados continuam protegidas por RLS.
 
-## Pontos de atenção
+## Currículo
 
-A documentação detalhada da área está preservada em [área do gestor](../../legacy/area-do-gestor.md).
+O gestor pode cadastrar descritores manualmente ou acompanhar a importação
+curricular. Habilidades, descritores, série, trimestre e matéria precisam permanecer
+rastreáveis para alimentar o construtor docente e os relatórios.
+
+## Dados principais
+
+`perfis`, `turmas`, `professor_turma_materias`, catálogo curricular,
+`solicitacoes_acesso`, `gestor_auditoria`, conteúdos publicados e feature flags.

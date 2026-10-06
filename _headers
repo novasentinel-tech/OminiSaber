@@ -1,0 +1,3 @@
+# Revalidate page and asset versions on navigation after a deployment.
+/*
+  Cache-Control: public, max-age=0, must-revalidate

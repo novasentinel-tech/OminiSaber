@@ -46,6 +46,54 @@
   color: #26205e;
   box-shadow: none;
 }
+.device-push-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  border: 1px solid #dce7fb;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #f7faff, #eef5ff);
+}
+.device-push-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: #1459dc;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(31, 94, 234, 0.12);
+}
+.device-push-copy h2 {
+  margin: 2px 0 4px;
+  color: #121b35;
+  font: 800 16px Manrope, sans-serif;
+}
+.device-push-copy > p:last-child {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.device-push-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 11px;
+  border-radius: 999px;
+  color: #6b748a;
+  background: #fff;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.device-push-status .material-symbols-outlined { font-size: 17px; }
+.device-push-status[data-state="active"] { color: #087b56; background: #e2f8ee; }
+.device-push-status[data-state="blocked"],
+.device-push-status[data-state="unsupported"] { color: #a83d45; background: #fff0f1; }
+.device-push-card .button { white-space: nowrap; }
 .notification-toolbar {
   padding: 18px 22px;
   border-bottom: 1px solid var(--line);
@@ -219,4 +267,11 @@
   .page-heading .button {
     width: 100%;
   }
+  .device-push-card {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    padding: 16px;
+  }
+  .device-push-status { grid-column: 2; justify-self: start; }
+  .device-push-card .button { grid-column: 1 / -1; width: 100%; }
 }

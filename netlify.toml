@@ -1,0 +1,23 @@
+[build]
+  publish = "netlify-dist"
+  command = "npm --prefix engine ci && npm --prefix engine run build && node scripts/prepare-netlify-site.mjs"
+
+[[redirects]]
+  from = "/oministudio"
+  to = "/oministudio/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/oministudio/*"
+  to = "/oministudio/index.html"
+  status = 200
+
+[[headers]]
+  for = "/engine/dist/client/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/oministudio/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

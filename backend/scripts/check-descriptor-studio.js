@@ -1,0 +1,10 @@
+import dotenv from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
+dotenv.config({ path: new URL('../../.env', import.meta.url), quiet: true });
+const client = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY, { auth: { persistSession: false, autoRefreshToken: false }, global: { fetch: (url, init) => fetch(url, { ...init, signal: AbortSignal.timeout(20000) }) } });
+if (!process.env.DESCRIPTOR_TEST_EMAIL || !process.env.DESCRIPTOR_TEST_PASSWORD) throw new Error('Informe DESCRIPTOR_TEST_EMAIL e DESCRIPTOR_TEST_PASSWORD no ambiente.');
+const login = await client.auth.signInWithPassword({email:process.env.DESCRIPTOR_TEST_EMAIL,password:process.env.DESCRIPTOR_TEST_PASSWORD});
+if (login.error) throw new Error(`Login: ${login.error.message}`);
+const result = await client.from('descritores_curriculares').select('id,codigo,titulo,descricao,materia_codigo,serie,trimestre,status,updated_at,habilidade_descritores(habilidade_id,periodo_id)').limit(1);
+console.log(JSON.stringify({ authenticated: true, readError: result.error, sample: result.data }, null, 2));
+await client.auth.signOut();

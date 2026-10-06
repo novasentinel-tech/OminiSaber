@@ -15,9 +15,12 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css?v=20260903-login-3" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../../backend/ominisaber-supabase-config.js?v=20260903-login-3"></script>
-    <script src="../../backend/ominisaber-supabase-client.js?v=20260903-login-3"></script>
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../backend/ominisaber-supabase-config.js?v=20261004-7"></script>
+    <script src="../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../Parties/parties.css?v=20261004-8" />
+    <script defer src="../Parties/parties.js?v=20261004-8"></script>
   </head>
   <body>
     <header class="brand-bar">
@@ -42,8 +45,12 @@
         </div>
         <img
           class="journey-art"
-          src="assets/jornada-ominisaber-3d.png"
+          src="assets/jornada-ominisaber-3d.jpg"
           alt="Livros, tecnologia e caminhos de aprendizagem conectados"
+          width="1100"
+          height="836"
+          decoding="async"
+          fetchpriority="high"
         />
       </section>
 
@@ -127,7 +134,7 @@
                 <input id="remember-me" name="remember-me" type="checkbox" />
                 <span>Lembrar neste dispositivo</span>
               </label>
-              <a href="#" data-forgot-password>Esqueci minha senha</a>
+              <button type="button" data-forgot-password>Esqueci minha senha</button>
             </div>
 
             <button class="submit-button" type="submit">
@@ -164,6 +171,6 @@
       </section>
     </main>
 
-    <script defer src="script.js?v=20260903-login-3"></script>
+    <script defer src="script.js?v=20261004-login-1"></script>
   </body>
 </html>

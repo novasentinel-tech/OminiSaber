@@ -29,7 +29,7 @@ end $$;
 
 do $$ begin
   create type public.materia_aluno as enum (
-    'matematica', 'fisica', 'portugues', 'redacao',
+    'matematica', 'fisica', 'quimica', 'biologia', 'portugues', 'redacao',
     'tecnico_administracao', 'tecnico_informatica'
   );
 exception when duplicate_object then null;

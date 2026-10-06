@@ -4,3 +4,651 @@
   --accent-soft: #eaf2ff;
   --nav: #141b43;
 }
+
+.math-template-lab {
+  margin-bottom: 22px;
+  padding: 20px;
+  border: 1px solid #cddcf8;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 92% 0, rgba(47, 104, 220, 0.14), transparent 32%),
+    linear-gradient(135deg, #f8fbff, #edf4ff);
+}
+
+.math-template-lab > header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.math-template-lab > header small,
+.math-template-lab > header strong {
+  display: block;
+}
+
+.math-template-lab > header small {
+  color: var(--accent-dark);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+}
+
+.math-template-lab > header strong {
+  margin-top: 4px;
+  font:
+    700 19px/1.25 Poppins,
+    sans-serif;
+  color: var(--ink);
+}
+
+.math-template-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.math-template-header-actions > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.math-template-header-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 36px;
+  padding: 0 11px;
+  border: 1px solid #cddcf8;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--accent-dark);
+  font:
+    700 11px Inter,
+    sans-serif;
+  cursor: pointer;
+}
+
+.math-template-header-actions button:hover,
+.math-template-header-actions button:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(47, 104, 220, 0.12);
+}
+
+.math-template-header-actions .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.math-template-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.math-template-grid[hidden] {
+  display: none;
+}
+
+.math-template-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 10px;
+  min-width: 0;
+  min-height: 130px;
+  padding: 14px;
+  border: 1px solid #d9e3f6;
+  border-radius: 16px;
+  background: #fff;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.math-template-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.math-template-card.selected {
+  border-color: var(--accent);
+  box-shadow:
+    inset 0 0 0 1px var(--accent),
+    0 10px 25px rgba(47, 104, 220, 0.13);
+}
+
+.math-template-card > span {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.math-template-card div {
+  min-width: 0;
+}
+
+.math-template-card strong,
+.math-template-card small,
+.math-template-card em {
+  display: block;
+}
+
+.math-template-card strong {
+  font-size: 13px;
+}
+
+.math-template-card small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.math-template-card em {
+  margin-top: 8px;
+  color: var(--accent-dark);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.math-template-card > i {
+  display: none;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: var(--accent);
+  font-style: normal;
+  font-size: 18px;
+}
+
+.math-template-card.selected > i {
+  display: block;
+}
+
+.math-config-section {
+  background: linear-gradient(145deg, #fff, #f7faff);
+}
+
+.math-config-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.math-config-grid label {
+  display: grid;
+  gap: 6px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.math-live-preview {
+  min-height: 190px;
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px dashed #b8caed;
+  border-radius: 17px;
+  background: #fff;
+}
+
+.math-preview-plane {
+  position: relative;
+  width: min(420px, 100%);
+  aspect-ratio: 1.65;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #c8d5ed;
+  border-radius: 12px;
+  background-image:
+    linear-gradient(#e2eaf8 1px, transparent 1px),
+    linear-gradient(90deg, #e2eaf8 1px, transparent 1px);
+  background-size: 10% 10%;
+}
+
+.math-preview-plane .axis {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  background: #53627e;
+}
+
+.math-preview-plane .axis-x {
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 2px;
+}
+
+.math-preview-plane .axis-y {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+}
+
+.math-preview-plane i {
+  position: absolute;
+  z-index: 2;
+  top: var(--point-y);
+  left: var(--point-x);
+  width: 15px;
+  height: 15px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+  transform: translate(-50%, -50%);
+}
+
+.math-preview-plane b {
+  position: absolute;
+  right: 10px;
+  bottom: 9px;
+  z-index: 2;
+  padding: 4px 7px;
+  border-radius: 8px;
+  background: #102449;
+  color: #fff;
+  font-size: 11px;
+}
+
+.math-preview-line {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  width: min(560px, 100%);
+  min-height: 145px;
+  margin: 0 auto;
+}
+
+.math-preview-line > div {
+  position: relative;
+  height: 4px;
+  background: #8190aa;
+}
+
+.math-preview-line > div::before,
+.math-preview-line > div::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  width: 2px;
+  height: 14px;
+  background: #8190aa;
+}
+
+.math-preview-line > div::before {
+  left: 0;
+}
+
+.math-preview-line > div::after {
+  right: 0;
+}
+
+.math-preview-line i {
+  position: absolute;
+  top: 50%;
+  left: var(--line-point);
+  width: 18px;
+  height: 18px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+  transform: translate(-50%, -50%);
+}
+
+.math-preview-line b {
+  grid-column: 1/-1;
+  justify-self: center;
+  color: var(--accent-dark);
+}
+
+.math-preview-triangle {
+  display: grid;
+  place-items: center;
+  min-height: 170px;
+}
+
+.math-preview-triangle svg {
+  display: block;
+  width: min(310px, 100%);
+  height: auto;
+  overflow: visible;
+}
+
+.math-preview-triangle .triangle-shape {
+  fill: color-mix(in srgb, var(--accent) 7%, transparent);
+  stroke: var(--accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 5;
+}
+
+.math-preview-triangle .right-angle-mark {
+  fill: none;
+  stroke: var(--accent-dark);
+  stroke-width: 3;
+}
+
+.math-preview-triangle .triangle-label {
+  fill: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-linejoin: round;
+  stroke-width: 5px;
+}
+
+.math-preview-triangle .side-a,
+.math-preview-triangle .side-b {
+  text-anchor: middle;
+}
+
+.math-preview-bars {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 14px;
+  min-height: 190px;
+}
+
+.math-preview-bars > div {
+  display: grid;
+  grid-template-rows: 140px auto;
+  gap: 7px;
+  width: min(70px, 18%);
+  text-align: center;
+}
+
+.math-preview-bars > div > span {
+  position: relative;
+  align-self: end;
+  height: var(--bar-size);
+  min-height: 12px;
+  border-radius: 9px 9px 3px 3px;
+  background: linear-gradient(180deg, #4f83ea, #2254b6);
+}
+
+.math-preview-bars b {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  color: var(--ink);
+  font-size: 10px;
+  transform: translateX(-50%);
+}
+
+.math-preview-bars small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.math-preview-bars > p {
+  align-self: center;
+  color: var(--muted);
+  text-align: center;
+}
+
+.math-preview-bars.empty {
+  display: grid;
+  grid-template-columns: minmax(150px, 240px) minmax(190px, 1fr);
+  align-items: center;
+  gap: 24px;
+}
+
+.chart-empty-example {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 12px;
+  height: 130px;
+  padding: 12px 18px 0;
+  border-bottom: 2px solid #c8d5ed;
+  border-left: 2px solid #c8d5ed;
+}
+
+.chart-empty-example span {
+  width: 32px;
+  height: var(--bar-size);
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, #b8cdf5, #dce7fb);
+}
+
+.math-preview-bars.empty > p {
+  margin: 0;
+  text-align: left;
+}
+
+.math-preview-bars.empty > p strong,
+.math-preview-bars.empty > p small {
+  display: block;
+}
+
+.math-preview-bars.empty > p strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.math-preview-bars.empty > p small {
+  margin-top: 5px;
+  line-height: 1.45;
+}
+
+.geometry-kind-grid {
+  display: grid;
+  grid-template-columns: 0.72fr 1.2fr 1fr;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.geometry-kind-grid label,
+.geometry-custom-fields label {
+  display: grid;
+  gap: 6px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.geometry-kind-grid select,
+.geometry-custom-fields input {
+  width: 100%;
+}
+
+.geometry-custom-fields {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 15px;
+  padding: 14px;
+  border: 1px dashed #b8caed;
+  border-radius: 15px;
+  background: #f8fbff;
+}
+
+.geometry-custom-fields[hidden] {
+  display: none;
+}
+
+.geometry-custom-fields > div {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.geometry-interaction-note {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+}
+
+.geometry-interaction-note > span {
+  font-size: 26px;
+}
+
+.geometry-interaction-note strong,
+.geometry-interaction-note small {
+  display: block;
+}
+
+.geometry-interaction-note small {
+  margin-top: 2px;
+  color: #53627e;
+  line-height: 1.4;
+}
+
+.geometry-teacher-preview > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.geometry-teacher-preview > header small,
+.geometry-teacher-preview > header strong {
+  display: block;
+}
+
+.geometry-teacher-preview > header small {
+  color: var(--accent-dark);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.geometry-teacher-preview > header strong {
+  margin-top: 2px;
+}
+
+.geometry-teacher-preview > header > span {
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.geometry-visual {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(170px, 0.55fr);
+  align-items: center;
+  gap: 24px;
+  min-height: 235px;
+}
+
+.geometry-visual svg {
+  display: block;
+  width: min(440px, 100%);
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.geometry-visual svg g > * {
+  fill: rgba(47, 104, 220, 0.08);
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.geometry-visual svg .geometry-guide {
+  fill: none;
+  stroke: #8197bf;
+  stroke-width: 2;
+  stroke-dasharray: 7 6;
+}
+
+.geometry-visual svg .geometry-point {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.geometry-measure-legend {
+  display: grid;
+  gap: 7px;
+}
+
+.geometry-measure-legend span {
+  padding: 8px 10px;
+  border: 1px solid #d8e3f7;
+  border-radius: 10px;
+  background: #f8fbff;
+  color: #53627e;
+  font-size: 11px;
+}
+
+.geometry-measure-legend b {
+  color: var(--ink);
+}
+
+@media (max-width: 1320px) {
+  .math-template-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .math-template-lab {
+    padding: 15px;
+  }
+
+  .math-template-lab > header {
+    display: block;
+  }
+
+  .math-template-header-actions {
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 7px;
+  }
+
+  .math-template-grid,
+  .math-config-grid,
+  .geometry-kind-grid,
+  .geometry-custom-fields > div,
+  .geometry-visual {
+    grid-template-columns: 1fr;
+  }
+
+  .math-template-card {
+    min-height: 0;
+  }
+
+  .math-preview-triangle svg {
+    width: min(245px, 100%);
+  }
+
+  .math-preview-bars.empty {
+    grid-template-columns: 1fr;
+  }
+
+  .math-preview-bars.empty > p {
+    text-align: center;
+  }
+}

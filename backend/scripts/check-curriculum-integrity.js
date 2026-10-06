@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) throw new Error(message
 
 assert(migration.includes('habilidade_compativel_com_materia'), 'helper central de compatibilidade existe');
 assert(migration.includes('security invoker') && migration.includes("h.materia_codigo = p_materia"), 'helper valida matéria sem SECURITY DEFINER');
-assert(migration.includes("h.codigo ~ '^EM\\d{2}[A-Z]{2}\\d{2}$'") && migration.includes("c.status = 'publicado'") && migration.includes('c.ativo = true'), 'helper preserva EM/publicado/ativo');
+assert(migration.includes("h.codigo ~ '^EM[0-9]{2}[A-Z]{2,3}[0-9]{2,3}(?:[A-Z]{3}[A-Za-z]?/ES)?$'") && migration.includes("c.status = 'publicado'") && migration.includes('c.ativo = true'), 'helper preserva EM/publicado/ativo');
 assert(migration.includes('a.tipo_professor::text::public.materia_aluno'), 'A/B/K questões derivam matéria da avaliação');
 assert(migration.includes('l.tipo_professor::text::public.materia_aluno'), 'C/D/K laboratórios derivam matéria do laboratório');
 assert(migration.includes('t.materia_codigo'), 'E/F atividades derivam matéria da trilha');

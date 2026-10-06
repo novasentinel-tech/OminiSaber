@@ -1,27 +1,43 @@
-# Instalação
+# Instalação local
 
-O OmniSaber é uma aplicação web estática com uma camada Supabase. O frontend pode ser servido por qualquer servidor HTTP local.
+## Requisitos
 
-## Objetivo
+- navegador atual;
+- Node.js para scripts de configuração e validação;
+- Python para servidor local e validação SQL;
+- um projeto Supabase configurado.
 
-Preparar o ambiente para abrir as páginas sem depender de `file://`, que pode bloquear scripts e requisições.
+## Preparação
 
-## Estrutura
+Na raiz do repositório:
 
-- Frontend: `frontend/`
-- Backend e cliente Supabase: `backend/`
-- Documentação: `docs/`
-
-## Funcionamento
-
-Use um servidor HTTP na raiz do repositório. Exemplo com Python:
-
-```bash
-python3 -m http.server 8080
+```powershell
+Copy-Item .env.example .env
+npm install
+npm --prefix backend install
+python -m pip install -r backend/requirements-dev.txt
 ```
 
-Depois abra `http://localhost:8080/`.
+Preencha `.env` conforme [Configuração](configuracao.md) e gere o arquivo público:
 
-## Pontos de atenção
+```powershell
+npm --prefix backend run env:sync
+```
 
-O projeto não possui bundler ou etapa de build frontend documentada. Dependências locais do backend ficam em `backend/package.json` e `backend/requirements-dev.txt`.
+## Executar
+
+```powershell
+python -m http.server 4173
+```
+
+Abra `http://127.0.0.1:4173/frontend/login/index.html`.
+
+## Validar a preparação
+
+```powershell
+npm --prefix backend run docs:check
+npm --prefix backend run sql:check
+```
+
+O frontend não possui build. Não use `file://`, porque sessão, imports e requisições
+dependem de uma origem HTTP consistente.
