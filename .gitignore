@@ -12,3 +12,5 @@ backend/.env.*
 node_modules/
 netlify-dist/
 .cache/
+.tmp/
+tmp/
