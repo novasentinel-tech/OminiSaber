@@ -11,3 +11,4 @@ backend/.env.*
 .vscode/
 node_modules/
 netlify-dist/
+.cache/
