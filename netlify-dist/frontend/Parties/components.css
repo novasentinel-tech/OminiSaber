@@ -1,0 +1,268 @@
+/* Botões */
+body.os-parties-ready :where(.os-button, .button, .primary-button, .secondary-button, .action-button, .btn) {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: var(--os-radius-md);
+  font-weight: 800;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--os-transition), border-color var(--os-transition), color var(--os-transition), transform var(--os-transition);
+}
+
+body.os-parties-ready :where(.os-button--primary, .button.primary, .button-primary, .primary-button, .btn-primary) {
+  border-color: var(--os-accent);
+  background: var(--os-accent);
+  color: var(--os-on-accent);
+}
+
+body.os-parties-ready :where(.os-button--primary, .button.primary, .button-primary, .primary-button, .btn-primary):hover {
+  border-color: var(--os-accent-strong);
+  background: var(--os-accent-strong);
+}
+
+body.os-parties-ready :where(.os-button--secondary, .button.secondary, .secondary-button, .btn-secondary) {
+  border-color: var(--os-line-strong);
+  background: var(--os-surface);
+  color: var(--os-ink);
+}
+
+body.os-parties-ready :where(.os-button--secondary, .button.secondary, .secondary-button, .btn-secondary):hover {
+  border-color: color-mix(in srgb, var(--os-accent) 48%, var(--os-line));
+  background: var(--os-accent-soft);
+  color: var(--os-accent-strong);
+}
+
+body.os-parties-ready :where(button, .button, .primary-button, .secondary-button)[disabled],
+body.os-parties-ready :where(button, .button, .primary-button, .secondary-button)[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+body.os-parties-ready :where(.icon-button, .icon-btn, .action-icon) {
+  display: inline-grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--os-radius-md);
+  background: transparent;
+  color: var(--os-ink-soft);
+}
+
+body.os-parties-ready :where(.icon-button, .icon-btn, .action-icon):hover {
+  border-color: color-mix(in srgb, var(--os-accent) 26%, var(--os-line));
+  background: var(--os-accent-soft);
+  color: var(--os-accent-strong);
+}
+
+/* Formulários */
+body.os-parties-ready :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea, .input) {
+  max-width: 100%;
+  border: 1px solid var(--os-line-strong);
+  border-radius: var(--os-radius-md);
+  background: var(--os-surface);
+  color: var(--os-ink);
+  box-shadow: none;
+  transition: border-color var(--os-transition), box-shadow var(--os-transition), background var(--os-transition);
+}
+
+body.os-parties-ready :where(input:not([type="checkbox"]):not([type="radio"]), select) {
+  min-height: 42px;
+}
+
+body.os-parties-ready textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+body.os-parties-ready :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea, .input):focus {
+  border-color: var(--os-accent);
+  outline: 0;
+  box-shadow: var(--os-focus);
+}
+
+body.os-parties-ready :where(label, .field-label) {
+  color: var(--os-ink-soft);
+  font-weight: 700;
+}
+
+body.os-parties-ready :where(.field-error, .error-message, [data-error-message]) {
+  color: #a9342d;
+  font-size: var(--os-text-sm);
+}
+
+body.os-parties-ready :where(input[type="checkbox"], input[type="radio"]) {
+  accent-color: var(--os-accent);
+}
+
+/* Superfícies */
+body.os-parties-ready :where(.os-surface, .surface, .panel, .card, .content-card, .summary-card, .metric-card) {
+  border-color: var(--os-line);
+  border-radius: var(--os-radius-lg);
+  background: var(--os-surface);
+  box-shadow: none;
+}
+
+body.os-parties-ready :where(.panel, .card, .content-card, .summary-card, .metric-card):not([class*="hero"]):not([class*="sidebar"]) {
+  border-width: 1px;
+  border-style: solid;
+}
+
+body.os-parties-ready :where(.eyebrow, .kicker, .section-kicker, .panel-kicker) {
+  color: var(--os-muted);
+  font-size: var(--os-text-xs);
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+body.os-parties-ready :where(.muted, .text-muted, .subtitle, .description, .helper-text) {
+  color: var(--os-muted);
+}
+
+/* Etiquetas e filtros */
+body.os-parties-ready :where(.os-badge, .badge, .tag, .chip, .status, .pill) {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border: 1px solid color-mix(in srgb, var(--os-accent) 18%, var(--os-line));
+  border-radius: var(--os-radius-sm);
+  background: var(--os-accent-soft);
+  color: var(--os-accent-strong);
+  font-size: var(--os-text-xs);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+body.os-parties-ready :where(.filter-button, .tab, [role="tab"]) {
+  border-radius: var(--os-radius-md);
+}
+
+body.os-parties-ready :where(.filter-button.active, .tab.active, [role="tab"][aria-selected="true"]) {
+  background: var(--os-ink);
+  color: #fff;
+}
+
+/* Tabelas e listas */
+body.os-parties-ready :where(table, .data-table) {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--os-line);
+  border-radius: var(--os-radius-lg);
+  background: var(--os-surface);
+  overflow: hidden;
+}
+
+body.os-parties-ready :where(th, .table-head) {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--os-line);
+  background: var(--os-surface-muted);
+  color: var(--os-muted);
+  font-size: var(--os-text-xs);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+body.os-parties-ready td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--os-line);
+  color: var(--os-ink-soft);
+}
+
+body.os-parties-ready tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+body.os-parties-ready tbody tr:hover {
+  background: color-mix(in srgb, var(--os-accent) 4%, white);
+}
+
+/* Progresso */
+body.os-parties-ready :where(progress, .progress, .progress-track, .progress-bar, .mini-progress) {
+  accent-color: var(--os-accent);
+}
+
+body.os-parties-ready :where(.progress-track, .progress-bar, .mini-progress) {
+  overflow: hidden;
+  border-radius: 99px;
+  background: #dfe7e3;
+}
+
+body.os-parties-ready :where(.progress-track, .progress-bar, .mini-progress) > span {
+  background: var(--os-accent);
+}
+
+/* Estados */
+body.os-parties-ready :where(.empty, .empty-state, .loading-state, .state-panel) {
+  border-color: var(--os-line);
+  border-radius: var(--os-radius-lg);
+  color: var(--os-muted);
+}
+
+body.os-parties-ready :where(.loader, .spinner) {
+  border-color: color-mix(in srgb, var(--os-accent) 18%, white);
+  border-top-color: var(--os-accent);
+}
+
+body.os-parties-ready :where(.toast, [role="status"].notification) {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--os-radius-md);
+  background: var(--os-ink);
+  color: #fff;
+  box-shadow: var(--os-shadow-md);
+}
+
+/* Modais */
+body.os-parties-ready :where(dialog, .modal, .modal-card) {
+  border-color: var(--os-line);
+  border-radius: var(--os-radius-xl);
+  background: var(--os-surface);
+  color: var(--os-ink);
+  box-shadow: var(--os-shadow-lg);
+}
+
+body.os-parties-ready dialog::backdrop {
+  background: rgba(16, 24, 45, 0.58);
+  backdrop-filter: blur(3px);
+}
+
+/* Navegação */
+body.os-parties-ready :where(.sidebar, .app-sidebar, .study-sidebar, .library-sidebar, [data-shared-sidebar]) {
+  border-right-color: var(--os-line);
+  box-shadow: none;
+}
+
+body.os-parties-ready :where(.sidebar-nav, .app-nav, .study-nav, .library-nav) a {
+  border-radius: var(--os-radius-md);
+}
+
+body.os-parties-ready :where(.sidebar-nav, .app-nav, .study-nav, .library-nav) a:hover,
+body.os-parties-ready :where(.sidebar-nav, .app-nav, .study-nav, .library-nav) a:focus-visible {
+  transform: none;
+}
+
+body.os-parties-ready :where(.topbar, .site-header, .app-header, .page-header) {
+  border-bottom-color: var(--os-line);
+}
+
+@media (max-width: 720px) {
+  body.os-parties-ready :where(.os-button, .button, .primary-button, .secondary-button, .action-button, .btn) {
+    min-height: 44px;
+  }
+
+  body.os-parties-ready :where(table, .data-table) {
+    font-size: var(--os-text-sm);
+  }
+}

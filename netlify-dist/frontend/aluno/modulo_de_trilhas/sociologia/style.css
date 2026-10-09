@@ -1,0 +1,117 @@
+:root {
+  --ink: #252d38;
+  --muted: #707a86;
+  --paper: #f1f3f4;
+  --card: #fff;
+  --accent: #405b75;
+  --soft: #dfe8ef;
+  --line: #d5dde4;
+  font-family: Inter, sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 21px 8vw;
+  color: var(--muted);
+  font-size: 12px;
+}
+main {
+  width: min(1000px, 100%);
+  margin: auto;
+  padding: 65px 8vw;
+}
+small {
+  color: var(--accent);
+  font:
+    11px "DM Mono",
+    monospace;
+  letter-spacing: 0.1em;
+}
+h1,
+h2 {
+  font-family: Poppins, sans-serif;
+}
+h1 {
+  margin: 12px 0;
+  font-size: clamp(46px, 8vw, 82px);
+  line-height: 0.9;
+}
+.hero {
+  position: relative;
+  margin-bottom: 55px;
+}
+.hero p {
+  max-width: 430px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.hero > strong {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: var(--accent);
+  font:
+    700 25px Poppins,
+    sans-serif;
+}
+.matrix,
+.trails {
+  padding: 30px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.matrix h2 {
+  margin: 15px 0 8px;
+}
+.matrix > p {
+  max-width: 610px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.perspectives {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 25px;
+}
+.perspectives button {
+  padding: 18px;
+  color: var(--accent);
+  background: var(--soft);
+  border: 0;
+  border-radius: 8px;
+  font-weight: 700;
+}
+.perspectives button:hover,
+.perspectives button.selected {
+  color: white;
+  background: var(--accent);
+}
+.trails {
+  margin-top: 18px;
+}
+.trail-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 600px) {
+  main {
+    padding-top: 35px;
+  }
+  .perspectives {
+    grid-template-columns: 1fr;
+  }
+}

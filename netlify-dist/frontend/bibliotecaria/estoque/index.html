@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Acervo | Biblioteca | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=20260902-1" />
+    <link rel="stylesheet" href="../../shared/sidebar.css" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="script.js?v=20260902-1"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260924-5"></script>
+  </head>
+  <body data-app-role="library">
+    <div class="library-shell">
+      <aside class="library-sidebar">
+        <a class="brand" href="../dashboard/index.html">
+          <span class="brand-mark"
+            ><span class="material-symbols-outlined">local_library</span></span
+          >
+          <span>OminiSaber<small>Biblioteca</small></span>
+        </a>
+        <nav aria-label="Navegação da biblioteca">
+          <a href="../dashboard/index.html"
+            ><span class="material-symbols-outlined">dashboard</span>Visão
+            geral</a
+          >
+          <a class="active" href="index.html"
+            ><span class="material-symbols-outlined">shelves</span>Acervo</a
+          >
+          <a href="../gestao_emprestimos/index.html"
+            ><span class="material-symbols-outlined">sync_alt</span
+            >Empréstimos</a
+          >
+          <a href="../configuracoes/index.html"
+            ><span class="material-symbols-outlined">settings</span
+            >Configurações</a
+          >
+        </nav>
+        <button class="signout" type="button" data-signout>
+          <span class="material-symbols-outlined">logout</span>Sair
+        </button>
+      </aside>
+      <main class="library-main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">OPERAÇÃO FÍSICA</p>
+            <h1>Acervo</h1>
+            <p class="muted">
+              Cadastre títulos, identifique cada exemplar e organize as
+              estantes.
+            </p>
+          </div>
+        </header>
+
+        <section class="metrics" aria-label="Resumo do acervo">
+          <article class="metric">
+            <span class="material-symbols-outlined blue">menu_book</span
+            ><strong data-book-count>0</strong><span>Títulos catalogados</span>
+          </article>
+          <article class="metric">
+            <span class="material-symbols-outlined green">inventory_2</span
+            ><strong data-copy-count>0</strong><span>Exemplares físicos</span>
+          </article>
+          <article class="metric">
+            <span class="material-symbols-outlined amber">shelves</span
+            ><strong data-section-count>0</strong><span>Seções ativas</span>
+          </article>
+          <article class="metric">
+            <span class="material-symbols-outlined red">location_on</span
+            ><strong data-unassigned-count>0</strong
+            ><span>Sem localização</span>
+          </article>
+        </section>
+
+        <section class="workspace-grid">
+          <article class="panel registration-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">ETAPA 1</p>
+                <h2>Novo lote de exemplares</h2>
+                <p class="muted">
+                  O sistema cria uma série para cada cópia cadastrada de forma
+                  individualizada.
+                </p>
+              </div>
+              <span class="step-number">01</span>
+            </div>
+
+            <!-- O botão que redireciona para a nova página -->
+            <div class="form-actions full" style="margin-top: 1.5rem">
+              <a
+                href="etapa1/etapa1.html"
+                class="button"
+                style="
+                  text-decoration: none;
+                  display: flex;
+                  justify-content: center;
+                "
+              >
+                <span class="material-symbols-outlined">arrow_forward</span>
+                Iniciar Cadastro (Etapa 1)
+              </a>
+            </div>
+          </article>
+
+          <article class="panel sections-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">ETAPA 2</p>
+                <h2>Seções físicas</h2>
+                <p class="muted">
+                  Distribua exemplares por capacidade disponível.
+                </p>
+              </div>
+              <span class="step-number">02</span>
+            </div>
+            <a
+              href="etapa2/etapa2.html"
+              class="button"
+              style="
+                text-decoration: none;
+                display: flex;
+                justify-content: center;
+              "
+            >
+              <span class="material-symbols-outlined">arrow_forward</span>
+              Criar & Organizar Seções (Etapa 2)
+            </a>
+          </article>
+        </section>
+
+        <section class="panel catalog-panel">
+          <div class="panel-heading catalog-heading">
+            <div>
+              <p class="section-kicker">INVENTÁRIO</p>
+              <h2>Livros e exemplares</h2>
+              <p class="muted">
+                Abra um título para conferir série, ISBN, status e localização.
+              </p>
+            </div>
+            <label class="search-field"
+              ><span class="material-symbols-outlined">search</span
+              ><input
+                class="input"
+                data-search
+                placeholder="Buscar título ou gênero"
+            /></label>
+          </div>
+          <div class="catalog-list" data-catalog>
+            <p class="empty">Carregando inventário...</p>
+          </div>
+        </section>
+
+        <section class="panel digital-panel" id="materiais-digitais">
+          <div class="panel-heading catalog-heading">
+            <div>
+              <p class="section-kicker">ACERVO DIGITAL</p>
+              <h2>PDFs verificados</h2>
+              <p class="muted">
+                Envie, confira e publique materiais para o download protegido
+                dos alunos.
+              </p>
+            </div>
+            <button class="button" type="button" data-pdf-form-toggle>
+              <span class="material-symbols-outlined">upload_file</span>Novo PDF
+            </button>
+          </div>
+          <div class="schema-warning" data-digital-warning hidden>
+            <span class="material-symbols-outlined">database</span>
+            <div>
+              <strong>Estrutura digital ainda não instalada</strong>
+              <p>
+                Aplique a migração da biblioteca no Supabase configurado pelo
+                arquivo .env.
+              </p>
+            </div>
+          </div>
+          <form class="pdf-form" data-pdf-form hidden>
+            <label
+              >Título<input
+                class="input"
+                name="titulo"
+                required
+                maxlength="180"
+                placeholder="Nome do material"
+            /></label>
+            <label
+              >Autor ou instituição<input
+                class="input"
+                name="autor"
+                maxlength="160"
+                placeholder="Ex.: Equipe OminiSaber"
+            /></label>
+            <label
+              >Matéria<select class="input" name="materia" required>
+                <option value="Português">Português</option>
+                <option value="Matemática">Matemática</option>
+                <option value="Física">Física</option>
+                <option value="Redação">Redação</option>
+                <option value="Administração">Administração</option>
+                <option value="Informática">Informática</option>
+              </select></label
+            >
+            <label
+              >Categoria<input
+                class="input"
+                name="categoria"
+                maxlength="100"
+                value="Material de apoio"
+            /></label>
+            <label class="full"
+              >Descrição<textarea
+                class="input"
+                name="descricao"
+                rows="3"
+                maxlength="800"
+                placeholder="Explique o conteúdo e para quem ele é indicado."
+              ></textarea>
+            </label>
+            <label class="file-field full"
+              ><span class="material-symbols-outlined">picture_as_pdf</span
+              ><span
+                ><strong>Escolher PDF</strong
+                ><small>Somente PDF real, até 50 MB</small></span
+              ><input
+                name="arquivo"
+                type="file"
+                accept="application/pdf,.pdf"
+                aria-label="Selecionar arquivo PDF"
+                required
+            /></label>
+            <div class="pdf-form-actions full">
+              <button
+                class="button secondary"
+                type="button"
+                data-pdf-form-cancel
+              >
+                Cancelar</button
+              ><button class="button" type="submit">
+                <span class="material-symbols-outlined">verified</span>Verificar
+                e publicar
+              </button>
+            </div>
+          </form>
+          <div class="digital-list" data-digital-list>
+            <p class="empty">Carregando materiais digitais...</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog class="modal" data-section-modal>
+      <form class="modal-card" method="dialog" data-section-form>
+        <button
+          class="modal-close"
+          type="button"
+          data-modal-close
+          aria-label="Fechar"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <p class="section-kicker">NOVA LOCALIZAÇÃO</p>
+        <h2>Criar seção</h2>
+        <p class="muted">
+          Defina onde os exemplares ficarão disponíveis para coleta.
+        </p>
+        <label
+          >Nome da seção<input
+            class="input"
+            name="nome"
+            required
+            maxlength="100"
+            placeholder="Ex.: Sessão Literatura 1"
+        /></label>
+        <label
+          >Gênero associado<input
+            class="input"
+            name="materia_associada"
+            maxlength="80"
+            placeholder="Ex.: Romance"
+        /></label>
+        <label
+          >Capacidade máxima<input
+            class="input"
+            name="capacidade_maxima"
+            type="number"
+            min="1"
+            max="10000"
+            value="50"
+            required
+        /></label>
+        <div class="modal-actions">
+          <button class="button secondary" type="button" data-modal-close>
+            Cancelar</button
+          ><button class="button" type="submit">Criar seção</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="modal scanner-modal" data-scanner-modal>
+      <div class="modal-card">
+        <button
+          class="modal-close"
+          type="button"
+          data-scanner-close
+          aria-label="Fechar"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <p class="section-kicker">LEITURA INDIVIDUAL</p>
+        <h2>Escanear ISBNs</h2>
+        <p class="muted" data-scanner-status>
+          Aponte a câmera para o código de barras do exemplar.
+        </p>
+        <div class="video-wrap">
+          <video data-scanner-video autoplay muted playsinline></video>
+          <div class="scan-frame"></div>
+        </div>
+        <div class="scan-progress">
+          <strong data-scan-current>Exemplar 1</strong
+          ><span data-scan-count>0 de 1 ISBNs lidos</span>
+        </div>
+        <button class="button" type="button" data-scanner-start>
+          <span class="material-symbols-outlined">photo_camera</span>Iniciar
+          câmera
+        </button>
+      </div>
+    </dialog>
+    <div class="toast" data-toast></div>
+  </body>
+</html>

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Experiências interativas de Matemática do OminiSaber."
+    />
+    <title>Matemática | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="experiencia.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="experiencia.js"></script>
+    <script defer src="script.js"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../../Parties/parties.js?v=20260924-5"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Ir para as experiências</a>
+    
+    <div class="mobile-bar">
+      <a class="brand" href="../../dashboard_principal/index.html"
+        ><span class="brand-mark"
+          ><span class="material-symbols-outlined">school</span></span
+        >OminiSaber</a
+      ><button
+        class="mobile-menu-button icon-button"
+        data-menu-toggle
+        aria-label="Abrir menu"
+        aria-expanded="false"
+      >
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="subject-title">
+          <span class="subject-icon"
+            ><span class="material-symbols-outlined">calculate</span></span
+          >Matemática
+        </div>
+        <div class="top-actions">
+          <a
+            class="icon-button"
+            href="../../perfil/index.html"
+            aria-label="Abrir perfil"
+            ><span class="material-symbols-outlined">person</span></a
+          >
+        </div>
+      </header>
+      <main class="page" id="conteudo">
+        <section class="math-hero">
+          <div>
+            <p class="eyebrow">Laboratórios por descritor</p>
+            <h1>Experimente, represente<br />e explique sua estratégia.</h1>
+            <p>
+              Três experiências transformam números, formas e funções em objetos
+              que você pode manipular.
+            </p>
+            <div class="button-row">
+              <a class="primary-button" href="maquina-de-padroes/index.html"
+                >Começar pelo 1º ano<span class="material-symbols-outlined"
+                  >arrow_forward</span
+                ></a
+              ><a class="secondary-button" href="#experiencias">Ver todas</a>
+            </div>
+          </div>
+          <aside class="hero-progress">
+            <span class="material-symbols-outlined">functions</span
+            ><strong data-hub-progress>0/3</strong>
+            <p>laboratórios concluídos</p>
+            <div class="hub-progress-track">
+              <span data-hub-progress-bar></span>
+            </div>
+          </aside>
+        </section>
+        <section id="experiencias" aria-labelledby="experiencias-title">
+          <div class="hub-section-head">
+            <div>
+              <p class="eyebrow">BNCC e descritores</p>
+              <h2 id="experiencias-title">Escolha um laboratório</h2>
+            </div>
+            <div class="hub-filters" role="group" aria-label="Filtrar por ano">
+              <button data-year="all" aria-pressed="true">Todos</button
+              ><button data-year="1">1º ano</button
+              ><button data-year="2">2º ano</button
+              ><button data-year="3">3º ano</button>
+            </div>
+          </div>
+          <div class="experience-grid">
+            <article class="experience-card" data-card-year="1">
+              <div class="card-visual">
+                <img
+                  src="assets/01-1o-ano-maquina-de-padroes.jpg"
+                  alt="Prévia da Máquina de Padrões"
+                  width="1000"
+                  height="712"
+                  loading="lazy"
+                  decoding="async"
+                /><span class="year-badge">1º ano · 1º trimestre</span>
+              </div>
+              <div class="card-copy">
+                <div class="descriptor">
+                  <span>EM13MAT501</span><strong>D086_M</strong>
+                </div>
+                <h3>Máquina de Padrões</h3>
+                <p>
+                  Conecte tabela, gráfico e expressão para descobrir a regra de
+                  uma função do 1º grau.
+                </p>
+                <div class="card-footer">
+                  <span data-card-status="maquina-de-padroes"
+                    >Laboratório de funções</span
+                  ><a
+                    href="maquina-de-padroes/index.html"
+                    aria-label="Abrir Máquina de Padrões"
+                    ><span class="material-symbols-outlined"
+                      >arrow_forward</span
+                    ></a
+                  >
+                </div>
+              </div>
+            </article>
+            <article class="experience-card" data-card-year="2">
+              <div class="card-visual">
+                <img
+                  src="assets/02-2o-ano-estudio-de-areas.jpg"
+                  alt="Prévia do Estúdio de Áreas"
+                  width="1000"
+                  height="712"
+                  loading="lazy"
+                  decoding="async"
+                /><span class="year-badge">2º ano · 2º trimestre</span>
+              </div>
+              <div class="card-copy">
+                <div class="descriptor">
+                  <span>EM13MAT307</span><strong>D058_M</strong>
+                </div>
+                <h3>Estúdio de Áreas</h3>
+                <p>
+                  Recorte, mova e reorganize figuras para justificar a área de
+                  regiões compostas.
+                </p>
+                <div class="card-footer">
+                  <span data-card-status="estudio-de-areas"
+                    >Laboratório de geometria</span
+                  ><a
+                    href="estudio-de-areas/index.html"
+                    aria-label="Abrir Estúdio de Áreas"
+                    ><span class="material-symbols-outlined"
+                      >arrow_forward</span
+                    ></a
+                  >
+                </div>
+              </div>
+            </article>
+            <article class="experience-card" data-card-year="3">
+              <div class="card-visual">
+                <img
+                  src="assets/03-3o-ano-reta-em-movimento.jpg"
+                  alt="Prévia da Reta em Movimento"
+                  width="1000"
+                  height="712"
+                  loading="lazy"
+                  decoding="async"
+                /><span class="year-badge">3º ano · 3º trimestre</span>
+              </div>
+              <div class="card-copy">
+                <div class="descriptor">
+                  <span>EM13MAT510</span><strong>D085_M</strong>
+                </div>
+                <h3>Reta em Movimento</h3>
+                <p>
+                  Manipule m e b para entender como os coeficientes transformam
+                  uma reta.
+                </p>
+                <div class="card-footer">
+                  <span data-card-status="reta-em-movimento"
+                    >Laboratório analítico</span
+                  ><a
+                    href="reta-em-movimento/index.html"
+                    aria-label="Abrir Reta em Movimento"
+                    ><span class="material-symbols-outlined"
+                      >arrow_forward</span
+                    ></a
+                  >
+                </div>
+              </div>
+            </article>
+          </div>
+          <p class="empty-filter" data-empty-filter hidden>
+            Nenhuma experiência disponível para este filtro.
+          </p>
+        </section>
+        <section class="teacher-feed surface panel">
+          <div>
+            <p class="panel-kicker">Conectado ao professor de Matemática</p>
+            <h2>Atividades publicadas para sua turma</h2>
+            <p class="muted small" data-teacher-feed-copy>
+              Consultando o Supabase...
+            </p>
+          </div>
+          <span class="teacher-feed-count" data-teacher-feed-count>—</span>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,108 @@
+body.os-parties-ready :where(.page, .page-shell, .app-main, .main-content, main) {
+  min-width: 0;
+}
+
+body.os-parties-ready :where(.page, .page-shell, .content, .content-shell, .dashboard, .portal-main) {
+  color: var(--os-ink);
+}
+
+.os-page-container,
+body.os-parties-ready :where(main > .page, main > .content, .main-content > .page) {
+  width: min(100%, var(--os-content-max));
+  margin-inline: auto;
+}
+
+body.os-parties-ready :where(.page-heading, .page-intro, .section-heading, .panel-head) {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--os-space-4);
+}
+
+body.os-parties-ready :where(.page-heading, .page-intro) h1 {
+  margin-block: 0;
+  font-size: var(--os-text-2xl);
+}
+
+body.os-parties-ready :where(.grid, .card-grid, .summary-grid, .metric-grid, .dashboard-grid, .activity-list, .content-grid, .panel-grid, .form-grid, .results-grid, .library-grid) {
+  gap: var(--os-space-5);
+}
+
+body.os-parties-ready :where(.app-shell, .page-shell, .portal-shell, .study-shell) {
+  background: var(--os-canvas);
+}
+
+body.os-parties-ready[data-party-layout="auth"] {
+  background: #f4f7f5;
+}
+
+body.os-parties-ready[data-party-layout="auth"] :where(.auth-card, .login-card, .register-card, .reset-card, .form-card) {
+  border: 1px solid var(--os-line);
+  border-radius: var(--os-radius-xl);
+  background: var(--os-surface);
+  box-shadow: var(--os-shadow-md);
+}
+
+body.os-parties-ready[data-party-layout="auth"] :where(.auth-hero, .login-visual, .auth-side) {
+  background-color: var(--os-ink);
+}
+
+body.os-parties-ready[data-party-layout="utility"] main {
+  width: min(100% - 32px, 760px);
+  margin-inline: auto;
+}
+
+/* Ritmo de desktop: respiro compartilhado sem interferir na etapa mobile. */
+@media (min-width: 901px) {
+  .os-page-container,
+  body.os-parties-ready[data-party-layout="app"] :where(main > .page, main > .content, .main-content > .page),
+  body.os-parties-ready[data-party-layout="app"] :where(main.page, main.content) {
+    width: min(
+      calc(100% - (var(--os-page-gutter-desktop) * 2)),
+      var(--os-content-max)
+    );
+    margin-inline: auto;
+  }
+
+  body.os-parties-ready[data-party-layout="app"] :where(.app-main > .page) {
+    padding-block: clamp(40px, 4vw, 60px) 88px;
+  }
+
+  body.os-parties-ready :where(.page-heading, .page-intro) {
+    margin-bottom: var(--os-section-gap-desktop);
+  }
+
+  body.os-parties-ready :where(.section-heading, .panel-head) {
+    margin-bottom: var(--os-space-5);
+  }
+
+  body.os-parties-ready :where(.grid, .card-grid, .summary-grid, .metric-grid, .dashboard-grid, .activity-list, .content-grid, .panel-grid, .form-grid, .results-grid, .library-grid) {
+    gap: var(--os-grid-gap-desktop);
+  }
+
+  body.os-parties-ready :where(.tabs, .tab-list, .filters, .filter-row, .activity-tabs, .toolbar, .page-actions) {
+    column-gap: var(--os-space-3);
+    row-gap: var(--os-space-3);
+  }
+
+  body.os-parties-ready :where(.page, .content, .dashboard, .portal-main, .library-main) > section + section {
+    margin-top: var(--os-section-gap-desktop);
+  }
+}
+
+@media (max-width: 900px) {
+  body.os-parties-ready :where(.page-heading, .page-intro, .section-heading, .panel-head) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  body.os-parties-ready :where(.page, .page-shell, .content-shell, .dashboard, .portal-main) {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  body.os-parties-ready :where(.page, .content, .dashboard, .portal-main) {
+    padding-inline: 14px;
+  }
+}

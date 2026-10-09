@@ -1,0 +1,664 @@
+@import url("../portugues/experiencia.css");
+
+:root {
+  --math-blue: #0b5fe8;
+  --math-blue-strong: #064cc1;
+  --math-cyan: #1499cd;
+  --math-teal: #0f9b8e;
+  --math-amber: #f29c13;
+  --math-coral: #ef5b68;
+  --math-soft: #eef5ff;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a[aria-current="page"] {
+  background: var(--math-blue);
+}
+.subject-icon {
+  color: var(--math-blue);
+  background: var(--math-soft);
+}
+.eyebrow,
+.breadcrumbs,
+.tag strong {
+  color: var(--math-blue);
+}
+.primary-button {
+  background: var(--math-blue);
+  border-color: var(--math-blue);
+}
+.primary-button:hover {
+  background: var(--math-blue-strong);
+}
+.secondary-button {
+  color: var(--math-blue);
+  border-color: #b8cdf8;
+}
+.secondary-button:hover {
+  background: var(--math-soft);
+}
+.topbar {
+  gap: 18px;
+}
+.top-filters {
+  margin-right: auto;
+}
+.page {
+  width: min(1440px, 100%);
+}
+.page-heading {
+  align-items: center;
+}
+.page-heading h1 {
+  font-size: clamp(27px, 2.4vw, 34px);
+}
+.curriculum-tags {
+  max-width: 610px;
+}
+.tag {
+  max-width: 360px;
+  line-height: 1.35;
+}
+
+.math-workbench {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.72fr) minmax(420px, 1.45fr) minmax(
+      290px,
+      0.92fr
+    );
+  gap: 16px;
+  align-items: stretch;
+}
+.math-workbench.two-column {
+  grid-template-columns: minmax(620px, 1.8fr) minmax(300px, 0.75fr);
+}
+.math-workbench.line-lab {
+  grid-template-columns: minmax(520px, 1.15fr) minmax(420px, 0.95fr);
+}
+.math-panel {
+  min-width: 0;
+  padding: 18px;
+}
+.step-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+}
+.step-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  color: #fff;
+  background: var(--math-blue);
+  border-radius: 50%;
+  font-weight: 800;
+}
+.step-number.teal {
+  background: var(--math-teal);
+}
+.step-number.amber {
+  background: var(--math-amber);
+}
+.step-title h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.value-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+.value-table th {
+  padding: 0 8px 4px;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: left;
+}
+.value-table td {
+  padding: 0 4px;
+}
+.number-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.number-control input {
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+  padding: 0 8px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-weight: 700;
+}
+.row-marker {
+  display: grid;
+  place-items: center;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  background: var(--marker);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+}
+.hint-card {
+  display: flex;
+  gap: 9px;
+  margin-top: 15px;
+  padding: 13px;
+  color: #284b7b;
+  background: #f3f7ff;
+  border: 1px solid #cbdcf8;
+  border-radius: 10px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.hint-card .material-symbols-outlined {
+  color: var(--math-blue);
+}
+
+.canvas-shell {
+  position: relative;
+  min-height: 480px;
+  overflow: hidden;
+}
+.math-canvas {
+  display: block;
+  width: 100%;
+  height: 480px;
+  border-radius: 10px;
+  touch-action: none;
+}
+.canvas-caption {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 11px 13px;
+  color: #3f5378;
+  background: #f7f9fe;
+  border: 1px solid #dfe6f3;
+  border-radius: 9px;
+  font-size: 11px;
+}
+
+.equation-box {
+  margin: 5px 0 16px;
+  padding: 13px;
+  background: #fff9ed;
+  border: 1px solid #f4d69d;
+  border-radius: 10px;
+  text-align: center;
+}
+.equation {
+  font:
+    700 23px Poppins,
+    sans-serif;
+}
+.coefficient-control {
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.coefficient-control label {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.stepper {
+  display: grid;
+  grid-template-columns: 38px 1fr 38px;
+  align-items: center;
+  margin-top: 9px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  overflow: hidden;
+}
+.stepper button {
+  height: 38px;
+  color: var(--math-blue);
+  background: #fff;
+  border: 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+.stepper button:hover {
+  background: var(--math-soft);
+}
+.stepper output {
+  color: var(--ink);
+  font-weight: 800;
+  text-align: center;
+}
+.live-explanation {
+  margin: 14px 0;
+  padding: 14px;
+  color: #66430a;
+  background: #fff8e8;
+  border: 1px solid #f4d69d;
+  border-radius: 10px;
+  font-size: 11px;
+  line-height: 1.55;
+}
+.full-button {
+  width: 100%;
+}
+.feedback {
+  min-height: 22px;
+  margin: 10px 0 0;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.feedback.success {
+  color: #08765f;
+}
+.feedback.error {
+  color: #c43b4a;
+}
+
+.tool-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.tool-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tool-button[aria-pressed="true"] {
+  color: var(--math-blue);
+  background: var(--math-soft);
+  border-color: var(--math-blue);
+}
+.tool-button .material-symbols-outlined {
+  font-size: 19px;
+}
+.area-canvas {
+  height: 520px;
+}
+.strategy-parts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin: 15px 0;
+}
+.strategy-part {
+  padding: 12px;
+  border: 2px solid var(--part-color);
+  border-radius: 8px;
+  font-weight: 800;
+  text-align: center;
+}
+.strategy-expression {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 72px;
+  padding: 15px;
+  border: 1px dashed #b8c0d1;
+  border-radius: 10px;
+  font-weight: 800;
+}
+.area-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0;
+  padding: 14px;
+  background: #f6fbfa;
+  border: 1px solid #bfe5df;
+  border-radius: 10px;
+}
+.area-total output {
+  color: var(--math-teal);
+  font:
+    700 24px Poppins,
+    sans-serif;
+}
+
+.line-stack {
+  display: grid;
+  gap: 14px;
+}
+.wide-control {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 34px 66px;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+.wide-control button {
+  width: 34px;
+  height: 34px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.wide-control input {
+  width: 100%;
+  accent-color: var(--control-color);
+}
+.wide-control output {
+  padding: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 800;
+}
+.scenario {
+  padding: 16px;
+  background: #f2fbfc;
+  border: 1px solid #8bd7de;
+  border-radius: 12px;
+}
+.scenario h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.scenario-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+.scenario-item {
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #d4e9ed;
+  border-radius: 9px;
+}
+.scenario-item span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+}
+.scenario-item strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 16px;
+}
+.prediction {
+  padding: 16px;
+}
+.prediction-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+.prediction-option {
+  position: relative;
+}
+.prediction-option input {
+  position: absolute;
+  opacity: 0;
+}
+.prediction-option span {
+  display: block;
+  min-height: 64px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font-size: 10px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.prediction-option input:checked + span {
+  color: var(--math-blue);
+  background: var(--math-soft);
+  border-color: var(--math-blue);
+  box-shadow: 0 0 0 2px rgba(11, 95, 232, 0.1);
+}
+
+.lesson-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+.progress-card,
+.quiz-card {
+  min-height: 132px;
+}
+.progress-rail {
+  display: flex;
+  align-items: center;
+  margin: 18px 0 10px;
+}
+.progress-rail span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--muted);
+  background: #fff;
+  border: 1px solid #d9deea;
+  border-radius: 50%;
+  font-size: 11px;
+}
+.progress-rail span.done,
+.progress-rail span.current {
+  color: #fff;
+  background: var(--math-blue);
+  border-color: var(--math-blue);
+}
+.progress-rail i {
+  flex: 1;
+  height: 2px;
+  background: #d9deea;
+}
+.progress-rail i.done {
+  background: var(--math-blue);
+}
+.quiz-card {
+  background: #fffbef;
+  border-color: #f3d895;
+}
+.quiz-card .panel-head {
+  align-items: center;
+}
+.quiz-card[data-state="available"] {
+  background: #effaf7;
+  border-color: #a8dfd3;
+}
+
+.quiz-dialog {
+  width: min(760px, calc(100% - 28px));
+  max-height: 90vh;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 28px 80px rgba(14, 18, 74, 0.28);
+}
+.quiz-dialog::backdrop {
+  background: rgba(8, 10, 46, 0.64);
+}
+.quiz-dialog-inner {
+  max-height: 90vh;
+  overflow: auto;
+  padding: 24px;
+}
+.quiz-dialog-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+}
+.quiz-dialog-head h2 {
+  margin: 0;
+}
+.quiz-question {
+  margin: 18px 0;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+}
+.quiz-question legend {
+  padding: 0 6px;
+  font-weight: 700;
+}
+.quiz-option {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 9px;
+  margin-top: 9px;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.quiz-option:has(input:checked) {
+  background: var(--math-soft);
+  border-color: var(--math-blue);
+}
+.quiz-question textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 300;
+  max-width: 360px;
+  padding: 14px 17px;
+  color: #fff;
+  background: var(--navy);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  font-size: 12px;
+}
+
+@media (max-width: 1180px) {
+  .math-workbench,
+  .math-workbench.line-lab {
+    grid-template-columns: 1fr 1fr;
+  }
+  .math-workbench > :last-child {
+    grid-column: 1 / -1;
+  }
+  .math-workbench.two-column > :last-child {
+    grid-column: auto;
+  }
+  .line-stack {
+    grid-column: auto !important;
+  }
+}
+@media (max-width: 860px) {
+  .sidebar {
+    width: min(280px, 86vw);
+    transform: translateX(-105%);
+  }
+  body.menu-open .sidebar {
+    transform: translateX(0);
+  }
+  .app-shell {
+    margin-left: 0;
+  }
+  .math-workbench,
+  .math-workbench.two-column,
+  .math-workbench.line-lab,
+  .lesson-footer {
+    grid-template-columns: 1fr;
+  }
+  .math-workbench > :last-child,
+  .math-workbench.two-column > :last-child {
+    grid-column: auto;
+  }
+  .canvas-shell,
+  .math-canvas {
+    min-height: 400px;
+    height: 400px;
+  }
+  .area-canvas {
+    height: 430px;
+  }
+  .page-heading {
+    grid-template-columns: 1fr;
+  }
+  .curriculum-tags {
+    justify-content: flex-start;
+    max-width: none;
+  }
+  .tag {
+    max-width: none;
+  }
+}
+@media (max-width: 620px) {
+  .topbar {
+    flex-wrap: wrap;
+  }
+  .top-filters {
+    order: 3;
+    width: 100%;
+    margin: 0;
+  }
+  .top-select {
+    flex: 1;
+    width: 50%;
+  }
+  .page {
+    padding-inline: 14px;
+  }
+  .math-panel {
+    padding: 14px;
+  }
+  .canvas-shell,
+  .math-canvas {
+    min-height: 330px;
+    height: 330px;
+  }
+  .area-canvas {
+    height: 360px;
+  }
+  .wide-control {
+    grid-template-columns: 34px minmax(80px, 1fr) 34px 58px;
+  }
+  .prediction-options,
+  .scenario-grid {
+    grid-template-columns: 1fr;
+  }
+  .curriculum-tags {
+    display: grid;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

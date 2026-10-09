@@ -1,0 +1,74 @@
+/* Header contextual compartilhado: uma única linguagem para todas as áreas. */
+body.os-parties-ready .os-standard-header {
+  min-height: 76px;
+  width: 100%;
+  padding: 0 clamp(20px, 3.5vw, 54px);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--os-ink);
+  background: color-mix(in srgb, var(--os-surface) 96%, transparent);
+  border-bottom: 1px solid var(--os-line);
+  box-shadow: none;
+  backdrop-filter: blur(12px);
+}
+
+body.os-parties-ready .os-standard-header :where(.topbar-title, .study-topbar-copy, .library-header-copy) {
+  min-width: 0;
+}
+
+body.os-parties-ready .os-standard-header :where(.topbar-title, .study-topbar-copy, .library-header-copy) strong,
+body.os-parties-ready .os-standard-header :where(.topbar-title, .study-topbar-copy, .library-header-copy) span {
+  display: block;
+}
+
+body.os-parties-ready .os-standard-header :where(.topbar-title, .study-topbar-copy, .library-header-copy) strong {
+  color: var(--os-ink);
+  font: 800 15px/1.25 var(--os-font-body);
+}
+
+body.os-parties-ready .os-standard-header :where(.topbar-title, .study-topbar-copy, .library-header-copy) span {
+  margin-top: 4px;
+  color: var(--os-muted);
+  font-size: var(--os-text-xs);
+  line-height: 1.35;
+}
+
+body.os-parties-ready .os-standard-header :where(.topbar-actions, .study-topbar-actions) {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+body.os-parties-ready .os-standard-header > :where(.icon-button, .menu-button),
+body.os-parties-ready .os-standard-header :where(.topbar-actions, .study-topbar-actions) .icon-button {
+  flex: 0 0 42px;
+}
+
+body.os-parties-ready .os-standard-header > div:has(> .eyebrow) {
+  min-width: 0;
+}
+
+body.os-parties-ready .os-standard-header > div:has(> .eyebrow) .eyebrow {
+  margin: 0 0 4px;
+  color: var(--os-accent);
+}
+
+body.os-parties-ready .os-standard-header > div:has(> .eyebrow) h1 {
+  margin: 0;
+  color: var(--os-ink);
+  font-size: clamp(21px, 2.2vw, 30px);
+  line-height: 1.15;
+}
+
+@media (max-width: 720px) {
+  body.os-parties-ready .os-standard-header {
+    min-height: 68px;
+    padding-inline: 16px;
+  }
+
+  body.os-parties-ready .os-standard-header :where(.topbar-title, .study-topbar-copy, .library-header-copy) span {
+    display: none;
+  }
+}

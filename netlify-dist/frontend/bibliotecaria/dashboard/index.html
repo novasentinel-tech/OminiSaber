@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Biblioteca | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=20260902-1" />
+    <link rel="stylesheet" href="../../shared/sidebar.css" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="script.js?v=20260902-1"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260924-5"></script>
+  </head>
+  <body data-app-role="library">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"
+        ><span class="brand-mark"
+          ><span class="material-symbols-outlined">local_library</span></span
+        ><span>OminiSaber<small>Biblioteca</small></span></a
+      >
+      <nav aria-label="Navegação da biblioteca">
+        <a class="active" href="index.html"
+          ><span class="material-symbols-outlined">space_dashboard</span>Hoje</a
+        ><a href="../gestao_emprestimos/index.html"
+          ><span class="material-symbols-outlined">sync_alt</span>Empréstimos</a
+        ><a href="../estoque/index.html"
+          ><span class="material-symbols-outlined">shelves</span>Acervo</a
+        ><a href="../configuracoes/index.html"
+          ><span class="material-symbols-outlined">tune</span>Regras</a
+        >
+      </nav>
+      <button class="signout" type="button" data-signout>
+        <span class="material-symbols-outlined">logout</span>Sair
+      </button>
+    </aside>
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">OPERAÇÃO DA BIBLIOTECA</p>
+          <h1 data-greeting>Olá, bibliotecária</h1>
+          <p>Pedidos, retiradas e devoluções organizados por prioridade.</p>
+        </div>
+        <div class="top-actions">
+          <label class="search"
+            ><span class="material-symbols-outlined">search</span
+            ><span class="sr-only">Buscar na fila</span
+            ><input
+              type="search"
+              placeholder="Buscar aluno ou livro"
+              data-global-search /></label
+          ><a class="button primary" href="../estoque/etapa1/etapa1.html"
+            ><span class="material-symbols-outlined">add</span>Novo livro
+            físico</a
+          >
+        </div>
+      </header>
+      <section class="dashboard">
+        <div class="summary-strip" aria-label="Resumo da biblioteca">
+          <article>
+            <span class="material-symbols-outlined">pending_actions</span>
+            <div>
+              <strong data-pending>--</strong>
+              <p>pedidos para separar</p>
+            </div>
+          </article>
+          <article>
+            <span class="material-symbols-outlined">move_to_inbox</span>
+            <div>
+              <strong data-pickup>--</strong>
+              <p>prontos para retirada</p>
+            </div>
+          </article>
+          <article class="attention">
+            <span class="material-symbols-outlined">warning</span>
+            <div>
+              <strong data-overdue>--</strong>
+              <p>devoluções atrasadas</p>
+            </div>
+          </article>
+          <article>
+            <span class="material-symbols-outlined">library_books</span>
+            <div>
+              <strong data-available>--</strong>
+              <p>exemplares disponíveis</p>
+            </div>
+          </article>
+        </div>
+        <section class="work-queue" aria-labelledby="queue-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">FILA INTELIGENTE</p>
+              <h2 id="queue-title">O que fazer agora</h2>
+            </div>
+            <a href="../gestao_emprestimos/index.html"
+              >Ver todos
+              <span class="material-symbols-outlined">arrow_forward</span></a
+            >
+          </div>
+          <div class="queue-list" data-queue aria-live="polite">
+            <p class="empty">Carregando solicitações reais...</p>
+          </div>
+        </section>
+        <div class="lower-grid">
+          <section class="circulation">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">MOVIMENTO DO ACERVO</p>
+                <h2>Últimos 7 dias</h2>
+              </div>
+              <span class="trend" data-trend>Sem movimentação</span>
+            </div>
+            <div
+              class="circulation-chart"
+              aria-label="Empréstimos e devoluções nos últimos sete dias"
+            >
+              <div class="chart-legend">
+                <span><i class="loans"></i>Empréstimos</span
+                ><span><i class="returns"></i>Devoluções</span>
+              </div>
+              <div class="bars" data-chart></div>
+            </div>
+          </section>
+          <section class="quick-actions">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">ATALHOS</p>
+                <h2>Processos rápidos</h2>
+              </div>
+            </div>
+            <a href="../gestao_emprestimos/index.html?aba=pendente"
+              ><span class="material-symbols-outlined">inventory_2</span>
+              <div>
+                <strong>Separar pedidos</strong>
+                <p>Reserve o exemplar com um clique</p>
+              </div>
+              <span class="material-symbols-outlined">chevron_right</span></a
+            ><a href="../gestao_emprestimos/index.html?aba=aprovado"
+              ><span class="material-symbols-outlined">qr_code_scanner</span>
+              <div>
+                <strong>Confirmar retirada</strong>
+                <p>Entregue o exemplar já separado</p>
+              </div>
+              <span class="material-symbols-outlined">chevron_right</span></a
+            ><a href="../estoque/index.html"
+              ><span class="material-symbols-outlined">picture_as_pdf</span>
+              <div>
+                <strong>Acervo e PDFs</strong>
+                <p>Gerencie físico e digital</p>
+              </div>
+              <span class="material-symbols-outlined">chevron_right</span></a
+            >
+          </section>
+        </div>
+      </section>
+    </main>
+    <div class="toast" data-toast role="status" aria-live="polite"></div>
+  </body>
+</html>

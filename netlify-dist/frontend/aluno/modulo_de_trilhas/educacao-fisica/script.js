@@ -1,0 +1,48 @@
+(() => {
+  const info = {
+    leve: "Movimento leve: priorize mobilidade, respiração confortável e percepção do corpo.",
+    moderada:
+      "Movimento moderado: mantenha ritmo sustentável e faça pausas para hidratação.",
+    intensa:
+      "Movimento intenso: respeite seus limites e planeje recuperação antes de repetir o esforço.",
+  };
+  document.querySelectorAll("[data-intensity]").forEach((button) =>
+    button.addEventListener("click", () => {
+      document
+        .querySelectorAll("[data-intensity]")
+        .forEach((item) => item.classList.remove("selected"));
+      button.classList.add("selected");
+      document.querySelector("[data-intensity-info]").textContent =
+        info[button.dataset.intensity];
+    }),
+  );
+  document.addEventListener("DOMContentLoaded", async () => {
+    const list = document.querySelector("[data-trails]");
+    if (!window.OminiSaber?.configured) {
+      list.textContent = "Supabase não configurado.";
+      return;
+    }
+    try {
+      const [trails, progress] = await Promise.all([
+        window.OminiSaber.listTrilhas(),
+        window.OminiSaber.listStudentProgress(),
+      ]);
+      const items = progress.filter((item) =>
+        /educa[çc][ãa]o f[ií]sica/i.test(
+          item.atividades?.trilhas?.materia || "",
+        ),
+      );
+      document.querySelector("[data-progress]").textContent =
+        `${items.length ? Math.round((items.filter((item) => item.concluida).length / items.length) * 100) : 0}%`;
+      list.innerHTML =
+        trails
+          .filter((item) =>
+            /educa[çc][ãa]o f[ií]sica/i.test(item.materia || ""),
+          )
+          .map((item) => `<div class="trail-item">${item.titulo}</div>`)
+          .join("") || "Nenhuma trilha publicada.";
+    } catch (error) {
+      list.textContent = error.message;
+    }
+  });
+})();

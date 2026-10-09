@@ -1,0 +1,586 @@
+/*
+ * OminiSaber mobile shell
+ * Regras compartilhadas para as 92 páginas. O CSS local continua cuidando
+ * somente do conteúdo particular de cada tela.
+ */
+
+:root {
+  --os-mobile-gutter: 16px;
+  --os-mobile-header: 64px;
+  --os-mobile-nav-height: 72px;
+  --os-touch-target: 44px;
+}
+
+.os-mobile-backdrop,
+.os-mobile-nav,
+.os-mobile-close {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  html {
+    scroll-padding-top: calc(var(--os-mobile-header) + 12px);
+  }
+
+  body.os-parties-ready[data-party-layout="app"] {
+    min-width: 320px;
+    padding-bottom: calc(var(--os-mobile-nav-height) + env(safe-area-inset-bottom));
+    overflow-x: clip;
+  }
+
+  body.os-parties-ready.os-mobile-menu-open {
+    overflow: hidden;
+  }
+
+  body.os-parties-ready :where(.main-content, .app-main, .library-main, .study-main, main) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body.os-parties-ready[data-party-layout="app"] :where(
+    .sidebar,
+    .app-sidebar,
+    .library-sidebar,
+    .study-sidebar,
+    [data-shared-sidebar],
+    [data-sidebar]
+  ) {
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    z-index: 1001 !important;
+    display: flex !important;
+    width: min(84vw, 320px) !important;
+    max-width: 320px !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding-top: max(20px, env(safe-area-inset-top)) !important;
+    padding-bottom: max(18px, env(safe-area-inset-bottom)) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    transform: translate3d(-105%, 0, 0) !important;
+    visibility: hidden;
+    box-shadow: 24px 0 60px rgba(9, 20, 48, 0.22) !important;
+    transition:
+      transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 240ms ease !important;
+  }
+
+  body.os-parties-ready.os-mobile-menu-open :where(
+    .sidebar,
+    .app-sidebar,
+    .library-sidebar,
+    .study-sidebar,
+    [data-shared-sidebar],
+    [data-sidebar]
+  ) {
+    transform: translate3d(0, 0, 0) !important;
+    visibility: visible;
+  }
+
+  body.os-parties-ready :where(
+    .sidebar + .main-content,
+    .sidebar + main,
+    .app-sidebar + .app-main,
+    .library-sidebar + .library-main,
+    .study-sidebar + .study-main,
+    .main-content,
+    .app-main,
+    .library-main,
+    .study-main,
+    main
+  ) {
+    margin-left: 0 !important;
+  }
+
+  .os-mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: rgba(8, 18, 42, 0.54);
+    opacity: 0;
+    visibility: hidden;
+    backdrop-filter: blur(2px);
+    transition: opacity 200ms ease, visibility 200ms ease;
+  }
+
+  body.os-mobile-menu-open .os-mobile-backdrop {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .os-mobile-close {
+    position: absolute;
+    top: max(14px, env(safe-area-inset-top));
+    right: 14px;
+    z-index: 4;
+    display: grid;
+    width: var(--os-touch-target);
+    height: var(--os-touch-target);
+    place-items: center;
+    padding: 0;
+    color: var(--os-blue);
+    background: var(--os-blue-soft);
+    border: 1px solid #c7d8fb;
+    border-radius: 12px;
+  }
+
+  body.os-parties-ready .os-standard-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    min-height: var(--os-mobile-header);
+    height: var(--os-mobile-header);
+    padding: 0 var(--os-mobile-gutter);
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(14px);
+  }
+
+  body.os-parties-ready .os-standard-header :where(.menu-button, [data-menu-toggle], .os-mobile-menu-button) {
+    display: grid !important;
+    flex: 0 0 var(--os-touch-target);
+    width: var(--os-touch-target);
+    height: var(--os-touch-target);
+  }
+
+  body.os-parties-ready .os-standard-header :where(.topbar-title, .study-topbar-copy, .library-header-copy) {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  body.os-parties-ready .os-standard-header :where(.topbar-title, .study-topbar-copy, .library-header-copy) strong,
+  body.os-parties-ready .os-standard-header > div > h1 {
+    overflow: hidden;
+    font-size: 14px !important;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  body.os-parties-ready .os-standard-header :where(.topbar-title, .study-topbar-copy, .library-header-copy) span,
+  body.os-parties-ready .os-standard-header > div > p,
+  body.os-parties-ready .os-standard-header .eyebrow {
+    display: none !important;
+  }
+
+  body.os-parties-ready .os-standard-header :where(.topbar-actions, .study-topbar-actions) {
+    gap: 2px;
+  }
+
+  body.os-parties-ready .os-standard-header :where(.topbar-actions, .study-topbar-actions) > :nth-child(n + 3) {
+    display: none;
+  }
+
+  body.os-parties-ready .os-standard-header :where(.icon-button, .icon-btn, .action-icon) {
+    width: var(--os-touch-target);
+    height: var(--os-touch-target);
+    border-color: transparent;
+  }
+
+  /* A navegação inferior é a âncora principal no celular. */
+  body.os-parties-ready[data-party-layout="app"] > .mobile-nav:not(.os-mobile-nav) {
+    display: none !important;
+  }
+
+  .os-mobile-nav {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 900;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    min-height: var(--os-mobile-nav-height);
+    padding: 6px max(6px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+    background: rgba(255, 255, 255, 0.97);
+    border-top: 1px solid var(--os-line);
+    box-shadow: 0 -10px 28px rgba(19, 32, 58, 0.08);
+    backdrop-filter: blur(16px);
+  }
+
+  .os-mobile-nav :where(a, button) {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: 54px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px 2px;
+    color: #68738a;
+    background: transparent;
+    border: 0;
+    border-radius: 12px;
+    font: 800 9px/1.15 var(--os-font);
+    text-decoration: none;
+  }
+
+  .os-mobile-nav :where(a, button) .material-symbols-outlined {
+    font-size: 22px;
+  }
+
+  .os-mobile-nav :where(a.is-active, a[aria-current="page"], button.is-active, button[aria-expanded="true"]) {
+    color: var(--os-blue);
+    background: var(--os-blue-soft);
+  }
+
+  .os-mobile-nav :where(a.is-active, a[aria-current="page"]) .material-symbols-outlined {
+    font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 24;
+  }
+
+  .os-mobile-nav .nav-badge,
+  .os-mobile-nav [class*="badge"] {
+    position: absolute;
+    top: 2px;
+    left: calc(50% + 7px);
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    font-size: 8px;
+  }
+
+  body.os-parties-ready[data-party-layout="app"] :where(.page, .dashboard, .evolution, .hub-shell, .difficulty-page, .library-content, .content, .portal-main) {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+    padding: 24px var(--os-mobile-gutter) 36px !important;
+  }
+
+  body.os-parties-ready :where(.page-heading, .page-intro) {
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  body.os-parties-ready :where(.page-heading, .page-intro) h1,
+  body.os-parties-ready :where(.difficulty-page, .hub-shell) h1 {
+    font-size: clamp(28px, 8vw, 36px) !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.035em;
+  }
+
+  body.os-parties-ready :where(.page-heading, .page-intro) p:not(.eyebrow) {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  body.os-parties-ready :where(.page-actions, .toolbar, .panel-actions) {
+    width: 100%;
+  }
+
+  body.os-parties-ready :where(.tabs, .tab-list, .filters, .filter-row, .activity-tabs, .chip-row, .category-nav, .descriptor-filters) {
+    display: flex;
+    width: calc(100vw - (var(--os-mobile-gutter) * 2));
+    max-width: 100%;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    gap: 8px;
+    padding-bottom: 4px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+
+  body.os-parties-ready :where(.tabs, .tab-list, .filters, .filter-row, .activity-tabs, .chip-row, .category-nav, .descriptor-filters)::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.os-parties-ready :where(.tabs, .tab-list, .filters, .filter-row, .activity-tabs, .chip-row, .category-nav, .descriptor-filters) > * {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    white-space: nowrap;
+  }
+
+  body.os-parties-ready[data-study-page="catalogo"] .filters {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr;
+    padding-bottom: 0;
+    overflow: visible;
+  }
+
+  body.os-parties-ready[data-study-page="catalogo"] .filters > * {
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
+  }
+
+  body.os-parties-ready :where(button, a, input, select, textarea, summary) {
+    touch-action: manipulation;
+  }
+
+  body.os-parties-ready :where(button, .button, .primary-button, .secondary-button, .action-button, .btn, input:not([type="checkbox"]):not([type="radio"]), select) {
+    min-height: var(--os-touch-target);
+  }
+
+  body.os-parties-ready :where(.card, .panel, .content-card, .summary-card, .metric-card) {
+    max-width: 100%;
+  }
+
+  body.os-parties-ready :where(.grid, .card-grid, .dashboard-grid, .content-grid, .panel-grid, .results-grid, .library-grid) {
+    gap: 14px;
+  }
+
+  body.os-parties-ready :where(table, .data-table) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    white-space: nowrap;
+  }
+
+  body.os-parties-ready :where(dialog, .modal, .modal-card) {
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+    margin: auto 12px 12px !important;
+    border-radius: 20px 20px 14px 14px !important;
+    overflow-y: auto;
+  }
+
+  body.os-parties-ready :where(.toast, [role="status"].notification) {
+    right: var(--os-mobile-gutter) !important;
+    bottom: calc(var(--os-mobile-nav-height) + 12px + env(safe-area-inset-bottom)) !important;
+    left: var(--os-mobile-gutter) !important;
+    width: auto !important;
+    text-align: center;
+  }
+
+  /* Dashboard */
+  body.os-parties-ready[data-party-surface="student-dashboard"] .dashboard-grid,
+  body.os-parties-ready[data-party-surface="student-dashboard"] .next-step,
+  body.os-parties-ready[data-party-surface="student-dashboard"] .subject-detail,
+  body.os-parties-ready[data-party-surface="student-dashboard"] .weekly-progress {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.os-parties-ready[data-party-surface="student-dashboard"] .dashboard-rail {
+    display: grid;
+    gap: 14px;
+  }
+
+  body.os-parties-ready[data-party-surface="student-dashboard"] :where(.next-step, .lesson-summary, .lesson-title-row, .lesson-title-row > div, .mastery-section, .section-heading > div) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body.os-parties-ready[data-party-surface="student-dashboard"] .lesson-title-row h2 {
+    overflow-wrap: anywhere;
+  }
+
+  body.os-parties-ready[data-party-surface="student-dashboard"] .lesson-meta {
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    border-left: 0;
+  }
+
+  body.os-parties-ready[data-party-surface="student-dashboard"] .mastery-map {
+    min-height: 500px;
+    overflow: auto;
+  }
+
+  /* Atividades */
+  body.os-parties-ready[data-party-surface="activities"] :where(.activity-list, .activity-grid, .assessment-grid) {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.os-parties-ready[data-party-surface="activities"] :where(.activities-hero, .activity-card-footer, .assessment-head) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  body.os-parties-ready[data-party-surface="activities"] .activity-card :where(.button, .primary-button, .btn) {
+    width: 100%;
+  }
+
+  /* Mapa de dificuldades */
+  body.os-parties-ready .difficulty-page .subject-picker {
+    width: 100%;
+    min-width: 0;
+  }
+
+  body.os-parties-ready .difficulty-page .subject-picker select {
+    width: 100%;
+  }
+
+  body.os-parties-ready .difficulty-page .summary-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    border-radius: 14px;
+  }
+
+  body.os-parties-ready .difficulty-page .summary-strip article {
+    min-width: 0;
+    min-height: 86px;
+    padding: 14px;
+  }
+
+  body.os-parties-ready .difficulty-page .study-workspace,
+  body.os-parties-ready .difficulty-page .related-activities {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.os-parties-ready .difficulty-page .section-heading {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 20px 16px 16px;
+  }
+
+  body.os-parties-ready .difficulty-page .descriptor-detail {
+    position: static;
+    min-height: 0;
+    padding: 20px 16px;
+  }
+
+  body.os-parties-ready .difficulty-page .descriptor-row {
+    grid-template-columns: minmax(0, 1fr) auto 20px !important;
+    gap: 10px;
+    padding: 16px;
+  }
+
+  body.os-parties-ready .difficulty-page .descriptor-row .row-status {
+    grid-column: 1 / -1;
+  }
+
+  body.os-parties-ready .difficulty-page .related-activities {
+    padding: 0 16px 20px;
+  }
+
+  /* Agenda */
+  body.os-parties-ready[data-party-surface="agenda"] :where(.agenda-summary, .agenda-layout) {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.os-parties-ready[data-party-surface="agenda"] .day-panel {
+    position: static !important;
+    order: 2;
+  }
+
+  body.os-parties-ready[data-party-surface="agenda"] .calendar-panel {
+    min-height: 0 !important;
+  }
+
+  body.os-parties-ready[data-party-surface="agenda"] .calendar-day {
+    min-height: 58px;
+    padding: 4px;
+  }
+
+  body.os-parties-ready[data-party-surface="agenda"] .event-pill {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 50%;
+    font-size: 0;
+  }
+
+  /* Evolução */
+  body.os-parties-ready :where(.evolution .level-hero, .evolution .progress-overview) {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.os-parties-ready .evolution .level-emblem {
+    justify-self: center;
+  }
+
+  body.os-parties-ready .evolution :where(.path-scroll, .levels, .milestone-track) {
+    display: flex;
+    max-width: 100%;
+    justify-content: flex-start;
+    gap: 24px;
+    padding-bottom: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  body.os-parties-ready .evolution :where(.path-scroll, .levels, .milestone-track) > * {
+    flex: 0 0 104px;
+    scroll-snap-align: center;
+  }
+
+  body.os-parties-ready .evolution .path-line {
+    flex: 0 0 36px;
+  }
+
+  /* Biblioteca */
+  body.os-parties-ready :where(.library-main, .library-content) .hero {
+    min-height: 0;
+    padding: 28px 20px !important;
+    border-radius: 16px !important;
+  }
+
+  body.os-parties-ready :where(.library-main, .library-content) .hero h1 {
+    font-size: clamp(28px, 8vw, 38px) !important;
+  }
+
+  body.os-parties-ready :where(.library-main, .library-content) :where(.mode-switch, .library-grid, .book-grid) {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Trilhas e aulas */
+  body.os-parties-ready .hub-shell .hero {
+    display: block;
+    margin-bottom: 28px;
+  }
+
+  body.os-parties-ready .hub-shell .hero-stamp {
+    width: fit-content;
+    margin-top: 20px;
+  }
+
+  body.os-parties-ready .hub-shell .discipline-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --os-mobile-gutter: 14px;
+  }
+
+  body.os-parties-ready[data-party-layout="app"] :where(.page, .dashboard, .evolution, .hub-shell, .difficulty-page, .library-content, .content, .portal-main) {
+    padding-top: 20px !important;
+  }
+
+  body.os-parties-ready :where(.page-heading, .page-intro) h1,
+  body.os-parties-ready :where(.difficulty-page, .hub-shell) h1 {
+    font-size: clamp(26px, 9vw, 32px) !important;
+  }
+
+  body.os-parties-ready .difficulty-page .summary-strip article {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  body.os-parties-ready .difficulty-page .summary-icon {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+  }
+
+  body.os-parties-ready .difficulty-page .row-copy > span {
+    white-space: normal;
+  }
+
+  body.os-parties-ready .evolution .achievement-grid,
+  body.os-parties-ready .hub-shell .discipline-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.os-parties-ready :where(.library-main, .library-content) .request-card {
+    grid-template-columns: auto minmax(0, 1fr) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .os-mobile-backdrop,
+  .os-mobile-nav,
+  .os-mobile-close,
+  body.os-parties-ready[data-party-layout="app"] :where(.sidebar, .app-sidebar, .library-sidebar, .study-sidebar, [data-sidebar]) {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

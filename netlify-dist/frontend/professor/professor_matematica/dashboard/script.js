@@ -1,0 +1,1 @@
+window.OMINI_TEACHER_PORTAL = window.OMINI_TEACHER_CONFIGS.matematica;

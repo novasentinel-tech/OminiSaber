@@ -1,0 +1,27 @@
+@media (max-width: 760px) {
+  body {
+    overflow-x: hidden;
+  }
+  .manager-main,
+  .manager-content,
+  .executive-grid,
+  .executive-kpis,
+  .coverage-card,
+  .priority-card,
+  .activity-card {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .manager-content {
+    width: 100%;
+  }
+  .coverage-chart,
+  .coverage-card .card-head {
+    width: 100%;
+    max-width: 100%;
+  }
+  .coverage-card .card-head h2 {
+    min-width: 0;
+    max-width: 100%;
+  }
+}

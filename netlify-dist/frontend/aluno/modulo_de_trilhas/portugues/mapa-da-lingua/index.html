@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Experiência interativa de variação linguística do OminiSaber."
+    />
+    <title>Mapa da Língua | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../experiencia.css" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="../experiencia.js"></script>
+    <script defer src="script.js"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../../../Parties/parties.js?v=20260927-3"></script>
+  </head>
+  <body data-experience="mapa-da-lingua" data-descriptor="D103_P">
+    <a class="skip-link" href="#conteudo">Ir para a atividade</a>
+    
+    <div class="mobile-bar">
+      <a class="brand" href="../index.html"
+        ><span class="brand-mark"
+          ><span class="material-symbols-outlined">school</span></span
+        >OminiSaber</a
+      ><button
+        class="mobile-menu-button icon-button"
+        data-menu-toggle
+        aria-label="Abrir menu"
+        aria-expanded="false"
+      >
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="subject-title">
+          <span class="subject-icon"
+            ><span class="material-symbols-outlined">menu_book</span></span
+          >Língua Portuguesa
+        </div>
+        <div class="top-filters">
+          <select class="top-select" aria-label="Ano">
+            <option selected>1º ano</option></select
+          ><select class="top-select" aria-label="Trimestre">
+            <option selected>1º trimestre</option>
+          </select>
+        </div>
+        <div class="top-actions">
+          <a
+            class="icon-button"
+            href="../../../perfil/index.html"
+            aria-label="Abrir perfil"
+            ><span class="material-symbols-outlined">person</span></a
+          >
+        </div>
+      </header>
+
+      <main class="page" id="conteudo">
+        <div class="breadcrumbs">
+          <span class="material-symbols-outlined">travel_explore</span>Mapa da
+          Língua
+        </div>
+        <section class="page-heading">
+          <div>
+            <p class="eyebrow">
+              Variação linguística · vozes, contexto e interlocução
+            </p>
+            <h1>Como as escolhas da língua revelam quem fala?</h1>
+            <p class="page-intro">
+              Explore situações de comunicação, ouça os trechos e encontre as
+              marcas que indicam locutor, interlocutor e contexto.
+            </p>
+          </div>
+          <div class="curriculum-tags">
+            <span class="tag"><strong>EM13LP10</strong> Habilidade</span
+            ><span class="tag"
+              ><strong>D103_P</strong> Identificar marcas linguísticas que
+              evidenciam o locutor e o interlocutor.</span
+            >
+          </div>
+        </section>
+
+        <div class="lesson-grid">
+          <section
+            class="surface map-stage"
+            aria-label="Mapa interativo de vozes do Brasil"
+          >
+            <img
+              src="../assets/mapa-linguistico-brasil.jpg"
+              width="1000"
+              height="1000"
+              decoding="async"
+              alt="Mapa ilustrado do Brasil dividido em regiões coloridas, com paisagens culturais e urbanas."
+            />
+            <button class="map-pin" data-voice="escola" aria-pressed="false">
+              <span>1</span><b>Conversa na escola</b>
+            </button>
+            <button class="map-pin" data-voice="radio" aria-pressed="false">
+              <span>2</span><b>Rádio comunitária</b>
+            </button>
+            <button class="map-pin" data-voice="familia" aria-pressed="true">
+              <span>3</span><b>Mensagem da família</b>
+            </button>
+            <button class="map-pin" data-voice="formal" aria-pressed="false">
+              <span>4</span><b>Apresentação formal</b>
+            </button>
+          </section>
+
+          <div class="side-stack">
+            <section class="surface panel" aria-labelledby="trecho-title">
+              <div class="panel-head">
+                <div>
+                  <p class="panel-kicker">Trecho selecionado</p>
+                  <h2 id="trecho-title" data-voice-title>
+                    Mensagem da família
+                  </h2>
+                </div>
+                <button class="audio-button" data-listen type="button">
+                  <span class="material-symbols-outlined">play_arrow</span
+                  ><span data-audio-label>Ouvir trecho</span>
+                </button>
+              </div>
+              <p class="muted small" data-voice-context>
+                Mensagem de uma mãe para o filho depois da aula.
+              </p>
+              <div class="transcript" data-transcript aria-live="polite">
+                Oi, <span class="clue">meu filho</span>! Tudo bem
+                <span class="clue">por aí</span>? Aqui
+                <span class="clue teal">tá</span> tudo certo.<br /><br />Não
+                esquece de almoçar direitinho, <span class="clue">tá?</span> E
+                me manda mensagem quando chegar da escola,
+                <span class="clue teal">por favor</span>.<br /><br />Um beijo
+                grande! Mamãe.
+              </div>
+              <div class="evidence-form">
+                <div class="field">
+                  <label for="locutor">Quem fala?</label
+                  ><select id="locutor">
+                    <option value="">Selecione</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="interlocutor">Para quem?</label
+                  ><select id="interlocutor">
+                    <option value="">Selecione</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="marca">Que marca revela isso?</label
+                  ><select id="marca">
+                    <option value="">Selecione</option>
+                  </select>
+                </div>
+              </div>
+              <div class="button-row" style="margin-top: 16px">
+                <button class="primary-button" data-confirm-analysis>
+                  <span class="material-symbols-outlined">check_circle</span
+                  >Confirmar análise</button
+                ><button class="ghost-button" data-clear-analysis>
+                  Limpar escolhas
+                </button>
+              </div>
+              <p class="feedback" data-feedback aria-live="polite"></p>
+            </section>
+
+            <section class="surface panel">
+              <div class="panel-head">
+                <div>
+                  <p class="panel-kicker">Minha trilha</p>
+                  <h3 data-completion-state>Etapa 3 de 4</h3>
+                </div>
+                <span class="material-symbols-outlined" aria-hidden="true"
+                  >flag</span
+                >
+              </div>
+              <div class="progress-steps" aria-label="Etapa 3 de 4">
+                <span class="done"></span><i class="done"></i
+                ><span class="done"></span><i class="done"></i
+                ><span class="current"></span><i></i><span></span>
+              </div>
+              <p class="muted small">
+                Explore os contextos e confirme uma análise para concluir.
+              </p>
+            </section>
+
+            <section
+              class="surface panel quiz-card"
+              data-teacher-quiz
+              data-state="waiting"
+            >
+              <div class="quiz-state">
+                <span class="quiz-state-icon"
+                  ><span class="material-symbols-outlined"
+                    >assignment</span
+                  ></span
+                >
+                <div>
+                  <p class="panel-kicker">Quiz do professor</p>
+                  <h3 data-quiz-title>Revisão da trilha</h3>
+                </div>
+              </div>
+              <p class="muted small" data-quiz-copy>
+                Consultando atividades publicadas...
+              </p>
+              <button class="secondary-button" data-open-quiz hidden>
+                Abrir quiz
+              </button>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

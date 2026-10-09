@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Etapa 1 | Cadastro de livros | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="etapa_style.css" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="../../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="etapa_script.js"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../../Parties/parties.js?v=20260924-5"></script>
+  </head>
+  <body data-app-role="library">
+    <main class="page-shell">
+      <a class="back-link" href="../index.html"
+        ><span class="material-symbols-outlined">arrow_back</span>Voltar ao
+        acervo</a
+      >
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">OPERAÇÃO FÍSICA · ETAPA 1 DE 3</p>
+          <h1>Cadastro e inventário de livros</h1>
+          <p class="intro">
+            Registre a obra, associe um autor padronizado e gere a identificação
+            de cada exemplar.
+          </p>
+        </div>
+        <div class="progress" aria-label="Progresso do cadastro">
+          <span class="active">01</span><i></i><span>02</span><i></i
+          ><span>03</span>
+        </div>
+      </header>
+
+      <section class="content-grid">
+        <form class="panel book-form" data-book-form novalidate>
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">NOVA OBRA</p>
+              <h2>Dados bibliográficos</h2>
+            </div>
+            <span class="material-symbols-outlined heading-icon"
+              >menu_book</span
+            >
+          </div>
+          <div class="form-grid">
+            <label class="field full-width"
+              >Título da obra<input
+                class="input"
+                name="titulo"
+                required
+                maxlength="180"
+                placeholder="Digite o título como aparece na capa"
+            /></label>
+            <div class="field full-width">
+              <label for="author-name">Nome do autor</label>
+              <div class="input-with-action">
+                <input
+                  class="input"
+                  id="author-name"
+                  name="autor"
+                  required
+                  readonly
+                  placeholder="Selecione um autor cadastrado"
+                />
+                <input type="hidden" name="autor_id" />
+                <button
+                  class="icon-button"
+                  type="button"
+                  data-author-open
+                  aria-label="Pesquisar autor"
+                  title="Pesquisar autor"
+                >
+                  <span class="material-symbols-outlined">search</span>
+                </button>
+              </div>
+              <small class="field-help"
+                >A seleção evita variações e duplicidade no catálogo.</small
+              >
+            </div>
+            <label class="field"
+              >Gênero<select class="input" name="genero" required>
+                <option value="">Selecione o gênero</option>
+                <option>Romance</option>
+                <option>Didático</option>
+                <option>Científico / Técnico</option>
+                <option>Literatura</option>
+                <option>História</option>
+                <option>Biografia</option>
+                <option>Infantojuvenil</option>
+                <option>Outro</option>
+              </select></label
+            >
+            <div class="field">
+              <label for="book-isbn">ISBN da obra</label>
+              <div class="input-with-action">
+                <input
+                  class="input"
+                  id="book-isbn"
+                  name="isbn"
+                  inputmode="numeric"
+                  maxlength="17"
+                  placeholder="978-85-00000-000-0"
+                /><button
+                  class="icon-button"
+                  type="button"
+                  data-isbn-inline-open
+                  aria-label="Escanear ISBN"
+                  title="Escanear ISBN"
+                >
+                  <span class="material-symbols-outlined">barcode_scanner</span>
+                </button>
+              </div>
+            </div>
+            <label class="field"
+              >Prefixo da série<input
+                class="input"
+                name="prefixo"
+                inputmode="numeric"
+                pattern="[0-9]{4}"
+                maxlength="4"
+                value="9842"
+                required
+              /><small class="field-help"
+                >4 dígitos. Sugestão gerada ao selecionar o autor.</small
+              ></label
+            >
+            <label class="field"
+              >Quantidade de cópias<input
+                class="input"
+                name="quantidade"
+                type="number"
+                min="1"
+                max="9999"
+                value="1"
+                required
+            /></label>
+          </div>
+          <div class="batch-preview" data-batch-preview>
+            <span class="material-symbols-outlined">tag</span
+            ><span
+              >Selecione um autor e informe a quantidade para visualizar as
+              séries.</span
+            >
+          </div>
+          <div class="form-actions">
+            <a class="button secondary" href="../index.html">Cancelar</a
+            ><button class="button" type="submit">
+              <span class="material-symbols-outlined">inventory_2</span
+              >Cadastrar lote
+            </button>
+          </div>
+        </form>
+
+        <aside class="panel guidance-panel">
+          <span class="material-symbols-outlined guidance-icon"
+            >qr_code_scanner</span
+          >
+          <p class="eyebrow">IDENTIFICAÇÃO</p>
+          <h2>Um ISBN, uma etiqueta</h2>
+          <p>
+            O ISBN informado será aplicado à obra. Para edições diferentes,
+            revise e personalize cada exemplar antes de salvar.
+          </p>
+          <button class="button secondary full" type="button" data-isbn-open>
+            <span class="material-symbols-outlined">barcode_scanner</span
+            >Revisar ISBNs do lote
+          </button>
+          <dl class="rules">
+            <div>
+              <dt>Prefixo</dt>
+              <dd>4 dígitos</dd>
+            </div>
+            <div>
+              <dt>Sufixo</dt>
+              <dd>0001 → 9999</dd>
+            </div>
+            <div>
+              <dt>Etiqueta</dt>
+              <dd>Série · sobrenome · ISBN</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+    </main>
+
+    <dialog class="modal" data-author-modal>
+      <section class="modal-card" aria-labelledby="author-title">
+        <button
+          class="modal-close"
+          type="button"
+          data-author-close
+          aria-label="Fechar"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <p class="eyebrow">CATÁLOGO PADRONIZADO</p>
+        <h2 id="author-title">Selecionar autor</h2>
+        <p class="muted">Pesquise pelo primeiro nome ou sobrenome.</p>
+        <div class="search-box">
+          <span class="material-symbols-outlined">search</span
+          ><input
+            class="input"
+            data-author-search
+            placeholder="Digite um nome ou sobrenome"
+            autocomplete="off"
+          />
+        </div>
+        <div class="author-results" data-author-results>
+          <p class="empty">Digite para pesquisar autores.</p>
+        </div>
+        <button class="button secondary full" type="button" data-new-author>
+          <span class="material-symbols-outlined">person_add</span>Cadastrar
+          novo autor
+        </button>
+      </section>
+    </dialog>
+
+    <dialog class="modal" data-new-author-modal>
+      <form class="modal-card" data-new-author-form>
+        <button
+          class="modal-close"
+          type="button"
+          data-new-author-close
+          aria-label="Fechar"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <p class="eyebrow">NOVO REGISTRO</p>
+        <h2>Cadastrar autor</h2>
+        <p class="muted">Use o nome completo como aparece na obra.</p>
+        <label class="field"
+          >Nome completo<input
+            class="input"
+            name="nome"
+            required
+            maxlength="160"
+            placeholder="Digite o nome completo"
+        /></label>
+        <div class="modal-actions">
+          <button class="button secondary" type="button" data-new-author-close>
+            Cancelar</button
+          ><button class="button" type="submit">Salvar autor</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="modal" data-isbn-modal>
+      <section class="modal-card isbn-modal-card" aria-labelledby="isbn-title">
+        <button
+          class="modal-close"
+          type="button"
+          data-isbn-close
+          aria-label="Fechar"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <p class="eyebrow">REVISÃO DO LOTE</p>
+        <h2 id="isbn-title">ISBNs por exemplar</h2>
+        <p class="muted">
+          Repita o ISBN da obra ou personalize as cópias com uma leitura
+          individual.
+        </p>
+        <div class="isbn-toolbar">
+          <button class="button secondary" type="button" data-scan-isbn>
+            <span class="material-symbols-outlined">photo_camera</span>Escanear
+            ISBN</button
+          ><button class="button secondary" type="button" data-copy-isbn>
+            <span class="material-symbols-outlined">content_copy</span>Replicar
+            da obra
+          </button>
+        </div>
+        <div class="isbn-list" data-isbn-list></div>
+        <div class="modal-actions">
+          <button class="button secondary" type="button" data-isbn-close>
+            Concluir depois</button
+          ><button class="button" type="button" data-isbn-save>
+            Usar estes ISBNs
+          </button>
+        </div>
+      </section>
+    </dialog>
+
+    <dialog class="modal scanner-modal" data-scanner-modal>
+      <section class="modal-card" aria-labelledby="scanner-title">
+        <button
+          class="modal-close"
+          type="button"
+          data-scanner-close
+          aria-label="Fechar"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <p class="eyebrow">LEITURA ÓPTICA</p>
+        <h2 id="scanner-title">Escanear ISBN</h2>
+        <p class="muted" data-scanner-status>
+          Aponte a câmera para o código de barras.
+        </p>
+        <div id="isbn-reader"></div>
+        <button class="button full" type="button" data-scanner-start>
+          <span class="material-symbols-outlined">photo_camera</span>Iniciar
+          câmera
+        </button>
+      </section>
+    </dialog>
+    <div class="toast" data-toast role="status"></div>
+  </body>
+</html>

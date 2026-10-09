@@ -1,0 +1,129 @@
+:root {
+  --ink: #29203c;
+  --muted: #756d83;
+  --paper: #f5f0fb;
+  --card: #fff;
+  --accent: #713c9d;
+  --soft: #eadcf5;
+  --line: #dfd1eb;
+  font-family: Inter, sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 22px 8vw;
+  color: var(--muted);
+  font-size: 12px;
+}
+main {
+  width: min(1000px, 100%);
+  margin: auto;
+  padding: 70px 8vw;
+}
+small {
+  color: var(--accent);
+  font:
+    11px "DM Mono",
+    monospace;
+  letter-spacing: 0.1em;
+}
+h1,
+h2 {
+  font-family: Poppins, sans-serif;
+}
+h1 {
+  margin: 12px 0;
+  font-size: clamp(48px, 8vw, 86px);
+  line-height: 0.92;
+}
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 60px;
+}
+.hero p {
+  max-width: 420px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.progress {
+  padding: 14px;
+  color: white;
+  background: var(--accent);
+  border-radius: 50%;
+  font:
+    700 25px Poppins,
+    sans-serif;
+}
+.equation,
+.trails {
+  padding: 30px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.equation h2 {
+  margin: 18px 0 28px;
+  font-size: 25px;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+input {
+  width: 110px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font-size: 18px;
+}
+.controls span {
+  padding: 14px 18px;
+  color: var(--accent);
+  background: var(--soft);
+  font:
+    600 18px "DM Mono",
+    monospace;
+}
+.equation p {
+  color: var(--muted);
+  font-size: 13px;
+}
+.trails {
+  margin-top: 18px;
+}
+.trail-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.trail-item span {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 11px;
+}
+@media (max-width: 600px) {
+  main {
+    padding-top: 35px;
+  }
+  .hero,
+  .controls {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+  }
+}

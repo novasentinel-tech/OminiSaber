@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Acervo físico e materiais digitais verificados do OminiSaber."
+    />
+    <title>Biblioteca | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=20260920-3" />
+    <script src="../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="script.js?v=20260902-1"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260924-5"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="library-header-copy">
+        <strong>Biblioteca digital</strong>
+        <span>Livros e materiais verificados para seus estudos</span>
+      </div>
+      <nav class="header-nav" aria-label="Atalhos da biblioteca">
+        <a href="../dashboard_principal/index.html">Início</a>
+        <a href="../modulo_de_trilhas/index.html">Trilhas</a>
+      </nav>
+      <a
+        class="avatar"
+        href="../perfil/index.html"
+        aria-label="Abrir perfil"
+        data-initials
+        >AL</a
+      >
+    </header>
+    <main class="page-shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">SEU ACERVO</p>
+          <h1>Escolha como você quer aprender.</h1>
+          <p>
+            Solicite livros físicos para retirada ou baixe materiais em PDF
+            conferidos pela biblioteca.
+          </p>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <span class="material-symbols-outlined">local_library</span><i></i>
+        </div>
+      </section>
+      <section class="mode-switch" aria-label="Tipo de acervo">
+        <button class="is-active" type="button" data-mode="fisico">
+          <span class="material-symbols-outlined">menu_book</span
+          ><span
+            ><strong>Livros físicos</strong
+            ><small>Solicite e retire na biblioteca</small></span
+          ><b data-physical-count>0</b>
+        </button>
+        <button type="button" data-mode="digital">
+          <span class="material-symbols-outlined">picture_as_pdf</span
+          ><span
+            ><strong>PDFs verificados</strong
+            ><small>Materiais digitais para download</small></span
+          ><b data-digital-count>0</b>
+        </button>
+        <button type="button" data-mode="pedidos">
+          <span class="material-symbols-outlined">receipt_long</span
+          ><span
+            ><strong>Meus pedidos</strong
+            ><small>Acompanhe separação e retirada</small></span
+          ><b data-request-count>0</b>
+        </button>
+      </section>
+      <section class="safe-note" data-safe-note hidden>
+        <span class="material-symbols-outlined">verified_user</span>
+        <div>
+          <strong>Download protegido</strong>
+          <p>
+            Todo arquivo exibido aqui é um PDF conferido e publicado pela equipe
+            da biblioteca.
+          </p>
+        </div>
+      </section>
+      <section class="search-panel" aria-label="Busca no acervo">
+        <label class="search-box"
+          ><span class="material-symbols-outlined">search</span
+          ><input
+            type="search"
+            placeholder="Buscar por título, autor, matéria ou palavra-chave"
+            data-search
+        /></label>
+        <div class="filters" data-filters>
+          <button class="is-active" type="button" data-filter="todos">
+            Todos</button
+          ><button type="button" data-filter="Português">Português</button
+          ><button type="button" data-filter="Matemática">Matemática</button
+          ><button type="button" data-filter="Física">Física</button
+          ><button type="button" data-filter="Redação">Redação</button
+          ><button type="button" data-filter="Administração">
+            Administração</button
+          ><button type="button" data-filter="Informática">Informática</button
+          ><button type="button" data-filter="Literatura Obrigatória">
+            Literatura
+          </button>
+        </div>
+      </section>
+      <section class="catalog-section" aria-live="polite">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow" data-section-eyebrow>ACERVO FÍSICO</p>
+            <h2 data-section-title>Livros para solicitar</h2>
+            <p data-section-description>
+              A bibliotecária separa um exemplar e avisa quando estiver pronto.
+            </p>
+          </div>
+          <span class="section-count" data-result-count>0 títulos</span>
+        </div>
+        <div class="catalog-grid" data-catalog>
+          <p class="loading">Carregando o acervo real...</p>
+        </div>
+      </section>
+    </main>
+    <dialog class="book-dialog" data-dialog>
+      <button
+        class="dialog-close"
+        type="button"
+        data-close-dialog
+        aria-label="Fechar detalhes"
+      >
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <div class="dialog-cover" data-dialog-cover></div>
+      <div class="dialog-content">
+        <span class="subject-tag" data-dialog-subject>Acervo</span>
+        <h2 data-dialog-title>Livro</h2>
+        <p class="dialog-author" data-dialog-author>Autor</p>
+        <p class="dialog-synopsis" data-dialog-synopsis></p>
+        <dl class="book-facts">
+          <div>
+            <dt data-fact-one-label>Páginas</dt>
+            <dd data-fact-one>--</dd>
+          </div>
+          <div>
+            <dt data-fact-two-label>Disponibilidade</dt>
+            <dd data-fact-two>--</dd>
+          </div>
+        </dl>
+        <div class="dialog-guidance" data-dialog-guidance></div>
+        <div class="dialog-actions">
+          <button
+            class="button button-primary"
+            type="button"
+            data-primary-action
+          >
+            <span data-action-label>Solicitar livro</span
+            ><span class="material-symbols-outlined" data-action-icon
+              >bookmark_add</span
+            >
+          </button>
+        </div>
+      </div>
+    </dialog>
+    <div class="toast" data-toast role="status" aria-live="polite"></div>
+  </body>
+</html>

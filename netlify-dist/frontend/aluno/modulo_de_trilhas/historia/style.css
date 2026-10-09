@@ -1,0 +1,124 @@
+:root {
+  --ink: #392d25;
+  --muted: #81756c;
+  --paper: #f5f0e8;
+  --card: #fffdf9;
+  --accent: #9b5537;
+  --soft: #f2dfd3;
+  --line: #e5d5c6;
+  font-family: Inter, sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 21px 8vw;
+  color: var(--muted);
+  font-size: 12px;
+}
+main {
+  width: min(1000px, 100%);
+  margin: auto;
+  padding: 65px 8vw;
+}
+small {
+  color: var(--accent);
+  font:
+    11px "DM Mono",
+    monospace;
+  letter-spacing: 0.1em;
+}
+h1,
+h2 {
+  font-family: Poppins, sans-serif;
+}
+h1 {
+  margin: 12px 0;
+  font-size: clamp(45px, 8vw, 82px);
+  line-height: 0.92;
+}
+.hero {
+  position: relative;
+  margin-bottom: 55px;
+}
+.hero p {
+  max-width: 440px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.hero > strong {
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: var(--accent);
+  font:
+    700 25px Poppins,
+    sans-serif;
+}
+.timeline,
+.trails {
+  padding: 30px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.timeline-track {
+  display: flex;
+  justify-content: space-between;
+  margin: 45px 0 30px;
+  padding: 0 4px;
+  border-top: 2px solid var(--accent);
+}
+.timeline-track button {
+  width: 54px;
+  height: 54px;
+  margin-top: -28px;
+  color: var(--accent);
+  background: var(--soft);
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  font:
+    600 11px "DM Mono",
+    monospace;
+}
+.timeline-track button:hover,
+.timeline-track button.selected {
+  color: white;
+  background: var(--accent);
+}
+.timeline h2 {
+  margin: 0 0 8px;
+}
+.timeline p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.trails {
+  margin-top: 18px;
+}
+.trail-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 600px) {
+  main {
+    padding-top: 35px;
+  }
+  .timeline-track button {
+    width: 44px;
+    height: 44px;
+    font-size: 9px;
+  }
+}

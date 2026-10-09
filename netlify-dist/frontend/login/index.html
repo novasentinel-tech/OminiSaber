@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Acesse seu espaço institucional OminiSaber"
+    />
+    <title>OminiSaber | Entrar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Rounded:opsz,wght@20..48,400..600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=20260903-login-3" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../backend/ominisaber-supabase-config.js?v=20261004-7"></script>
+    <script src="../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../Parties/parties.css?v=20261004-8" />
+    <script defer src="../Parties/parties.js?v=20261004-8"></script>
+  </head>
+  <body>
+    <header class="brand-bar">
+      <a
+        class="brand"
+        href="./index.html"
+        aria-label="OminiSaber — página de acesso"
+      >
+        <span class="brand-icon material-symbols-rounded" aria-hidden="true"
+          >school</span
+        >
+        <span>Omini<span>Saber</span></span>
+      </a>
+    </header>
+
+    <main class="login-layout">
+      <section class="welcome" aria-labelledby="welcome-title">
+        <div class="welcome-copy">
+          <p class="eyebrow">Educação conectada</p>
+          <h1 id="welcome-title">Seu espaço<br />Omini<span>Saber</span></h1>
+          <p>Entre para continuar aprendendo,<br />ensinando e organizando.</p>
+        </div>
+        <img
+          class="journey-art"
+          src="assets/jornada-ominisaber-3d.jpg"
+          alt="Livros, tecnologia e caminhos de aprendizagem conectados"
+          width="1100"
+          height="836"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </section>
+
+      <section class="access" aria-labelledby="login-title">
+        <div class="access-inner">
+          <div class="access-heading">
+            <p class="eyebrow">Acesso institucional</p>
+            <h2 id="login-title">Bem-vindo de volta</h2>
+            <p>Use os dados fornecidos pela sua escola.</p>
+          </div>
+
+          <form id="loginForm" novalidate aria-describedby="loginError">
+            <div
+              id="loginError"
+              class="login-message"
+              role="alert"
+              aria-live="assertive"
+              tabindex="-1"
+              hidden
+            ></div>
+            <button
+              id="resendConfirmation"
+              class="secondary-action"
+              type="button"
+              hidden
+            >
+              Reenviar e-mail de confirmação
+            </button>
+
+            <div class="form-field">
+              <label for="email">Matrícula ou e-mail</label>
+              <span class="input-shell">
+                <span
+                  class="material-symbols-rounded field-icon"
+                  aria-hidden="true"
+                  >person</span
+                >
+                <input
+                  id="email"
+                  name="email"
+                  type="text"
+                  autocomplete="username"
+                  placeholder="Digite sua matrícula ou e-mail"
+                  required
+                />
+              </span>
+            </div>
+
+            <div class="form-field">
+              <label for="password">Senha</label>
+              <span class="input-shell">
+                <span
+                  class="material-symbols-rounded field-icon"
+                  aria-hidden="true"
+                  >lock</span
+                >
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  placeholder="Digite sua senha"
+                  required
+                />
+                <button
+                  class="password-toggle"
+                  id="togglePassword"
+                  type="button"
+                  aria-label="Mostrar senha"
+                  aria-pressed="false"
+                >
+                  <span class="material-symbols-rounded" aria-hidden="true"
+                    >visibility</span
+                  >
+                </button>
+              </span>
+            </div>
+
+            <div class="form-options">
+              <label class="remember-option" for="remember-me">
+                <input id="remember-me" name="remember-me" type="checkbox" />
+                <span>Lembrar neste dispositivo</span>
+              </label>
+              <button type="button" data-forgot-password>Esqueci minha senha</button>
+            </div>
+
+            <button class="submit-button" type="submit">
+              <span class="btn-spinner" aria-hidden="true"></span>
+              <span class="btn-label">Entrar no OminiSaber</span>
+              <span
+                class="material-symbols-rounded btn-arrow"
+                aria-hidden="true"
+                >arrow_forward</span
+              >
+            </button>
+          </form>
+
+          <div
+            class="access-assurance"
+            aria-label="Informações de acesso e segurança"
+          >
+            <p>
+              <span
+                class="assurance-icon material-symbols-rounded"
+                aria-hidden="true"
+                >school</span
+              >Acesso fornecido pela sua escola
+            </p>
+            <p class="secure">
+              <span
+                class="assurance-icon material-symbols-rounded"
+                aria-hidden="true"
+                >lock</span
+              >Ambiente protegido
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script defer src="script.js?v=20261004-login-1"></script>
+  </body>
+</html>

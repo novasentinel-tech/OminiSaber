@@ -1,0 +1,340 @@
+:root {
+  --accent: #933fc4;
+  --accent-dark: #67238f;
+  --accent-soft: #f5ebff;
+  --nav: #241438;
+}
+.writing-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow: auto;
+}
+.writing-tab {
+  min-height: 42px;
+  padding: 0 15px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #fff;
+  color: var(--muted);
+  font-weight: 700;
+}
+.writing-tab.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+}
+.writing-toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.search-field {
+  position: relative;
+  flex: 1;
+}
+.search-field span {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--muted);
+}
+.search-field input {
+  padding-left: 43px;
+}
+.writing-toolbar select {
+  width: min(260px, 35%);
+}
+.correction-layout {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 17px;
+}
+.submission-list {
+  padding: 10px;
+  max-height: 690px;
+  overflow: auto;
+}
+.submission-card {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  background: transparent;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 11px;
+  align-items: center;
+}
+.submission-card:hover,
+.submission-card:focus-visible {
+  background: var(--accent-soft);
+}
+.submission-card.active {
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+  background: var(--accent-soft);
+}
+.student-initials {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: var(--accent-dark);
+  font-weight: 800;
+}
+.submission-card strong,
+.submission-card small {
+  display: block;
+}
+.submission-card small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.submission-card .status {
+  white-space: nowrap;
+}
+.essay-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.essay-head h2 {
+  margin: 2px 0 4px;
+  font: 700 20px Poppins;
+}
+.essay-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+.essay-copy {
+  min-height: 260px;
+  margin: 18px 0;
+  padding: 25px;
+  border-radius: 14px;
+  background: #fffcf7;
+  color: #2e2930;
+  font:
+    400 16px/1.85 Georgia,
+    serif;
+  white-space: pre-wrap;
+}
+.correction-form {
+  display: grid;
+  gap: 14px;
+}
+.competence-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 9px;
+}
+.competence-card {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.competence-card label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.competence-card select {
+  margin-top: 8px;
+}
+.correction-total {
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.correction-total strong {
+  font: 700 23px Poppins;
+}
+.correction-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+}
+.prompt-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+.prompt-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+.prompt-card h3 {
+  margin: 6px 0;
+  font: 700 15px Poppins;
+}
+.prompt-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+.prompt-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 14px;
+}
+.tag {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  font-size: 9px;
+  font-weight: 700;
+}
+.evolution-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 11px;
+}
+.evolution-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+.evolution-card span,
+.evolution-card strong {
+  display: block;
+}
+.evolution-card span {
+  color: var(--muted);
+  font-size: 10px;
+}
+.evolution-card strong {
+  margin: 7px 0;
+  font: 700 24px Poppins;
+}
+.progress-bar {
+  height: 7px;
+  border-radius: 99px;
+  background: #ececf3;
+  overflow: hidden;
+}
+.progress-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+.dialog {
+  width: min(680px, calc(100% - 28px));
+  padding: 0;
+  border: 0;
+  border-radius: 18px;
+  box-shadow: 0 28px 80px rgba(25, 13, 42, 0.3);
+}
+.dialog::backdrop {
+  background: rgba(18, 10, 31, 0.58);
+  backdrop-filter: blur(3px);
+}
+.dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--line);
+}
+.dialog-head h2 {
+  margin: 0;
+  font: 700 19px Poppins;
+}
+.dialog-body {
+  padding: 20px 22px;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 18px;
+}
+.checkbox-line {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.checkbox-line input {
+  width: 18px;
+  min-height: 18px;
+}
+@media (max-width: 1100px) {
+  .correction-layout {
+    grid-template-columns: 1fr;
+  }
+  .submission-list {
+    max-height: 330px;
+  }
+  .competence-grid,
+  .evolution-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .writing-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .writing-toolbar select {
+    width: 100%;
+  }
+  .prompt-grid {
+    grid-template-columns: 1fr;
+  }
+  .competence-grid,
+  .evolution-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .essay-copy {
+    padding: 18px;
+    font-size: 15px;
+  }
+  .correction-actions,
+  .dialog-actions {
+    flex-direction: column-reverse;
+  }
+  .correction-actions .button,
+  .dialog-actions .button {
+    width: 100%;
+  }
+}
+@media (max-width: 430px) {
+  .competence-grid,
+  .evolution-grid {
+    grid-template-columns: 1fr;
+  }
+  .submission-card {
+    grid-template-columns: 40px 1fr;
+  }
+  .submission-card > .status {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+.submission-card,
+.prompt-card,
+.evolution-card,
+.essay-sheet {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 180px;
+}

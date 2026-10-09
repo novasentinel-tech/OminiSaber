@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Empréstimos | Biblioteca | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../library.css?v=20260902-1" />
+    <link rel="stylesheet" href="../../shared/sidebar.css" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="../app.js?v=20260902-2"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260924-5"></script>
+  </head>
+  <body data-app-role="library">
+    <div class="library-shell">
+      <aside class="library-sidebar">
+        <a class="brand" href="../dashboard/index.html"
+          ><span class="brand-mark"
+            ><span class="material-symbols-outlined">local_library</span></span
+          ><span>OminiSaber<small>Biblioteca</small></span></a
+        >
+        <nav aria-label="Navegação da biblioteca">
+          <a href="../dashboard/index.html"
+            ><span class="material-symbols-outlined">dashboard</span>Visão
+            geral</a
+          ><a href="../estoque/index.html"
+            ><span class="material-symbols-outlined">shelves</span>Acervo</a
+          ><a class="active" href="index.html"
+            ><span class="material-symbols-outlined">sync_alt</span
+            >Empréstimos</a
+          ><a href="../configuracoes/index.html"
+            ><span class="material-symbols-outlined">settings</span
+            >Configurações</a
+          >
+        </nav>
+        <button class="signout" type="button" data-signout>
+          <span class="material-symbols-outlined">logout</span>Sair
+        </button>
+      </aside>
+      <main class="library-main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">FILA OPERACIONAL</p>
+            <h1>Empréstimos</h1>
+            <p class="muted">
+              Separe um exemplar com um clique e confirme a retirada no balcão.
+            </p>
+          </div>
+        </header>
+        <section class="card">
+          <div class="toolbar">
+            <div>
+              <h2>O que precisa ser resolvido</h2>
+              <p class="muted">
+                Pesquise por aluno, turma ou título e conclua a ação na própria
+                linha.
+              </p>
+            </div>
+            <label class="sr-only" for="loanSearch">Buscar registro</label>
+            <input
+              id="loanSearch"
+              class="input search"
+              data-search
+              type="search"
+              placeholder="Buscar registro..."
+            />
+          </div>
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="pendente" role="tab">
+              1 · Separar</button
+            ><button class="tab" data-tab="aprovado" role="tab">
+              2 · Entregar</button
+            ><button class="tab" data-tab="emprestado" role="tab">
+              3 · Devolver</button
+            ><button class="tab" data-tab="atrasado" role="tab">
+              Atrasados</button
+            ><button class="tab" data-tab="devolvido" role="tab">
+              Devolvidos
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aluno / turma</th>
+                  <th>Livro</th>
+                  <th>Status / prazo</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody data-requests>
+                <tr>
+                  <td colspan="4" class="empty">Carregando registros...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <dialog class="modal" data-reject-dialog>
+      <form class="modal-card" data-reject-form>
+        <button
+          class="modal-close"
+          type="button"
+          data-reject-close
+          aria-label="Fechar"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <p class="eyebrow">ATUALIZAR PEDIDO</p>
+        <h2>Por que não será atendido?</h2>
+        <p class="muted">
+          O aluno verá este motivo na biblioteca e receberá uma notificação.
+        </p>
+        <input type="hidden" name="solicitacao_id" />
+        <label
+          >Motivo<textarea
+            class="input"
+            name="motivo"
+            rows="4"
+            required
+            minlength="3"
+            maxlength="300"
+            placeholder="Ex.: Exemplar em manutenção. Tente novamente na próxima semana."
+          ></textarea>
+        </label>
+        <div class="modal-actions">
+          <button class="button secondary" type="button" data-reject-close>
+            Cancelar</button
+          ><button class="button danger" type="submit">Recusar pedido</button>
+        </div>
+      </form>
+    </dialog>
+    <div class="toast" data-toast></div>
+  </body>
+</html>

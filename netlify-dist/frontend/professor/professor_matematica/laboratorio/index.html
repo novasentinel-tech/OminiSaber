@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Laboratório funcional do professor de Matemática."
+    />
+    <title>Laboratório de Matemática | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../specialty/portal.css?v=20261002-3" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="../../app.js"></script>
+    <script defer src="../../specialty/configs.js"></script>
+    <script defer src="script.js"></script>
+    <script defer src="../../specialty/portal.js?v=20261004-8"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../../Parties/parties.css?v=20261004-8" />
+    <script defer src="../../../Parties/parties.js?v=20261004-8"></script>
+  </head>
+  <body
+    data-required-role="professor"
+    data-required-teacher-type="matematica"
+    data-page="laboratorio"
+  >
+    <div data-teacher-portal></div>
+  </body>
+</html>

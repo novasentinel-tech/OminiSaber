@@ -1,0 +1,131 @@
+body {
+  margin: 0;
+}
+
+.catalog-shell {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+.catalog-nav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 28px 20px;
+  border-right: 1px solid var(--os-line);
+  background: var(--os-surface);
+}
+
+.catalog-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  color: var(--os-ink);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.catalog-brand .material-symbols-outlined {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--os-yellow);
+}
+
+.catalog-nav a {
+  display: block;
+  padding: 9px 10px;
+  border-radius: var(--os-radius-md);
+  color: var(--os-ink-soft);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.catalog-nav a:hover {
+  background: var(--os-accent-soft);
+  color: var(--os-accent-strong);
+}
+
+.catalog-main {
+  width: min(100%, 1180px);
+  padding: 44px clamp(24px, 5vw, 72px) 80px;
+}
+
+.catalog-hero {
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--os-line);
+}
+
+.catalog-hero h1 {
+  margin: 0;
+  font-size: clamp(36px, 6vw, 64px);
+}
+
+.catalog-hero p {
+  max-width: 700px;
+  color: var(--os-muted);
+}
+
+.catalog-section {
+  padding: 36px 0;
+  border-bottom: 1px solid var(--os-line);
+}
+
+.catalog-section h2 {
+  margin: 0 0 18px;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.catalog-demo {
+  padding: 20px;
+  border: 1px solid var(--os-line);
+  border-radius: var(--os-radius-lg);
+  background: var(--os-surface);
+}
+
+.token-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.swatch {
+  min-height: 108px;
+  padding: 72px 12px 10px;
+  border: 1px solid var(--os-line);
+  border-radius: var(--os-radius-md);
+  background: var(--swatch);
+  color: var(--os-ink);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.catalog-actions,
+.catalog-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 760px) {
+  .catalog-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .catalog-nav {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--os-line);
+  }
+}

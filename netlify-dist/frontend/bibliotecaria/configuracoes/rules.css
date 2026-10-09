@@ -1,0 +1,9 @@
+@media (max-width: 1000px) {
+  .rules-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .rules-preview {
+    position: static;
+  }
+}

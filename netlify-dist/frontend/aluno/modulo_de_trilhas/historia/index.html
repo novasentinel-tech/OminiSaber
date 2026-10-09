@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>História | OminiSaber</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="../../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="script.js"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../../Parties/parties.js?v=20260924-5"></script>
+  </head>
+  <body>
+    <header>
+      <a href="../index.html">← Catálogo</a><strong>HISTÓRIA</strong
+      ><a href="../../dashboard_principal/index.html">Dashboard ↗</a>
+    </header>
+    <main>
+      <section class="hero">
+        <small>CIÊNCIAS HUMANAS / TEMPO</small>
+        <h1>O passado<br />em movimento.</h1>
+        <p>
+          Conecte acontecimentos, vozes e consequências para construir
+          perspectiva.
+        </p>
+        <strong data-progress>--%</strong>
+      </section>
+      <section class="timeline">
+        <small>LINHA DO TEMPO</small>
+        <div class="timeline-track">
+          <button data-year="1888">1888</button
+          ><button data-year="1930">1930</button
+          ><button data-year="1964">1964</button
+          ><button data-year="1988">1988</button>
+        </div>
+        <article>
+          <h2 data-event>Escolha um marco</h2>
+          <p data-event-info>
+            Selecione um ponto da linha para abrir seu contexto histórico.
+          </p>
+        </article>
+      </section>
+      <section class="trails">
+        <small>TRILHAS DE HISTÓRIA</small>
+        <div data-trails>Carregando...</div>
+      </section>
+    </main>
+  </body>
+</html>

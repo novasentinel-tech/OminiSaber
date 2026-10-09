@@ -1,0 +1,370 @@
+.achievements-page {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  color: #10182d;
+  background: #f5f7fb;
+  font-family: Inter, sans-serif;
+}
+
+.achievements-page .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.achievements-page .site-header .topbar-title {
+  min-width: 0;
+  margin-right: auto;
+}
+
+.achievements-page .site-header .topbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.achievements-page .menu-button {
+  display: none;
+}
+
+.achievements-shell {
+  width: min(calc(100% - 64px), 1320px);
+  margin: 0 auto;
+  padding: 48px 0 80px;
+}
+
+.achievements-hero {
+  display: flex;
+  min-height: 260px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 44px 48px;
+  color: #fff;
+  background: #151d45;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.achievements-hero .eyebrow {
+  color: #a8c3ff !important;
+}
+
+.achievements-hero h1 {
+  max-width: 650px;
+  margin: 0;
+  color: #fff !important;
+  font: 700 clamp(34px, 4vw, 54px)/1.08 Poppins, sans-serif;
+  letter-spacing: -.04em;
+}
+
+.achievements-hero p:not(.eyebrow) {
+  max-width: 620px;
+  margin: 18px 0 0;
+  color: #d6def2;
+  line-height: 1.65;
+}
+
+.hero-medal {
+  display: grid;
+  width: 190px;
+  height: 190px;
+  flex: 0 0 190px;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  color: #ffbd12;
+  background: #202b5c;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 50%;
+  text-align: center;
+}
+
+.hero-medal .material-symbols-outlined {
+  font-size: 58px;
+}
+
+.hero-medal strong {
+  color: #fff;
+  font-size: 13px;
+}
+
+.status-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 20px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #dfe5ed;
+  border-radius: 17px;
+}
+
+.status-summary article {
+  display: grid;
+  min-height: 116px;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 22px 26px;
+  border-left: 1px solid #dfe5ed;
+}
+
+.status-summary article:first-child {
+  border-left: 0;
+}
+
+.status-summary article > .material-symbols-outlined {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  color: #155be8;
+  background: #edf3ff;
+  border-radius: 13px;
+}
+
+.status-summary :where(small, strong, span) {
+  display: block;
+}
+
+.status-summary small {
+  color: #68738a;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+
+.status-summary strong {
+  margin-top: 5px;
+  font: 800 19px Manrope, Poppins, sans-serif;
+}
+
+.status-summary div > span {
+  margin-top: 3px;
+  color: #68738a;
+  font-size: 11px;
+}
+
+.xp-progress {
+  height: 7px;
+  margin: -4px 18px 0;
+  overflow: hidden;
+  background: #dfe7f6;
+  border-radius: 99px;
+}
+
+.xp-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: #155be8;
+  border-radius: inherit;
+  transition: width .3s ease;
+}
+
+.gallery-section {
+  margin-top: 28px;
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #dfe5ed;
+  border-radius: 20px;
+}
+
+.gallery-section .section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.gallery-section h2 {
+  margin: 0;
+  font: 700 25px Poppins, sans-serif;
+}
+
+.section-icon {
+  color: #155be8;
+  font-size: 30px;
+}
+
+.achievement-filters {
+  display: flex;
+  gap: 8px;
+  padding-bottom: 18px;
+  overflow-x: auto;
+  border-bottom: 1px solid #e5e9f0;
+}
+
+.achievement-filters button {
+  min-height: 40px;
+  padding: 0 15px;
+  color: #5f6b80;
+  background: #fff;
+  border: 1px solid #dfe5ed;
+  border-radius: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.achievement-filters button.is-active {
+  color: #fff;
+  background: #10182d;
+  border-color: #10182d;
+}
+
+.achievement-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.achievement-card {
+  display: flex;
+  min-height: 240px;
+  flex-direction: column;
+  padding: 22px;
+  color: #10182d;
+  background: #fff;
+  border: 1px solid #dfe5ed;
+  border-radius: 16px;
+  text-decoration: none;
+}
+
+.achievement-card.is-unlocked {
+  border-color: #b8ccf6;
+  background: #f7f9ff;
+}
+
+.achievement-card.is-locked {
+  color: #667085;
+  background: #f8fafc;
+}
+
+.achievement-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.achievement-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  color: #155be8;
+  background: #edf3ff;
+  border-radius: 14px;
+  font-size: 28px;
+}
+
+.is-unlocked .achievement-icon {
+  color: #8c6500;
+  background: #fff2c6;
+}
+
+.xp-tag,
+.achievement-category {
+  width: fit-content;
+  padding: 5px 8px;
+  color: #0d47c8;
+  background: #edf3ff;
+  border-radius: 7px;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.achievement-card h3 {
+  margin: 22px 0 8px;
+  font: 700 17px/1.35 Poppins, sans-serif;
+}
+
+.achievement-card p {
+  margin: 0;
+  color: #68738a;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.achievement-category {
+  margin-top: auto;
+}
+
+.achievements-page :where(.loading-state, .error-state) {
+  min-height: 260px;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.achievements-page .empty-state {
+  grid-column: 1 / -1;
+  padding: 40px;
+  text-align: center;
+}
+
+@media (max-width: 980px) {
+  .achievement-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .achievements-shell {
+    width: 100%;
+    padding: 20px 14px 36px;
+  }
+
+  .achievements-hero {
+    min-height: 0;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 28px 22px;
+  }
+
+  .achievements-hero h1 {
+    font-size: 31px;
+  }
+
+  .hero-medal {
+    width: 128px;
+    height: 128px;
+    flex-basis: 128px;
+  }
+
+  .hero-medal .material-symbols-outlined {
+    font-size: 42px;
+  }
+
+  .status-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .status-summary article {
+    min-height: 92px;
+    border-top: 1px solid #dfe5ed;
+    border-left: 0;
+  }
+
+  .status-summary article:first-child {
+    border-top: 0;
+  }
+
+  .gallery-section {
+    padding: 22px 16px;
+  }
+
+  .gallery-section .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .achievement-list {
+    grid-template-columns: 1fr;
+  }
+}

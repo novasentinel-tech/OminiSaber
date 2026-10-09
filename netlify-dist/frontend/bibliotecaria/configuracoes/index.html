@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Regras | Biblioteca | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../library.css?v=20260902-2" />
+    <link rel="stylesheet" href="rules.css?v=20260902-1" />
+    <link rel="stylesheet" href="../../shared/sidebar.css" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="../app.js?v=20260902-2"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260924-5"></script>
+  </head>
+  <body data-app-role="library">
+    <div class="library-shell">
+      <aside class="library-sidebar">
+        <a class="brand" href="../dashboard/index.html"
+          ><span class="brand-mark"
+            ><span class="material-symbols-outlined">local_library</span></span
+          ><span>OminiSaber<small>Biblioteca</small></span></a
+        >
+        <nav aria-label="Navegação da biblioteca">
+          <a href="../dashboard/index.html"
+            ><span class="material-symbols-outlined">dashboard</span>Visão
+            geral</a
+          ><a href="../estoque/index.html"
+            ><span class="material-symbols-outlined">shelves</span>Acervo</a
+          ><a href="../gestao_emprestimos/index.html"
+            ><span class="material-symbols-outlined">sync_alt</span
+            >Empréstimos</a
+          ><a class="active" href="index.html"
+            ><span class="material-symbols-outlined">settings</span
+            >Configurações</a
+          >
+        </nav>
+        <button class="signout" type="button" data-signout>
+          <span class="material-symbols-outlined">logout</span>Sair
+        </button>
+      </aside>
+      <main class="library-main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">POLÍTICA DE CIRCULAÇÃO</p>
+            <h1>Regras da biblioteca</h1>
+            <p class="muted">
+              Defina os limites que orientam novos empréstimos.
+            </p>
+          </div>
+        </header>
+        <div class="rules-layout">
+          <section class="card">
+            <div class="card-heading">
+              <div>
+                <h2>Parâmetros atuais</h2>
+                <p class="muted">
+                  As novas regras valem para as próximas entregas.
+                </p>
+              </div>
+            </div>
+            <form data-library-settings>
+              <label
+                >Prazo de devolução<select class="input" name="prazo_dias">
+                  <option value="15">15 dias</option>
+                  <option value="30">30 dias</option>
+                </select></label
+              ><label
+                >Limite de livros por aluno<select
+                  class="input"
+                  name="limite_livros"
+                >
+                  <option value="1">1 livro</option>
+                  <option value="2">2 livros</option>
+                  <option value="3">3 livros</option>
+                  <option value="4">4 livros</option>
+                  <option value="5">5 livros</option>
+                </select></label
+              >
+              <div class="form-actions">
+                <button class="button" type="submit" data-settings-save>
+                  <span class="material-symbols-outlined">save</span>Salvar
+                  regras
+                </button>
+              </div>
+            </form>
+          </section>
+          <aside class="card rules-preview" aria-live="polite">
+            <p class="eyebrow">COMO FICA PARA O ALUNO</p>
+            <span class="material-symbols-outlined rules-preview-icon"
+              >event_available</span
+            >
+            <h2>Empréstimo simples e previsível</h2>
+            <p>
+              Depois da retirada, o aluno terá
+              <strong data-rules-days>15 dias</strong> para devolver o exemplar.
+            </p>
+            <div class="rule-chip">
+              <span class="material-symbols-outlined">library_books</span
+              ><span
+                >Até <strong data-rules-limit>1 livro</strong> ativo por
+                aluno</span
+              >
+            </div>
+            <div class="rule-chip">
+              <span class="material-symbols-outlined">block</span
+              ><span>Atrasos bloqueiam novas solicitações</span>
+            </div>
+            <small
+              >Pedidos já entregues preservam a data de devolução
+              original.</small
+            >
+          </aside>
+        </div>
+      </main>
+    </div>
+    <div class="toast" data-toast></div>
+  </body>
+</html>

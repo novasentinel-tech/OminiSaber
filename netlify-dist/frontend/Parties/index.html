@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Parties | Sistema visual OminiSaber</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="parties.css" />
+    <link rel="stylesheet" href="catalog.css" />
+    <script defer src="parties.js"></script>
+  </head>
+  <body data-party-role="student">
+    <div class="catalog-shell">
+      <aside class="catalog-nav">
+        <div class="catalog-brand">
+          <span class="material-symbols-outlined">school</span>
+          <span>OminiSaber<br /><small>Parties</small></span>
+        </div>
+        <nav aria-label="Seções do catálogo">
+          <a href="#tokens">Tokens</a>
+          <a href="#buttons">Botões</a>
+          <a href="#forms">Formulários</a>
+          <a href="#surfaces">Superfícies</a>
+          <a href="#tables">Tabelas</a>
+          <a href="#states">Estados</a>
+        </nav>
+      </aside>
+
+      <main class="catalog-main">
+        <header class="catalog-hero">
+          <p class="eyebrow">Sistema visual compartilhado</p>
+          <h1>Parties</h1>
+          <p>
+            A base visual do OminiSaber: clara, humana, orientada ao estudo e
+            compartilhada por aluno, professor, gestor e biblioteca.
+          </p>
+        </header>
+
+        <section class="catalog-section" id="tokens">
+          <h2>Tokens de cor</h2>
+          <div class="token-row">
+            <div class="swatch" style="--swatch: var(--os-ink)">Ink</div>
+            <div class="swatch" style="--swatch: var(--os-accent)">Ação</div>
+            <div class="swatch" style="--swatch: var(--os-yellow)">Atenção</div>
+            <div class="swatch" style="--swatch: var(--os-orange)">Física</div>
+            <div class="swatch" style="--swatch: var(--os-blue)">Português</div>
+            <div class="swatch" style="--swatch: var(--os-red)">Redação</div>
+          </div>
+        </section>
+
+        <section class="catalog-section" id="buttons">
+          <h2>Botões e ações</h2>
+          <div class="catalog-demo catalog-actions">
+            <button class="os-button os-button--primary">Continuar</button>
+            <button class="os-button os-button--secondary">Ver detalhes</button>
+            <button class="icon-button" aria-label="Abrir agenda">
+              <span class="material-symbols-outlined">calendar_month</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="catalog-section" id="forms">
+          <h2>Formulários</h2>
+          <div class="catalog-grid">
+            <label class="catalog-demo">
+              Matéria
+              <select>
+                <option>Matemática</option>
+                <option>Física</option>
+              </select>
+            </label>
+            <label class="catalog-demo">
+              Título da atividade
+              <input value="Circuito interativo" />
+            </label>
+          </div>
+        </section>
+
+        <section class="catalog-section" id="surfaces">
+          <h2>Superfícies e etiquetas</h2>
+          <div class="catalog-grid">
+            <article class="catalog-demo card">
+              <p class="eyebrow">Próximo passo</p>
+              <h3>Matemática — PAEBES</h3>
+              <p class="muted">4 questões · 40 minutos</p>
+            </article>
+            <div class="catalog-demo catalog-tags">
+              <span class="badge">Em andamento</span>
+              <span class="tag">Sem prazo</span>
+              <span class="chip">Matemática</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="catalog-section" id="tables">
+          <h2>Tabelas</h2>
+          <table>
+            <thead>
+              <tr><th>Aluno</th><th>Turma</th><th>Situação</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Carla Oliveira</td><td>1º ano</td><td><span class="badge">Ativa</span></td></tr>
+              <tr><td>Lucas Santos</td><td>2º ano</td><td><span class="tag">Pendente</span></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="catalog-section" id="states">
+          <h2>Estados de interface</h2>
+          <div class="catalog-grid">
+            <div class="catalog-demo empty-state">
+              <span class="material-symbols-outlined">inbox</span>
+              <h3>Nenhum registro</h3>
+              <p class="muted">Os próximos itens aparecerão aqui.</p>
+            </div>
+            <div class="catalog-demo loading-state">
+              <span class="loader" aria-hidden="true"></span>
+              <p>Carregando dados...</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

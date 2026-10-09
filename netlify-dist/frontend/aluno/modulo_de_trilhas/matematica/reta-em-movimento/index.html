@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Laboratório interativo de funções afins e quadráticas do OminiSaber."
+    />
+    <title>Retas e parábolas | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../experiencia.css" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="../experiencia.js"></script>
+    <link rel="stylesheet" href="function-lab.css?v=20260922-1" />
+    <script defer src="plot-math.js?v=20260922-1"></script>
+    <script defer src="function-lab.js?v=20260922-1"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../../../Parties/parties.js?v=20260927-3"></script>
+  </head>
+  <body data-experience="reta-em-movimento" data-descriptor="D085_M">
+    <a class="skip-link" href="#conteudo">Ir para a atividade</a>
+    
+    <div class="mobile-bar">
+      <a class="brand" href="../index.html"
+        ><span class="brand-mark"
+          ><span class="material-symbols-outlined">school</span></span
+        >OminiSaber</a
+      ><button
+        class="mobile-menu-button icon-button"
+        data-menu-toggle
+        aria-label="Abrir menu"
+        aria-expanded="false"
+      >
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="subject-title">
+          <span class="subject-icon"
+            ><span class="material-symbols-outlined">calculate</span></span
+          >Matemática
+        </div>
+        <div class="top-filters">
+          <select class="top-select" aria-label="Ano">
+            <option selected>3º ano</option></select
+          ><select class="top-select" aria-label="Trimestre">
+            <option selected>3º trimestre</option>
+          </select>
+        </div>
+        <div class="top-actions">
+          <a
+            class="icon-button"
+            href="../../../perfil/index.html"
+            aria-label="Abrir perfil"
+            ><span class="material-symbols-outlined">person</span></a
+          >
+        </div>
+      </header>
+      <main class="page" id="conteudo">
+        <div class="breadcrumbs">
+          <span class="material-symbols-outlined">show_chart</span>Reta em
+          Movimento
+        </div>
+        <section class="page-heading">
+          <div>
+            <p class="eyebrow">Laboratório de funções</p>
+            <h1>Retas e parábolas em movimento</h1>
+            <p class="page-intro">
+              Explore funções afins e quadráticas. Altere os coeficientes,
+              observe o gráfico e descubra o que cada termo transforma.
+            </p>
+          </div>
+          <div class="curriculum-tags">
+            <span class="tag"><strong>EM13MAT510</strong> Habilidade</span
+            ><span class="tag"
+              ><strong>D085_M</strong> Interpretar geometricamente os
+              coeficientes da equação de uma reta.</span
+            >
+          </div>
+        </section>
+        <div class="function-toolbar">
+          <label for="function-mode">Quero explorar
+            <select id="function-mode" data-function-mode>
+              <option value="linear">Reta · y = mx + b</option>
+              <option value="quadratic">Parábola · y = ax² + bx + c</option>
+            </select>
+          </label>
+          <button type="button" class="secondary-button" data-reset-plot>Restaurar coeficientes</button>
+        </div>
+        <div class="math-workbench line-lab">
+          <section class="surface math-panel">
+            <div class="step-title">
+              <span class="step-number">1</span>
+              <h2>Observe o plano cartesiano</h2>
+            </div>
+            <output class="function-equation" data-equation aria-live="polite">y = x + 1</output>
+            <p class="plot-scale-note">Escala automática: o gráfico e o ponto de arraste permanecem no quadro. Confira os valores dos eixos.</p>
+            <div class="canvas-shell">
+              <canvas
+                class="math-canvas"
+                data-line-canvas
+                aria-label="Plano cartesiano interativo com equação da reta"
+              >Use os controles de coeficientes e leia o resumo da função abaixo do gráfico.</canvas>
+              <span class="plot-drag-handle" data-plot-handle aria-hidden="true"></span>
+            </div>
+            <div class="canvas-caption">
+              <span class="material-symbols-outlined" aria-hidden="true">touch_app</span><span data-plot-caption>Arraste o ponto azul para alterar a inclinação.</span>
+            </div>
+            <p class="plot-summary" data-plot-summary aria-live="polite"></p>
+          </section>
+          <div class="line-stack">
+            <section class="surface math-panel">
+              <div class="step-title">
+                <span class="step-number amber">2</span>
+                <h2 data-equation-title>Ajuste a reta: y = mx + b</h2>
+              </div>
+              <div class="coefficient-control" data-linear-only>
+                <label
+                  ><span>m — inclinação</span
+                  ><span data-m-meaning>reta crescente</span></label
+                >
+                <div
+                  class="wide-control"
+                  style="--control-color: var(--math-amber)"
+                >
+                  <button
+                    data-change="m"
+                    data-delta="-.5"
+                    aria-label="Diminuir m"
+                  >
+                    −</button
+                  ><input
+                    data-m
+                    aria-label="m — inclinação da reta"
+                    type="range"
+                    min="-3"
+                    max="3"
+                    step=".5"
+                    value="1"
+                  /><button
+                    data-change="m"
+                    data-delta=".5"
+                    aria-label="Aumentar m"
+                  >
+                    +</button
+                  ><output data-m-output>1,0</output>
+                </div>
+              </div>
+              <div class="coefficient-control" data-linear-only>
+                <label
+                  ><span>b — intercepto no eixo y</span
+                  ><span>valor inicial</span></label
+                >
+                <div
+                  class="wide-control"
+                  style="--control-color: var(--math-teal)"
+                >
+                  <button
+                    data-change="b"
+                    data-delta="-1"
+                    aria-label="Diminuir b"
+                  >
+                    −</button
+                  ><input
+                    data-b
+                    aria-label="b — intercepto da reta"
+                    type="range"
+                    min="-5"
+                    max="5"
+                    step="1"
+                    value="1"
+                  /><button
+                    data-change="b"
+                    data-delta="1"
+                    aria-label="Aumentar b"
+                  >
+                    +</button
+                  ><output data-b-output>1</output>
+                </div>
+              </div>
+              <div class="coefficient-control" data-quadratic-only hidden>
+                <label for="coefficient-a">a — abertura e concavidade</label>
+                <div class="wide-control">
+                  <button type="button" data-change="a" data-delta="-.25" aria-label="Diminuir a">−</button>
+                  <input id="coefficient-a" data-a type="range" min="-3" max="3" step=".25" value="1" />
+                  <button type="button" data-change="a" data-delta=".25" aria-label="Aumentar a">+</button>
+                  <output data-a-output>1</output>
+                </div>
+              </div>
+              <div class="coefficient-control" data-quadratic-only hidden>
+                <label for="coefficient-qb">b — termo linear da parábola</label>
+                <div class="wide-control">
+                  <button type="button" data-change="qb" data-delta="-.5" aria-label="Diminuir b da parábola">−</button>
+                  <input id="coefficient-qb" data-qb type="range" min="-5" max="5" step=".5" value="0" />
+                  <button type="button" data-change="qb" data-delta=".5" aria-label="Aumentar b da parábola">+</button>
+                  <output data-qb-output>0</output>
+                </div>
+              </div>
+              <div class="coefficient-control" data-quadratic-only hidden>
+                <label for="coefficient-c">c — intercepto no eixo y</label>
+                <div class="wide-control">
+                  <button type="button" data-change="c" data-delta="-1" aria-label="Diminuir c">−</button>
+                  <input id="coefficient-c" data-c type="range" min="-5" max="5" step="1" value="0" />
+                  <button type="button" data-change="c" data-delta="1" aria-label="Aumentar c">+</button>
+                  <output data-c-output>0</output>
+                </div>
+              </div>
+            </section>
+            <section class="scenario" data-quadratic-only hidden>
+              <h3>Investigue a parábola</h3>
+              <p>Troque o sinal de a. O que acontece com a concavidade? Depois ajuste c para encontrar uma função com dois zeros, um zero ou nenhum zero real.</p>
+              <p>Compare o vértice e os zeros no resumo do gráfico. Com a = 0, você volta a uma função afim.</p>
+            </section>
+            <section class="scenario" data-linear-only>
+              <h3>
+                <span class="material-symbols-outlined">local_taxi</span>Tarifa
+                em movimento
+              </h3>
+              <p class="muted small">
+                O custo da corrida depende da distância percorrida.
+              </p>
+              <div class="scenario-grid">
+                <div class="scenario-item">
+                  <span>Valor inicial (b)</span
+                  ><strong data-initial-value>R$ 1,00</strong>
+                </div>
+                <div class="scenario-item">
+                  <span>Valor por km (m)</span
+                  ><strong data-km-value>R$ 1,00/km</strong>
+                </div>
+              </div>
+            </section>
+            <section class="surface prediction" data-linear-only>
+              <p class="panel-kicker">Antes de manipular</p>
+              <h3>O que muda quando você aumenta o módulo de m (|m|)?</h3>
+              <div class="prediction-options">
+                <label class="prediction-option"
+                  ><input type="radio" name="prediction" value="steeper" /><span
+                    >A reta fica mais inclinada.</span
+                  ></label
+                ><label class="prediction-option"
+                  ><input type="radio" name="prediction" value="less" /><span
+                    >A reta fica menos inclinada.</span
+                  ></label
+                ><label class="prediction-option"
+                  ><input type="radio" name="prediction" value="up" /><span
+                    >A reta apenas se move para cima.</span
+                  ></label
+                >
+              </div>
+              <button
+                class="primary-button full-button"
+                type="button"
+                data-test-hypothesis
+              >
+                <span class="material-symbols-outlined">play_arrow</span>Testar
+                hipótese
+              </button>
+              <p class="feedback" data-feedback aria-live="polite"></p>
+            </section>
+          </div>
+        </div>
+        <div class="lesson-footer">
+          <section class="surface panel progress-card">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Minha trilha</p>
+                <h3 data-completion-state>Etapa 2 de 5</h3>
+              </div>
+              <span class="material-symbols-outlined">flag</span>
+            </div>
+            <div class="progress-rail">
+              <span class="done">1</span><i class="done"></i
+              ><span class="current">2</span><i></i><span>3</span><i></i
+              ><span>4</span><i></i><span>5</span>
+            </div>
+            <p class="muted small">
+              Interprete os coeficientes e teste sua hipótese.
+            </p>
+          </section>
+          <section
+            class="surface panel quiz-card"
+            data-teacher-quiz
+            data-state="waiting"
+          >
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Quiz do professor</p>
+                <h3 data-quiz-title>Revisão da trilha</h3>
+              </div>
+              <span class="material-symbols-outlined">assignment</span>
+            </div>
+            <p class="muted small" data-quiz-copy>
+              Consultando atividades publicadas...
+            </p>
+            <button class="secondary-button" data-open-quiz hidden>
+              Abrir quiz
+            </button>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

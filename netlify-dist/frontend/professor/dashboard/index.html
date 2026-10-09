@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Acesso ao espaço docente do OminiSaber."
+    />
+    <title>Espaço docente | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../shared.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="script.js?v=20260831-2"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20261004-8" />
+    <script defer src="../../Parties/parties.js?v=20261004-8"></script>
+  </head>
+  <body data-required-role="professor" data-app-role="teacher">
+    <main>
+      <section class="state-panel" data-state="loading" aria-live="polite">
+        <span class="loader" aria-hidden="true"></span>
+        <h1>Abrindo seu espaço docente</h1>
+        <p>
+          A especialidade e as permissões estão sendo confirmadas no Supabase.
+        </p>
+      </section>
+      <section class="state-panel is-hidden" data-state="error" role="alert">
+        <span class="material-symbols-outlined">cloud_off</span>
+        <h1>Não foi possível abrir o espaço docente</h1>
+        <p data-error-message></p>
+        <button class="button primary" type="button" data-retry>
+          Tentar novamente
+        </button>
+      </section>
+    </main>
+  </body>
+</html>

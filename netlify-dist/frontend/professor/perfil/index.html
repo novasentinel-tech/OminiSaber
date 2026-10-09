@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Perfil e preferências do professor no OminiSaber." />
+    <title>Perfil e configurações | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:FILL@0..1" rel="stylesheet" />
+    <link rel="stylesheet" href="../specialty/portal.css?v=20261002-3" />
+    <link rel="stylesheet" href="style.css?v=20261002-2" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-config.js?v=20260909-1"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="../specialty/configs.js"></script>
+    <script defer src="script.js?v=20261004-8"></script>
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20261004-8" />
+    <script defer src="../../Parties/parties.js?v=20261004-8"></script>
+  </head>
+  <body data-required-role="professor" data-page="perfil">
+    <aside class="portal-sidebar" id="teacher-sidebar" aria-label="Navegação docente" data-teacher-sidebar data-profile-sidebar></aside>
+    <main class="portal-main">
+      <header class="portal-topbar portal-commandbar">
+        <button class="icon-button menu-button" type="button" data-profile-menu data-teacher-sidebar-toggle aria-label="Abrir navegação" aria-controls="teacher-sidebar" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
+        <div class="portal-context"><span class="portal-context-icon material-symbols-outlined" aria-hidden="true">manage_accounts</span><div><p class="portal-breadcrumb"><span>Conta</span><i>/</i><strong>Professor</strong></p><h1>Perfil e configurações</h1><p class="portal-context-help">Atualize seus dados e escolha como o OminiSaber se comporta.</p></div></div>
+      </header>
+      <div class="portal-content profile-content">
+        <section class="profile-hero"><div class="profile-avatar" data-profile-initials>PR</div><div><p class="eyebrow">SUA CONTA DOCENTE</p><h2 data-profile-heading>Perfil do professor</h2><p data-profile-role>Carregando informações da conta...</p></div></section>
+        <div class="profile-grid">
+          <section class="profile-card"><header><span class="material-symbols-outlined">badge</span><div><h2>Dados pessoais</h2><p>Informações usadas para identificar sua autoria.</p></div></header><form data-profile-form><label>Nome completo<input name="name" autocomplete="name" required maxlength="120" /></label><label>E-mail<input name="email" type="email" autocomplete="email" required /></label><button class="button primary" type="submit"><span class="material-symbols-outlined">save</span>Salvar alterações</button><p class="profile-status" data-profile-status role="status"></p></form></section>
+          <section class="profile-card"><header><span class="material-symbols-outlined">auto_awesome</span><div><h2>Copiloto docente</h2><p>Escolha se deseja ver o acesso ao assistente na criação de atividades.</p></div></header><label class="profile-toggle"><span><strong>Mostrar acesso ao Copiloto</strong><small>Converse, ajuste e revise a proposta antes de aplicar ao rascunho.</small></span><input type="checkbox" data-copilot-visible /><i aria-hidden="true"></i></label><p class="profile-helper">Você decide quando considerar o panorama agregado da turma.</p></section>
+          <section class="profile-card profile-security"><header><span class="material-symbols-outlined">shield_lock</span><div><h2>Privacidade e segurança</h2><p>O professor mantém o controle da publicação.</p></div></header><ul><li><span class="material-symbols-outlined">check_circle</span>Sugestões da IA permanecem como rascunho.</li><li><span class="material-symbols-outlined">check_circle</span>Dados individuais dos alunos não entram na conversa.</li><li><span class="material-symbols-outlined">check_circle</span>O uso do panorama da turma exige sua confirmação.</li></ul></section>
+        </div>
+      </div>
+    </main>
+    <div class="toast" data-profile-toast role="status" aria-live="polite"></div>
+  </body>
+</html>

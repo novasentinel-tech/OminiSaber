@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Criar conta | OminiSaber</title>
+    <link rel="stylesheet" href="../aluno/shared/responsive.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../backend/ominisaber-supabase-config.js?v=20260902-login-fix-1"></script>
+    <script src="../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: Inter, sans-serif;
+        background: #f7f8fc;
+        color: #0f172a;
+      }
+      .register-shell {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        background:
+          radial-gradient(circle at top left, #e0e7ff, transparent 42%), #f7f8fc;
+      }
+      .register-card {
+        width: min(100%, 34rem);
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid #e5e7eb;
+        border-radius: 1rem;
+        padding: clamp(1.25rem, 4vw, 2.5rem);
+        box-shadow: 0 24px 70px rgba(30, 41, 59, 0.12);
+        backdrop-filter: blur(12px);
+      }
+      .field-error {
+        color: #b91c1c;
+        font-size: 0.8rem;
+        margin-top: 0.35rem;
+      }
+      .register-back,
+      .register-login a {
+        color: #155be8;
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .register-back:hover,
+      .register-login a:hover {
+        text-decoration: underline;
+      }
+      .register-heading {
+        margin-top: 2rem;
+      }
+      .register-kicker {
+        margin: 0;
+        color: #155be8;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .register-heading h1 {
+        margin: 0.5rem 0 0;
+        font-family: Poppins, sans-serif;
+        font-size: 1.875rem;
+        line-height: 1.2;
+      }
+      .register-heading > p:last-child {
+        margin: 0.75rem 0 0;
+        color: #64748b;
+      }
+      .register-form {
+        display: grid;
+        gap: 1.25rem;
+        margin-top: 2rem;
+      }
+      .field-label {
+        display: block;
+        margin-bottom: 0.35rem;
+        color: #334155;
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+      .field-control {
+        width: 100%;
+        min-height: 3rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 0.65rem;
+        background: #fff;
+        color: #0f172a;
+        font: inherit;
+      }
+      .field-control:focus {
+        outline: 3px solid #bfd3ff;
+        border-color: #155be8;
+      }
+      .profile-note {
+        padding: 1rem;
+        border-radius: 0.65rem;
+        background: #edf3ff;
+        color: #173b80;
+        font-size: 0.875rem;
+        line-height: 1.55;
+      }
+      .terms-option {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        color: #475569;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+      .terms-option input {
+        width: 1rem;
+        height: 1rem;
+        margin-top: 0.2rem;
+        accent-color: #155be8;
+      }
+      .register-submit {
+        width: 100%;
+        min-height: 3rem;
+        padding: 0.75rem 1rem;
+        border: 0;
+        border-radius: 0.65rem;
+        background: #155be8;
+        color: #fff;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .register-submit:hover { background: #104bc4; }
+      .register-submit:disabled { cursor: wait; opacity: 0.6; }
+      .register-status {
+        padding: 0.75rem 1rem;
+        border: 1px solid #fecaca;
+        border-radius: 0.65rem;
+        background: #fef2f2;
+        color: #991b1b;
+        font-size: 0.875rem;
+      }
+      .register-status.success { border-color: #a7f3d0; background: #ecfdf5; color: #065f46; }
+      .register-status[hidden] { display: none; }
+      .register-login {
+        margin: 1.5rem 0 0;
+        color: #64748b;
+        text-align: center;
+        font-size: 0.875rem;
+      }
+    </style>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../Parties/parties.css?v=20260924-5" />
+    <script defer src="../Parties/parties.js?v=20260924-5"></script>
+  </head>
+  <body>
+    <main class="register-shell">
+      <section class="register-card">
+        <a
+          href="../login/index.html"
+          class="register-back"
+          >← Voltar para o login</a
+        >
+        <div class="register-heading">
+          <p class="register-kicker">
+            OminiSaber
+          </p>
+          <h1>
+            Crie sua conta
+          </h1>
+          <p>
+            Preencha seus dados para solicitar acesso à plataforma.
+          </p>
+        </div>
+        <form id="registerForm" class="register-form" novalidate>
+          <div
+            id="registerStatus"
+            class="register-status"
+            role="status"
+            aria-live="polite"
+            hidden
+          ></div>
+          <div>
+            <label
+              for="register-name"
+              class="field-label"
+              >Nome completo</label
+            ><input
+              id="register-name"
+              name="nome"
+              required
+              autocomplete="name"
+              class="field-control"
+              placeholder="Seu nome completo"
+            />
+            <p data-error-for="nome" class="field-error"></p>
+          </div>
+          <div>
+            <label
+              for="register-id"
+              class="field-label"
+              >Matrícula</label
+            ><input
+              id="register-id"
+              name="matricula"
+              required
+              autocomplete="username"
+              class="field-control"
+              placeholder="Ex.: 202600123"
+            />
+            <p data-error-for="matricula" class="field-error"></p>
+          </div>
+          <div>
+            <label
+              for="register-course"
+              class="field-label"
+              >Curso técnico</label
+            ><select
+              id="register-course"
+              name="curso_tecnico"
+              required
+              class="field-control"
+            >
+              <option value="">Selecione seu curso</option>
+              <option value="administracao">Técnico em Administração</option>
+              <option value="informatica">Técnico em Informática</option>
+            </select>
+            <p data-error-for="curso_tecnico" class="field-error"></p>
+          </div>
+          <div>
+            <label
+              for="register-email"
+              class="field-label"
+              >E-mail</label
+            ><input
+              id="register-email"
+              name="email"
+              required
+              type="email"
+              autocomplete="email"
+              class="field-control"
+              placeholder="voce@escola.com"
+            />
+            <p data-error-for="email" class="field-error"></p>
+          </div>
+          <div>
+            <label
+              for="register-password"
+              class="field-label"
+              >Senha</label
+            ><input
+              id="register-password"
+              name="password"
+              required
+              minlength="8"
+              type="password"
+              autocomplete="new-password"
+              class="field-control"
+              placeholder="Mínimo de 8 caracteres"
+            />
+            <p data-error-for="password" class="field-error"></p>
+          </div>
+          <div>
+            <label
+              for="register-password-confirm"
+              class="field-label"
+              >Confirme a senha</label
+            ><input
+              id="register-password-confirm"
+              name="passwordConfirm"
+              required
+              type="password"
+              autocomplete="new-password"
+              class="field-control"
+              placeholder="Repita sua senha"
+            />
+            <p data-error-for="passwordConfirm" class="field-error"></p>
+          </div>
+          <div class="profile-note">
+            <strong>Perfil inicial:</strong> aluno. O curso selecionado define
+            quais componentes técnicos serão disponibilizados no painel.
+          </div>
+          <label class="terms-option"
+            ><input
+              name="terms"
+              required
+              type="checkbox"
+            /><span
+              >Confirmo que estas informações são verdadeiras e aceito o uso da
+              plataforma para fins educacionais.</span
+            ></label
+          >
+          <button
+            id="registerSubmit"
+            type="submit"
+            class="register-submit"
+          >
+            Criar conta
+          </button>
+        </form>
+        <p class="register-login">
+          Já possui uma conta?
+          <a
+            href="../login/index.html"
+            >Entrar</a
+          >
+        </p>
+      </section>
+    </main>
+    <script>
+      (() => {
+        const form = document.getElementById("registerForm");
+        const submit = document.getElementById("registerSubmit");
+        const error = (field, message = "") => {
+          document.querySelector(`[data-error-for="${field}"]`).textContent =
+            message;
+        };
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          [
+            "nome",
+            "matricula",
+            "curso_tecnico",
+            "email",
+            "password",
+            "passwordConfirm",
+          ].forEach((field) => error(field));
+          const data = Object.fromEntries(new FormData(form));
+          let valid = true;
+          if (!data.nome?.trim()) {
+            error("nome", "Informe seu nome.");
+            valid = false;
+          }
+          if (!data.matricula?.trim()) {
+            error("matricula", "Informe sua matrícula.");
+            valid = false;
+          }
+          if (!["administracao", "informatica"].includes(data.curso_tecnico)) {
+            error("curso_tecnico", "Selecione seu curso técnico.");
+            valid = false;
+          }
+          if (!data.email?.includes("@")) {
+            error("email", "Informe um e-mail válido.");
+            valid = false;
+          }
+          if (!data.password || data.password.length < 8) {
+            error("password", "Use pelo menos 8 caracteres.");
+            valid = false;
+          }
+          if (data.password !== data.passwordConfirm) {
+            error("passwordConfirm", "As senhas não conferem.");
+            valid = false;
+          }
+          if (!data.terms) {
+            window.OminiSaber.notify(
+              "Aceite os termos para continuar.",
+              "error",
+            );
+            valid = false;
+          }
+          if (!valid) return;
+          submit.disabled = true;
+          try {
+            const { data: result, error: signupError } =
+              await window.OminiSaber.signUp(data);
+            if (signupError) throw signupError;
+            if (
+              result.user?.identities &&
+              result.user.identities.length === 0
+            ) {
+              throw new Error(
+                "Este e-mail já possui uma conta. Entre com sua senha ou use a recuperação de senha.",
+              );
+            }
+            if (result.session && result.user) {
+              const profile = await window.OminiSaber.getProfile(
+                result.user.id,
+              );
+              window.location.assign(
+                window.OminiSaber.getProfileDestination(profile),
+              );
+              return;
+            }
+            const status = document.getElementById("registerStatus");
+            status.className = "register-status success";
+            status.hidden = false;
+            status.textContent = `Conta criada para ${data.email.trim().toLowerCase()}. Confirme o e-mail enviado antes de entrar.`;
+            window.OminiSaber.notify(
+              "Conta criada. Confirme seu e-mail antes de entrar.",
+              "success",
+            );
+            form
+              .querySelectorAll("input, select, button")
+              .forEach((control) => {
+                control.disabled = true;
+              });
+            window.setTimeout(() => {
+              window.location.href = "../login/index.html";
+            }, 3500);
+          } catch (signupError) {
+            const message =
+              signupError.message || "Não foi possível criar a conta.";
+            const status = document.getElementById("registerStatus");
+            status.className = "register-status error";
+            status.hidden = false;
+            status.textContent = message;
+            window.OminiSaber.notify(message, "error");
+          } finally {
+            if (!form.querySelector("input:disabled")) submit.disabled = false;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Agenda escolar do aluno no OminiSaber." />
+    <title>Agenda do aluno | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@700;800&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../shared/account-shell.css" />
+    <link rel="stylesheet" href="style.css?v=20260920-2" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="../shared/account-shell.js?v=20260917-1"></script>
+    <script defer src="../../Parties/day-dialog.js?v=20260923-2"></script>
+    <script defer src="script.js?v=20260923-3"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260927-3"></script>
+  </head>
+  <body data-app-role="student" data-required-role="aluno">
+    
+    <main class="app-main">
+      <header class="app-topbar">
+        <button
+          class="icon-button menu-button"
+          type="button"
+          data-menu-toggle
+          aria-label="Abrir menu"
+          aria-expanded="false"
+        >
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <div class="topbar-title">
+          <strong>Organização escolar</strong
+          ><span>Provas, recuperações e atividades em um só lugar</span>
+        </div>
+        <div class="topbar-actions">
+          <a
+            class="icon-button"
+            href="../notificacoes/index.html"
+            aria-label="Abrir notificações"
+            ><span class="material-symbols-outlined">notifications</span></a
+          ><a
+            class="icon-button"
+            href="../perfil/index.html"
+            aria-label="Abrir perfil"
+            ><span class="material-symbols-outlined">person</span></a
+          >
+        </div>
+      </header>
+      <div class="page">
+        <header class="page-heading">
+          <div>
+            <p class="eyebrow">MINHA ROTINA</p>
+            <h1>Agenda do aluno</h1>
+            <p>
+              O que os professores publicarem para sua turma aparece aqui
+              automaticamente.
+            </p>
+          </div>
+          <button class="button secondary" type="button" data-today>
+            <span class="material-symbols-outlined">today</span>Ir para hoje
+          </button>
+        </header>
+        <section class="agenda-summary" aria-label="Resumo da agenda">
+          <article>
+            <span class="summary-icon indigo material-symbols-outlined"
+              >event_upcoming</span
+            >
+            <div>
+              <strong data-next-count>0</strong>
+              <p>próximos eventos</p>
+            </div>
+          </article>
+          <article>
+            <span class="summary-icon coral material-symbols-outlined"
+              >assignment</span
+            >
+            <div>
+              <strong data-assessment-count>0</strong>
+              <p>provas e recuperações</p>
+            </div>
+          </article>
+          <article>
+            <span class="summary-icon green material-symbols-outlined"
+              >sync</span
+            >
+            <div>
+              <strong>Ao vivo</strong>
+              <p>sincronizada com professores</p>
+            </div>
+          </article>
+        </section>
+        <div class="agenda-layout">
+          <section class="panel calendar-panel">
+            <div class="calendar-toolbar">
+              <div>
+                <button
+                  class="icon-button"
+                  type="button"
+                  data-prev-month
+                  aria-label="Mês anterior"
+                >
+                  <span class="material-symbols-outlined"
+                    >chevron_left</span
+                  ></button
+                ><button
+                  class="icon-button"
+                  type="button"
+                  data-next-month
+                  aria-label="Próximo mês"
+                >
+                  <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+              </div>
+              <h2 data-month-title>Agosto de 2026</h2>
+              <label class="calendar-filter"
+                ><span class="material-symbols-outlined">filter_list</span
+                ><select data-type-filter aria-label="Filtrar agenda">
+                  <option value="all">Todos</option>
+                  <option value="prova">Provas</option>
+                  <option value="recuperacao">Recuperações</option>
+                  <option value="trabalho">Trabalhos</option>
+                  <option value="atividade">Atividades</option>
+                </select></label
+              >
+            </div>
+            <div class="weekdays" aria-hidden="true">
+              <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span
+              ><span>Qui</span><span>Sex</span><span>Sáb</span>
+            </div>
+            <div
+              class="calendar-grid"
+              data-calendar
+              role="group"
+              aria-label="Calendário mensal"
+            ></div>
+            <div class="calendar-loading" data-loading>
+              <span class="loader"></span>
+              <p>Sincronizando sua agenda...</p>
+            </div>
+          </section>
+          <aside class="panel day-panel">
+            <p class="eyebrow">SUA PROGRAMAÇÃO</p>
+            <p>Selecione um dia no calendário para abrir todos os detalhes.</p>
+            <div class="upcoming">
+              <h3>Próximos compromissos</h3>
+              <div data-upcoming-events></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+    <nav class="mobile-nav" aria-label="Atalhos">
+      <a href="../dashboard_principal/index.html"
+        ><span class="material-symbols-outlined">home</span>Início</a
+      ><a class="active" href="index.html"
+        ><span class="material-symbols-outlined">calendar_month</span>Agenda</a
+      ><a href="../notificacoes/index.html"
+        ><span class="material-symbols-outlined">notifications</span>Avisos</a
+      ><a href="../perfil/index.html"
+        ><span class="material-symbols-outlined">person</span>Perfil</a
+      >
+    </nav>
+    <div class="toast" data-toast role="status" aria-live="polite"></div>
+  </body>
+</html>

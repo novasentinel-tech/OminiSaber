@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Agenda compartilhada do professor no OminiSaber."
+    />
+    <title>Agenda das turmas | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@700;800&family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../specialty/portal.css?v=20260929-2" />
+    <link rel="stylesheet" href="style.css?v=20260929-1" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-config.js?v=20260909-1"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="../specialty/configs.js"></script>
+    <script defer src="script.js?v=20261004-8"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20261004-8" />
+    <script defer src="../../Parties/parties.js?v=20261004-8"></script>
+  </head>
+  <body class="agenda-page" data-required-role="professor,gestor" data-teacher-navigation-pending>
+    <aside
+      class="portal-sidebar"
+      aria-label="Navegação do professor de Português"
+    >
+      <a class="portal-brand" href="../professor_portugues/dashboard/index.html"
+        ><span class="brand-symbol material-symbols-outlined">edit_note</span
+        ><span>OminiSaber<small>Português</small></span></a
+      >
+      <nav class="portal-nav">
+        <a href="../professor_portugues/dashboard/index.html"
+          ><span class="material-symbols-outlined">space_dashboard</span>Visão
+          geral</a
+        ><a href="../professor_portugues/laboratorio/index.html"
+          ><span class="material-symbols-outlined">menu_book</span>Oficina de
+          linguagem</a
+        ><a href="../professor_portugues/avaliacoes/index.html"
+          ><span class="material-symbols-outlined">fact_check</span
+          >Avaliações</a
+        ><a href="../professor_portugues/redacoes/index.html"
+          ><span class="material-symbols-outlined">edit_note</span>Redações</a
+        ><a class="active" href="index.html" aria-current="page"
+          ><span class="material-symbols-outlined">calendar_month</span>Agenda
+          das turmas</a
+        >
+      </nav>
+      <a class="portal-profile" href="../perfil/index.html" aria-label="Abrir perfil e configurações">
+        <span class="portal-avatar material-symbols-outlined">person</span>
+        <div>
+          <strong data-teacher-name>Professor</strong
+          ><span data-teacher-specialty>Docente</span>
+        </div>
+        <span class="portal-profile-action material-symbols-outlined" aria-hidden="true">settings</span>
+      </a>
+      <button class="portal-signout" type="button" data-role-signout>
+        <span class="material-symbols-outlined">logout</span>Sair
+      </button>
+    </aside>
+    <main class="portal-main">
+      <header class="portal-topbar portal-commandbar">
+        <button
+          class="icon-button menu-button"
+          type="button"
+          data-menu-toggle
+          data-agenda-menu
+          aria-label="Abrir menu"
+          aria-expanded="false"
+        >
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <div class="portal-context">
+          <span class="portal-context-icon material-symbols-outlined" aria-hidden="true">calendar_month</span>
+          <div>
+            <p class="portal-breadcrumb"><span>Planejamento</span><i>/</i><strong>Agenda docente</strong></p>
+            <h1>Agenda das turmas</h1>
+            <p class="portal-context-help">Organize a turma e mantenha os alunos informados.</p>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a
+            class="button secondary"
+            data-agenda-panel-link
+            href="../professor_portugues/dashboard/index.html"
+            ><span class="material-symbols-outlined">arrow_back</span>Voltar ao
+            painel</a
+          >
+        </div>
+      </header>
+      <div class="portal-content">
+        <header class="page-heading">
+          <div>
+            <p class="eyebrow">PLANEJAMENTO COLETIVO</p>
+            <h1>Agenda das turmas</h1>
+            <p>
+              Publique compromissos. Provas e recuperações notificam os alunos
+              automaticamente.
+            </p>
+          </div>
+          <button class="button primary" type="button" data-open-form>
+            <span class="material-symbols-outlined">add</span>Novo compromisso
+          </button>
+        </header>
+        <section class="teacher-banner">
+          <span class="material-symbols-outlined">diversity_3</span>
+          <div>
+            <strong>Todos alinhados, sem conflito de datas.</strong>
+            <p>
+              Você também vê compromissos publicados por outros professores das
+              mesmas turmas.
+            </p>
+          </div>
+        </section>
+        <div class="teacher-layout">
+          <section class="panel events-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Próximos compromissos</h2>
+                <p data-list-caption role="status" aria-live="polite">Carregando agenda compartilhada...</p>
+              </div>
+            </div>
+            <div class="agenda-filters">
+              <label class="field agenda-search">Pesquisar compromissos
+                <input type="search" data-event-search placeholder="Título, matéria ou professor" aria-describedby="agenda-search-help" />
+              </label>
+              <label class="field agenda-class-filter"
+                >Turma<select data-class-filter>
+                  <option value="all">Todas</option>
+                </select></label
+              >
+            </div>
+            <p class="agenda-search-help" id="agenda-search-help">Busca nos compromissos carregados: últimos 7 dias e próximos 5 meses.</p>
+            <div data-events-list></div>
+            <div class="state" data-events-loading>
+              <span class="loader"></span>
+              <p>Consultando as turmas...</p>
+            </div>
+          </section>
+          <aside class="panel event-form-panel" data-form-panel>
+            <div class="panel-header">
+              <div>
+                <h2>Novo compromisso</h2>
+                <p>Os alunos verão após a publicação</p>
+              </div>
+              <button
+                class="icon-button close-form"
+                type="button"
+                data-close-form
+                aria-label="Fechar"
+              >
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <form data-event-form>
+              <div class="form-grid">
+                <label class="field full"
+                  >Título<input
+                    name="title"
+                    maxlength="120"
+                    required
+                    placeholder="Ex.: Prova de funções quadráticas" /></label
+                ><label class="field"
+                  >Tipo<select name="type" required>
+                    <option value="prova">Prova</option>
+                    <option value="recuperacao">Recuperação</option>
+                    <option value="trabalho">Trabalho</option>
+                    <option value="atividade">Atividade</option>
+                    <option value="aula">Aula</option>
+                    <option value="reuniao">Reunião</option>
+                  </select></label
+                ><label class="field"
+                  >Turma<select name="classId" required>
+                    <option value="">Selecione</option>
+                  </select></label
+                ><label class="field"
+                  >Data<input name="date" type="date" required /></label
+                ><label class="field"
+                  >Horário<input name="time" type="time" required /></label
+                ><label class="field"
+                  >Término<input name="endTime" type="time" /></label
+                ><label class="field"
+                  >Matéria<input
+                    name="subject"
+                    maxlength="60"
+                    required /></label
+                ><label class="field"
+                  >Local<input
+                    name="location"
+                    maxlength="80"
+                    placeholder="Sala ou laboratório" /></label
+                ><label class="field full"
+                  >Orientações<textarea
+                    name="description"
+                    rows="3"
+                    maxlength="500"
+                    placeholder="Conteúdo, materiais ou observações"
+                  ></textarea>
+                </label>
+              </div>
+              <label class="publish-check"
+                ><input name="published" type="checkbox" checked /><span
+                  ><strong>Publicar agora</strong
+                  ><small
+                    >Alunos e professores da turma poderão visualizar.</small
+                  ></span
+                ></label
+              ><button class="button primary submit-event" type="submit">
+                <span class="material-symbols-outlined">publish</span>Publicar
+                na agenda
+              </button>
+            </form>
+          </aside>
+        </div>
+      </div>
+    </main>
+    <div class="toast" data-toast role="status" aria-live="polite"></div>
+  </body>
+</html>

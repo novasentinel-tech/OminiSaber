@@ -10,7 +10,6 @@ backend/.env.*
 .DS_Store
 .vscode/
 node_modules/
-netlify-dist/
 .cache/
 .tmp/
 tmp/

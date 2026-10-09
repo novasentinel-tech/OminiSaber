@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Parties initial shell -->
+    <script>/* Inlined by migrate-html.mjs before page styles: restore layout before paint. */
+(() => {
+  const root = document.documentElement;
+  root.classList.add("os-student-shell", "os-shell-pending");
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem("ominisaber:student-sidebar-collapsed") === "true";
+  } catch { /* Storage may be unavailable; the default layout still works. */ }
+  root.classList.toggle("os-sidebar-collapsed", innerWidth > 900 && collapsed);
+})();
+</script>
+    <style>/* First paint must never show the legacy navigation or animate restoration. */
+html.os-student-shell body { box-sizing: border-box; }
+html.os-student-shell :is(aside.sidebar, aside.app-sidebar, aside.study-sidebar, aside.library-sidebar, [data-shared-sidebar]):not(.os-party-student-sidebar):not(.correction-sidebar):not(.notes-drawer),
+html.os-student-shell :is(.shared-sidebar-toggle, .sidebar-edge-reveal, .omni-sidebar-close, .omni-sidebar-edge, .omni-sidebar-mobile, .omni-sidebar-backdrop, .mobile-study-nav, .mobile-bar) {
+  display: none !important;
+}
+html.os-shell-pending body,
+html.os-shell-pending .os-party-student-sidebar,
+html.os-shell-pending .os-student-sidebar-reopen {
+  transition: none !important;
+}
+html.os-student-shell body > main,
+html.os-student-shell :is(.main-content, .app-main, .study-main, .app-shell, .library-main) {
+  margin-left: 0 !important;
+  min-width: 0;
+}
+@media (min-width: 901px) {
+  html.os-student-shell body { padding-left: 248px !important; }
+  html.os-student-shell.os-sidebar-collapsed body { padding-left: 0 !important; }
+}
+@media (max-width: 900px) {
+  html.os-student-shell body { padding-left: 0 !important; }
+  html.os-student-shell .os-party-student-sidebar { transform: translateX(-105%); }
+}
+</style>
+    <!-- /Parties initial shell -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Jornada guiada de proposta, planejamento e escrita do OminiSaber."
+    />
+    <title>Laboratório de Redação | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,500&family=Poppins:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=20260926-6" />
+    <script src="../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="script.js?v=20260927-2"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../Parties/parties.js?v=20260924-5"></script>
+  </head>
+  <body data-required-role="aluno">
+    <header class="site-header app-topbar">
+      <button
+        class="icon-button menu-button"
+        type="button"
+        data-menu-toggle
+        aria-label="Abrir menu principal"
+        aria-expanded="false"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+      <div class="topbar-title">
+        <strong>Laboratório de redação</strong>
+        <span>Da ideia ao texto, uma etapa por vez</span>
+      </div>
+      <div class="topbar-actions">
+        <a class="icon-button" href="historico/index.html" aria-label="Abrir histórico de redações">
+          <span class="material-symbols-outlined" aria-hidden="true">history</span>
+        </a>
+        <a class="icon-button" href="../perfil/index.html" aria-label="Abrir perfil">
+          <span class="material-symbols-outlined" aria-hidden="true">person</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="intro writing-intro">
+        <div>
+          <p class="eyebrow">LABORATÓRIO DE REDAÇÃO</p>
+          <h1>Da ideia ao texto, sem pular etapas.</h1>
+          <p>
+            Explore uma proposta, construa argumentos com repertório pertinente
+            e escreva com foco.
+          </p>
+        </div>
+        <div class="intro-note">
+          <span class="material-symbols-outlined" aria-hidden="true"
+            >cloud_done</span
+          ><span
+            >Ligado ao Supabase<br /><strong
+              >Planejamento e versões salvos</strong
+            ></span
+          >
+        </div>
+      </section>
+
+      <nav class="stepper" aria-label="Etapas da redação">
+        <button
+          class="step is-active"
+          type="button"
+          data-step-target="1"
+          aria-current="step"
+        >
+          <span>01</span><strong>Explorar</strong
+          ><small>Propostas e textos</small></button
+        ><span class="step-line" aria-hidden="true"></span>
+        <button class="step" type="button" data-step-target="2">
+          <span>02</span><strong>Planejar</strong
+          ><small>Argumentos e repertório</small></button
+        ><span class="step-line" aria-hidden="true"></span>
+        <button class="step" type="button" data-step-target="3">
+          <span>03</span><strong>Escrever</strong
+          ><small>Somente sua redação</small>
+        </button>
+      </nav>
+
+      <section
+        class="step-panel"
+        data-step="1"
+        aria-labelledby="step-one-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">ETAPA 1 · EXPLORAÇÃO</p>
+            <h2 id="step-one-title">
+              Escolha uma proposta que provoque boas perguntas.
+            </h2>
+            <p>
+              Veja primeiro o que sua professora fixou. Depois, explore todo o
+              banco de temas.
+            </p>
+          </div>
+          <span
+            class="material-symbols-outlined heading-icon"
+            aria-hidden="true"
+            >travel_explore</span
+          >
+        </div>
+        <section class="pinned-section" aria-labelledby="pinned-title">
+          <div class="subheading row-heading">
+            <div>
+              <span class="material-symbols-outlined" aria-hidden="true"
+                >keep</span
+              >
+              <h3 id="pinned-title">Fixados pela professora</h3>
+            </div>
+            <span class="live-source"><i></i> Atualizado pelo Supabase</span>
+          </div>
+          <div class="pinned-grid" data-pinned-grid aria-live="polite"></div>
+        </section>
+        <section class="theme-bank" aria-labelledby="theme-bank-title">
+          <div class="bank-heading">
+            <div>
+              <p class="eyebrow">BANCO DE TEMAS</p>
+              <h3 id="theme-bank-title">Outras propostas para praticar</h3>
+            </div>
+            <span data-theme-total>0 temas</span>
+          </div>
+          <div class="theme-toolbar">
+            <label class="theme-search"
+              ><span class="material-symbols-outlined" aria-hidden="true"
+                >search</span
+              ><input
+                type="search"
+                data-theme-search
+                placeholder="Buscar tema, eixo ou palavra-chave"
+                aria-label="Buscar no banco de temas"
+            /></label>
+            <div class="theme-filters" role="group" aria-label="Filtrar temas">
+              <button
+                class="filter-button is-active"
+                type="button"
+                data-theme-filter="todos"
+              >
+                Todos</button
+              ><button
+                class="filter-button"
+                type="button"
+                data-theme-filter="sociedade"
+              >
+                Sociedade</button
+              ><button
+                class="filter-button"
+                type="button"
+                data-theme-filter="tecnologia"
+              >
+                Tecnologia</button
+              ><button
+                class="filter-button"
+                type="button"
+                data-theme-filter="meio-ambiente"
+              >
+                Meio ambiente</button
+              ><button
+                class="filter-button"
+                type="button"
+                data-theme-filter="educacao"
+              >
+                Educação</button
+              ><button
+                class="filter-button"
+                type="button"
+                data-theme-filter="saude"
+              >
+                Saúde
+              </button>
+            </div>
+          </div>
+          <div class="theme-grid" data-theme-grid aria-live="polite"></div>
+        </section>
+      </section>
+
+      <section
+        class="step-panel is-hidden"
+        data-step="2"
+        aria-labelledby="step-two-title"
+      >
+        <div class="section-heading map-heading">
+          <div>
+            <p class="eyebrow">LABORATÓRIO DE REDAÇÃO</p>
+            <h2 id="step-two-title">Mapa da Redação</h2>
+            <p>
+              Construa seu texto passo a passo, com orientação em cada etapa.
+            </p>
+          </div>
+          <div class="map-heading-tools">
+            <div class="map-progress" aria-live="polite"><span><strong data-map-progress-label>1 de 6</strong> etapas concluídas</span><div aria-hidden="true"><i data-map-progress-bar></i></div></div>
+            <span class="save-pill" data-planning-status><span class="material-symbols-outlined" aria-hidden="true">cloud</span>Aguardando edição</span>
+            <button class="button button-secondary map-free-mode" type="button" data-switch-mode="free"><span class="material-symbols-outlined" aria-hidden="true">edit_document</span>Texto livre</button>
+          </div>
+        </div>
+        <div class="selected-theme" data-selected-theme></div>
+        <div class="essay-map-mount" data-essay-map></div>
+        <aside class="shortcut-explainer">
+          <span class="material-symbols-outlined" aria-hidden="true"
+            >keyboard</span
+          >
+          <div>
+            <strong>Atalhos que estarão disponíveis na escrita</strong>
+            <p>
+              <kbd>Tab</kbd> no início de uma linha ou <kbd>Shift</kbd> +
+              <kbd>Enter</kbd> cria automaticamente um novo parágrafo na linha
+              de baixo. Na etapa 3 você também poderá minimizar este bloco de
+              anotações.
+            </p>
+          </div>
+        </aside>
+        <div class="planning-workspace">
+          <section class="planning-column notes-column">
+            <div class="subheading">
+              <span class="material-symbols-outlined" aria-hidden="true"
+                >edit_note</span
+              >
+              <h3>Bloco de anotações</h3>
+            </div>
+            <label for="planning-notes">Ideias, dúvidas e conexões</label
+            ><textarea
+              id="planning-notes"
+              data-planning-notes
+              maxlength="20000"
+              placeholder="Anote livremente antes de organizar sua tese..."
+            ></textarea>
+            <div class="planning-footer">
+              <span data-planning-count>0 caracteres</span
+              ><span>Salvo na sua conta</span>
+            </div>
+          </section>
+          <section class="planning-column argument-map">
+            <div class="subheading">
+              <span class="material-symbols-outlined" aria-hidden="true"
+                >account_tree</span
+              >
+              <h3>Mapa de argumentos</h3>
+            </div>
+            <label for="planning-thesis">Tese central</label
+            ><textarea
+              id="planning-thesis"
+              data-planning-thesis
+              rows="3"
+              placeholder="Qual posição você defenderá?"
+            ></textarea>
+            <div class="argument-fields">
+              <label
+                >Argumento 1<textarea
+                  data-argument="0"
+                  rows="3"
+                  placeholder="Causa, problema ou perspectiva..."
+                ></textarea></label
+              ><label
+                >Argumento 2<textarea
+                  data-argument="1"
+                  rows="3"
+                  placeholder="Consequência, contraponto ou aprofundamento..."
+                ></textarea>
+              </label>
+            </div>
+            <p class="field-hint">
+              Evite repetir a tese: cada argumento precisa acrescentar uma razão
+              verificável.
+            </p>
+          </section>
+        </div>
+        <section class="repertoire-lab" aria-labelledby="repertoire-title">
+          <div class="repertoire-head">
+            <div>
+              <p class="eyebrow">REPERTÓRIO PRODUTIVO</p>
+              <h3 id="repertoire-title">
+                Classifique e conecte referências ao seu argumento
+              </h3>
+              <p>
+                Não usamos repertório coringa. Cada referência explica onde e
+                como pode ser aplicada.
+              </p>
+            </div>
+            <span class="selected-counter" data-repertoire-count
+              >0 selecionados</span
+            >
+          </div>
+          <div
+            class="repertoire-categories"
+            role="group"
+            aria-label="Categorias de repertório"
+          >
+            <button
+              class="repertoire-filter is-active"
+              type="button"
+              data-repertoire-filter="todos"
+            >
+              Todos</button
+            ><button
+              class="repertoire-filter"
+              type="button"
+              data-repertoire-filter="cultural"
+            >
+              Cultural</button
+            ><button
+              class="repertoire-filter"
+              type="button"
+              data-repertoire-filter="estatistico"
+            >
+              Estatístico</button
+            ><button
+              class="repertoire-filter"
+              type="button"
+              data-repertoire-filter="historico"
+            >
+              Histórico</button
+            ><button
+              class="repertoire-filter"
+              type="button"
+              data-repertoire-filter="cientifico"
+            >
+              Científico</button
+            ><button
+              class="repertoire-filter"
+              type="button"
+              data-repertoire-filter="legal"
+            >
+              Legal</button
+            ><button
+              class="repertoire-filter"
+              type="button"
+              data-repertoire-filter="literario"
+            >
+              Literário
+            </button>
+          </div>
+          <div
+            class="repertoire-grid"
+            data-repertoire-grid
+            aria-live="polite"
+          ></div>
+        </section>
+        <section class="intervention-builder">
+          <div class="subheading">
+            <span class="material-symbols-outlined" aria-hidden="true"
+              >construction</span
+            >
+            <h3>Esboço da proposta de intervenção</h3>
+          </div>
+          <div class="intervention-grid">
+            <label
+              >Agente<input
+                data-intervention="agente"
+                placeholder="Quem deve agir?" /></label
+            ><label
+              >Ação<input
+                data-intervention="acao"
+                placeholder="O que deve ser feito?" /></label
+            ><label
+              >Meio<input
+                data-intervention="meio"
+                placeholder="Como será realizado?" /></label
+            ><label
+              >Finalidade<input
+                data-intervention="finalidade"
+                placeholder="Qual resultado esperado?" /></label
+            ><label
+              >Detalhamento<input
+                data-intervention="detalhamento"
+                placeholder="Que detalhe torna a proposta concreta?"
+            /></label>
+          </div>
+        </section>
+        <div class="step-actions">
+          <button
+            class="button button-secondary"
+            type="button"
+            data-back-step="1"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true"
+              >arrow_back</span
+            >Voltar aos temas</button
+          ><button
+            class="button button-primary"
+            type="button"
+            data-next-step="3"
+          >
+            Montar meu texto<span
+              class="material-symbols-outlined"
+              aria-hidden="true"
+              >arrow_forward</span
+            >
+          </button>
+        </div>
+      </section>
+
+      <section
+        class="step-panel writing-panel is-hidden"
+        data-step="3"
+        aria-labelledby="step-three-title"
+      >
+        <div class="writing-focus-head">
+          <div>
+            <p class="eyebrow">ETAPA 3 · REDAÇÃO</p>
+            <h2 id="step-three-title">Agora, somente o seu texto.</h2>
+            <p data-writing-theme>Proposta selecionada</p>
+          </div>
+          <span class="save-pill" data-draft-status
+            ><span class="material-symbols-outlined" aria-hidden="true"
+              >cloud_done</span
+            >Pronto para escrever</span
+          >
+          <button class="button button-secondary" type="button" data-switch-mode="guided"><span class="material-symbols-outlined" aria-hidden="true">account_tree</span>Voltar ao mapa</button>
+        </div>
+        <div class="writing-workspace" data-writing-workspace>
+          <aside class="notes-drawer" data-notes-drawer>
+            <header>
+              <div>
+                <span class="material-symbols-outlined" aria-hidden="true"
+                  >sticky_note_2</span
+                ><strong>Meu planejamento</strong>
+              </div>
+              <button
+                class="icon-button"
+                type="button"
+                data-toggle-notes
+                aria-label="Minimizar bloco de anotações"
+                aria-expanded="true"
+              >
+                <span class="material-symbols-outlined" aria-hidden="true"
+                  >left_panel_close</span
+                >
+              </button>
+            </header>
+            <div class="notes-drawer-content" data-notes-content></div>
+          </aside>
+          <article class="paper-editor">
+            <div class="paper-toolbar">
+              <span
+                ><span class="material-symbols-outlined" aria-hidden="true"
+                  >keyboard_tab</span
+                ><kbd>Tab</kbd> no início ou <kbd>Shift</kbd> +
+                <kbd>Enter</kbd>: novo parágrafo</span
+              ><span data-last-saved></span>
+            </div>
+            <label for="official-title">Título</label
+            ><input
+              id="official-title"
+              type="text"
+              maxlength="160"
+              placeholder="Dê um título ao seu texto"
+              data-official-title
+              autocomplete="off"
+            /><label for="official-text">Redação</label
+            ><textarea
+              id="official-text"
+              data-official-text
+              spellcheck="true"
+              placeholder="Comece sua introdução aqui..."
+            ></textarea>
+            <footer class="editor-footer">
+              <span><strong data-word-count>0</strong> palavras</span
+              ><span><strong data-paragraph-count>0</strong> parágrafos</span
+              ><span><strong data-character-count>0</strong> caracteres</span>
+            </footer>
+          </article>
+        </div>
+        <div class="step-actions">
+          <button
+            class="button button-secondary"
+            type="button"
+            data-back-step="2"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true"
+              >arrow_back</span
+            >Rever planejamento</button
+          ><button class="button button-primary" type="button" data-open-review>
+            Revisar antes de enviar<span
+              class="material-symbols-outlined"
+              aria-hidden="true"
+              >fact_check</span
+            >
+          </button>
+        </div>
+      </section>
+      <div
+        class="feedback"
+        data-feedback
+        role="status"
+        aria-live="polite"
+      ></div>
+    </main>
+    <dialog
+      class="theme-dialog"
+      data-theme-dialog
+      aria-labelledby="theme-dialog-title"
+    >
+      <button
+        class="dialog-close"
+        type="button"
+        data-close-dialog
+        aria-label="Fechar detalhes"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+      <div data-theme-dialog-content></div>
+    </dialog>
+    <dialog class="writing-mode-dialog" data-writing-mode-dialog aria-labelledby="writing-mode-title">
+      <div class="mode-dialog-head">
+        <p class="eyebrow">ANTES DE COMEÇAR</p>
+        <h2 id="writing-mode-title">Como você quer escrever hoje?</h2>
+        <p>Você poderá trocar de modo depois sem perder seu conteúdo.</p>
+      </div>
+      <div class="mode-choice-grid">
+        <article class="mode-card mode-card-guided" data-parallax-card>
+          <div class="mode-card-glare" aria-hidden="true"></div>
+          <div class="mode-card-content">
+            <span class="mode-card-icon material-symbols-outlined" aria-hidden="true">account_tree</span><span class="mode-recommended">RECOMENDADO</span>
+            <h3>Montar por blocos</h3><p>Organize cada parte e acompanhe a estrutura da redação enquanto escreve.</p>
+            <ol><li><span>1</span>Cada bloco tem uma função</li><li><span>2</span>Avance no seu ritmo</li><li><span>3</span>Transforme tudo em texto</li></ol>
+            <button class="button button-primary" type="button" data-writing-mode="guided">Usar o mapa da redação<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button>
+          </div>
+        </article>
+        <article class="mode-card" data-parallax-card>
+          <div class="mode-card-glare" aria-hidden="true"></div>
+          <div class="mode-card-content">
+            <span class="mode-card-icon material-symbols-outlined" aria-hidden="true">edit_document</span>
+            <h3>Escrever livremente</h3><p>Abra a folha e escreva a redação completa do seu jeito, com o planejamento disponível ao lado.</p>
+            <button class="button button-secondary" type="button" data-writing-mode="free">Abrir texto livre<span class="material-symbols-outlined" aria-hidden="true">edit</span></button>
+          </div>
+        </article>
+      </div>
+    </dialog>
+    <footer class="site-footer">
+      <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+      Seus rascunhos, anotações e versões ficam associados à sua conta.
+    </footer>
+  </body>
+</html>

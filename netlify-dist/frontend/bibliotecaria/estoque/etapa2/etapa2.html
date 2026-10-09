@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Etapa 2 | Seções físicas | OminiSaber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="etapa_style.css" />
+    <script src="/backend/vendor/supabase-2.112.3.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="../../../../backend/ominisaber-supabase-config.js"></script>
+    <script src="../../../../backend/ominisaber-supabase-client.js?v=20261004-7"></script>
+    <script defer src="etapa_script.js"></script>
+    <!-- OminiSaber Parties: sistema visual compartilhado -->
+    <link rel="stylesheet" href="../../../Parties/parties.css?v=20260924-5" />
+    <script defer src="../../../Parties/parties.js?v=20260924-5"></script>
+  </head>
+  <body data-app-role="library">
+    <main class="page-shell">
+      <a class="back-link" href="../index.html"
+        ><span class="material-symbols-outlined">arrow_back</span>Voltar ao
+        acervo</a
+      >
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">OPERAÇÃO FÍSICA · ETAPA 2 DE 3</p>
+          <h1>Seções físicas</h1>
+          <p class="intro">
+            Crie as estantes e distribua os exemplares sem localização.
+          </p>
+        </div>
+        <div class="progress" aria-label="Progresso do cadastro">
+          <span>01</span><i></i><span class="active">02</span><i></i
+          ><span>03</span>
+        </div>
+      </header>
+
+      <section class="panel creation-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">NOVA SEÇÃO</p>
+            <h2>Adicionar estante</h2>
+          </div>
+          <span class="material-symbols-outlined heading-icon">shelves</span>
+        </div>
+        <form class="section-form" data-section-form>
+          <label class="field"
+            >Nome da seção<input
+              class="input"
+              name="nome"
+              required
+              maxlength="100"
+              placeholder="Ex.: Estante A1"
+          /></label>
+          <label class="field"
+            >Gênero principal<select
+              class="input"
+              name="genero_associado"
+              required
+            >
+              <option value="">Selecione o gênero</option>
+              <option>Romance</option>
+              <option>Didático</option>
+              <option>Científico / Técnico</option>
+              <option>Literatura</option>
+              <option>História</option>
+              <option>Biografia</option>
+              <option>Infantojuvenil</option>
+              <option>Todos os gêneros</option>
+            </select></label
+          >
+          <label class="field"
+            >Capacidade máxima<input
+              class="input"
+              name="capacidade_maxima"
+              type="number"
+              min="1"
+              max="99999"
+              required
+              placeholder="Ex.: 50"
+          /></label>
+          <button class="button" type="submit">
+            <span class="material-symbols-outlined">add</span>Criar seção
+          </button>
+        </form>
+      </section>
+
+      <section class="inventory-section" aria-labelledby="shelves-title">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">MAPA DO ACERVO</p>
+            <h2 id="shelves-title">Estantes cadastradas</h2>
+          </div>
+          <span class="count-badge" data-section-count>0 seções</span>
+        </div>
+        <div class="shelf-grid" data-shelf-grid>
+          <p class="empty">Carregando seções...</p>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="modal" data-allocation-modal>
+      <section class="modal-card" aria-labelledby="allocation-title">
+        <button
+          class="modal-close"
+          type="button"
+          data-allocation-close
+          aria-label="Fechar"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <p class="eyebrow">ALOCAÇÃO DE EXEMPLARES</p>
+        <h2 id="allocation-title">
+          Alocar em <span data-allocation-section>seção</span>
+        </h2>
+        <p class="muted">
+          Selecione os exemplares sem localização ou leia suas etiquetas.
+        </p>
+        <div class="allocation-summary">
+          <strong><span data-selected-count>0</span> selecionados</strong
+          ><span>Disponível: <b data-available-capacity>0</b></span>
+        </div>
+        <div class="allocation-actions">
+          <button class="button secondary" type="button" data-allocation-scan>
+            <span class="material-symbols-outlined">barcode_scanner</span>Bipar
+            etiqueta</button
+          ><label class="search-box"
+            ><span class="material-symbols-outlined">search</span
+            ><input
+              class="input"
+              data-copy-search
+              placeholder="Buscar série, título ou ISBN"
+          /></label>
+        </div>
+        <div class="copy-list" data-copy-list>
+          <p class="empty">Nenhum exemplar sem localização.</p>
+        </div>
+        <p
+          class="allocation-warning"
+          data-allocation-warning
+          role="alert"
+          hidden
+        ></p>
+        <div class="modal-actions">
+          <button class="button secondary" type="button" data-allocation-close>
+            Cancelar</button
+          ><button class="button" type="button" data-allocation-save>
+            <span class="material-symbols-outlined">check</span>Salvar alocação
+          </button>
+        </div>
+      </section>
+    </dialog>
+
+    <dialog class="modal scanner-modal" data-scanner-modal>
+      <section class="modal-card">
+        <button
+          class="modal-close"
+          type="button"
+          data-scanner-close
+          aria-label="Fechar"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <p class="eyebrow">LEITURA ÓPTICA</p>
+        <h2>Bipar etiqueta</h2>
+        <p class="muted" data-scanner-status>
+          Aponte a câmera para o código da etiqueta.
+        </p>
+        <div id="allocation-reader"></div>
+        <button class="button full" type="button" data-scanner-start>
+          <span class="material-symbols-outlined">photo_camera</span>Iniciar
+          câmera
+        </button>
+      </section>
+    </dialog>
+    <div class="toast" data-toast role="status"></div>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+html {
+  color-scheme: light;
+}
+
+body.os-parties-ready,
+body.os-parties-ready button,
+body.os-parties-ready input,
+body.os-parties-ready select,
+body.os-parties-ready textarea {
+  font-family: var(--os-font);
+}
+
+body.os-parties-ready {
+  min-height: 100vh;
+  background: var(--os-canvas);
+  color: var(--os-ink);
+  font-size: var(--os-text-base);
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.os-parties-ready *,
+body.os-parties-ready *::before,
+body.os-parties-ready *::after {
+  box-sizing: border-box;
+}
+
+body.os-parties-ready :where(h1, h2, h3, h4) {
+  color: var(--os-ink);
+  font-family: var(--os-font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+body.os-parties-ready :where(p, li, label, input, select, textarea) {
+  font-size: inherit;
+}
+
+body.os-parties-ready :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 0;
+  box-shadow: var(--os-focus);
+}
+
+body.os-parties-ready a {
+  text-underline-offset: 0.18em;
+}
+
+body.os-parties-ready ::selection {
+  background: color-mix(in srgb, var(--os-accent) 24%, white);
+  color: var(--os-ink);
+}
+
+.os-skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 10000;
+  padding: 10px 14px;
+  border-radius: var(--os-radius-md);
+  background: var(--os-ink);
+  color: #fff;
+  font-size: var(--os-text-sm);
+  font-weight: 800;
+  transform: translateY(-160%);
+  transition: transform var(--os-transition);
+}
+
+.os-skip-link:focus {
+  transform: none;
+}
+
+.os-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.os-parties-ready *,
+  body.os-parties-ready *::before,
+  body.os-parties-ready *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
